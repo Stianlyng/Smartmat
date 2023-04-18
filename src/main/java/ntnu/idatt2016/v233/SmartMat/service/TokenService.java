@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 /**
  * This class is used to generate a JWT token.
- * @author tokenly-team
+ * @author Anders
  * @version 1.0
  * @since 22.03.2023
  */

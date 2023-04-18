@@ -22,6 +22,12 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 
+/**
+ * Configures the authentication for the application.
+ * @author Anders (young buck)
+ * @version 1.0
+ * @since 04.04.2023
+ */
 @Configuration
 public class AuthenticationConfig {
 
@@ -83,6 +89,12 @@ public class AuthenticationConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
+    /**
+     * Configures the UserDetailsService instance for managing user details.
+     * This is temporary in-memory user details for development purposes.
+     * TODO: Replace with a proper UserDetailsService implementation.
+     * @return A UserDetailsService instance.
+     */
     //Temporary in-memory userdetails for development purposes
     @Bean
     public UserDetailsService userDetailsService() {

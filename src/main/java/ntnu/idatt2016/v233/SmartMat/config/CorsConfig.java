@@ -14,13 +14,13 @@ import java.util.Arrays;
  * Cors configuration for application
  * @author Birk
  * @version 1.0
- *
+ * @since 04.04.2023
  */
 @Configuration
 @AllArgsConstructor
 public class CorsConfig {
     /**
-     * The frontend domain properties.
+     * The domain property.
      */
     private final DomainProperty domainProperty;
 

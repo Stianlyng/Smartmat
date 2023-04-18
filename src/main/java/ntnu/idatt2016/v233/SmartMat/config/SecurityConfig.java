@@ -9,13 +9,14 @@ import org.springframework.security.config.annotation.web.configurers.oauth2.ser
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
-@AllArgsConstructor
-
 /**
  * Configs for security and authentication
  * @author Birk
+ * @version 1.0
+ * @since 04.04.2023
  */
+@Configuration
+@AllArgsConstructor
 public class SecurityConfig {
 
     /**
@@ -39,5 +40,5 @@ public class SecurityConfig {
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
-    
+
 }
