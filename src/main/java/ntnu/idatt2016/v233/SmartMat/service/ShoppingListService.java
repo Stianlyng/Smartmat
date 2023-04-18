@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import ntnu.idatt2016.v233.SmartMat.model.ShoppingList;
-import ntnu.idatt2016.v233.SmartMat.repository.ShoppingListReposity;
+import ntnu.idatt2016.v233.SmartMat.repository.ShoppingListRepository;
 
 /**
  * Service for the shopping list
@@ -14,13 +14,13 @@ import ntnu.idatt2016.v233.SmartMat.repository.ShoppingListReposity;
  */
 public class ShoppingListService {
     
-    ShoppingListReposity shoppingListRepository;
+    ShoppingListRepository shoppingListRepository;
     /**
      * Creates a new ShoppingListService
      * 
      * @param shoppingListRepository The repository to use
      */
-    public ShoppingListService(ShoppingListReposity shoppingListRepository) {
+    public ShoppingListService(ShoppingListRepository shoppingListRepository) {
         this.shoppingListRepository = shoppingListRepository;
     }
     
