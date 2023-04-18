@@ -25,6 +25,3 @@ deploy-jar:
     stage: deploy
     script:
     - mvn install
-    artifacts:
-        paths:
-        - target/*.jar
