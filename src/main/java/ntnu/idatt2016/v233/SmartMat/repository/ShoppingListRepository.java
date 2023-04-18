@@ -12,7 +12,7 @@ import ntnu.idatt2016.v233.SmartMat.model.ShoppingList;
  * @version 1.0
  *
  */
-public interface ShoppingListReposity {
+public interface ShoppingListRepository {
     
     /**
      * Saves a shopping list to the database
