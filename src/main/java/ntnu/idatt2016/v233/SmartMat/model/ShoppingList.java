@@ -1,7 +1,5 @@
 package ntnu.idatt2016.v233.SmartMat.model;
 
-import lombok.Setter;
-import lombok.Getter;
 
 /**
  * This class represents a shopping list
@@ -9,16 +7,8 @@ import lombok.Getter;
  * @author Stian Lyng
  * @version 1.0
  *
+ * @param ShoppingListID the id of the shopping list
+ * @param GroupID the id of the groupID
  */
-public class ShoppingList {
-
-    /**
-     * The ID of the shopping list
-     */
-    private int ShoppingListID;
-    
-    /**
-     * The id of the group the shopping list belongs to
-     */
-    private int groupID;
+public record ShoppingList(long ShoppingListID, long groupID) {
 }
