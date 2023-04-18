@@ -34,7 +34,7 @@ public interface ProductRepository {
      * @param id the ID of the group
      * @return an optional containing the product if it exists
      */
-    Optional<Product> getByProductName(int id);
+    Optional<Product> getByProductName(String name);
 
     /**
      * Gets all Products
