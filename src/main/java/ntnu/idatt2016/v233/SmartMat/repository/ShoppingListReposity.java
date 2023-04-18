@@ -5,6 +5,13 @@ import java.util.Optional;
 
 import ntnu.idatt2016.v233.SmartMat.model.ShoppingList;
 
+/**
+ * This interface defines the methods for the shopping list repository
+ *
+ * @author Stian Lyng
+ * @version 1.0
+ *
+ */
 public interface ShoppingListReposity {
     
     /**
