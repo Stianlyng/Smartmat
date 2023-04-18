@@ -66,7 +66,7 @@ CREATE TABLE items_allergies (
 );
 
 CREATE TABLE users_allergies (
-    username BIGINT NOT NULL,
+    username VARCHAR(50) NOT NULL,
     allergy_name VARCHAR(50) NOT NULL,
     CONSTRAINT PK_user_category PRIMARY KEY (username, allergy_name),
     FOREIGN KEY (username) REFERENCES users (username),
