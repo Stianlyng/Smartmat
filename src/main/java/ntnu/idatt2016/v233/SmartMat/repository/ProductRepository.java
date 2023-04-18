@@ -1,6 +1,5 @@
 package ntnu.idatt2016.v233.SmartMat.repository;
 
-import ntnu.idatt2016.v233.SmartMat.model.ShoppingList;
 import ntnu.idatt2016.v233.SmartMat.model.product.Product;
 
 import java.util.List;
