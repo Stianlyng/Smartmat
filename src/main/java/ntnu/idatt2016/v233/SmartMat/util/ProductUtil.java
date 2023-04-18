@@ -34,12 +34,30 @@ public class ProductUtil {
                 for (String unit : VOLUME_UNITS) {
                     int i = words.indexOf(unit);
                     if (i != -1) {
-                        return Optional.of(words.get(i - 1) + " " + unit);
+                        return Optional.of(words.get(i - 1) + unit);
                     }
+                }
+
+                volume = words.stream().filter(word -> Arrays.stream(VOLUME_UNITS).anyMatch(word::contains))
+                        .filter(ProductUtil::hasNumbers)
+                        .findAny()
+                        .orElse("");
+                if (!volume.equals("")){
+                    return Optional.of(volume);
                 }
             }
         }
 
+
         return Optional.empty();
+    }
+
+    /**
+     * Checks if a string contains any numbers
+     * @param s The string to check
+     * @return True if the string contains any numbers, false otherwise
+     */
+    private static boolean hasNumbers(String s) {
+        return s.matches(".*\\d.*");
     }
 }

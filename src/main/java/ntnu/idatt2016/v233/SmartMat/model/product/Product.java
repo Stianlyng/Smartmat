@@ -1,5 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.model.product;
 
+import lombok.Builder;
+
 /**
  * Product is a record class representing a product in the system.
  * All other info about the product is fetched from api call on fronted.
@@ -8,5 +10,6 @@ package ntnu.idatt2016.v233.SmartMat.model.product;
  * @version 1.0
  * @since 04.04.2023
  */
+@Builder
 public record Product (int ean, String name, String description){
 }
