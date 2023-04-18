@@ -129,6 +129,21 @@ CREATE TABLE WASTES(
     ean BIGINT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     amount DOUBLE NOT NULL,
+    unit VARCHAR(50) NOT NULL,
     FOREIGN KEY (group_id) references groups(group_id),
     FOREIGN KEY (ean) references product(ean)
-)
+);
+
+CREATE TABLE achievement(
+    achievement_name VARCHAR(50) NOT NULL PRIMARY KEY,
+    achievement_description varchar(500) NOT NULL PRIMARY KEY
+);
+
+CREATE TABLE achievement_person(
+    achievement_name VARCHAR(50) NOT NULL,
+    username VARCHAR(50) NOT NULL,
+    CONSTRAINT PK_achievement_username PRIMARY KEY (achievement_name,username),
+    FOREIGN KEY (username) REFERENCES users(username),
+    FOREIGN KEY (achievement_name) REFERENCES achievement(achievement_name)
+);
+
