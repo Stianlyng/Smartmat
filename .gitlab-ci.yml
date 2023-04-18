@@ -1,0 +1,30 @@
+image: maven:3.9.0-eclipse-temurin-19-focal
+
+variables:
+  SPRING_PROFILES_ACTIVE: gitlab-ci
+
+stages:
+  - build
+  - test
+  - deploy
+
+maven-build:
+  stage: build
+  script:
+    - mvn -v
+    - mvn package
+
+
+run-tests:
+  stage: test
+  script:
+  - mvn install
+  - mvn test
+
+deploy-jar:
+    stage: deploy
+    script:
+    - mvn install
+    artifacts:
+        paths:
+        - target/*.jar
