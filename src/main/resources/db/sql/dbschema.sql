@@ -121,6 +121,14 @@ CREATE TABLE favorite(
     CONSTRAINT PK_recipe_user PRIMARY KEY (recipe_id,username),
     FOREIGN KEY (recipe_id) REFERENCES recipe(recipe_id),
     FOREIGN KEY (username) REFERENCES users(username)
+);
+
+CREATE TABLE WASTES(
+    waste_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    group_id BIGINT NOT NULL,
+    ean BIGINT NOT NULL,
+    timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    amount DOUBLE NOT NULL,
+    FOREIGN KEY (group_id) references groups(group_id),
+    FOREIGN KEY (ean) references product(ean)
 )
-
-
