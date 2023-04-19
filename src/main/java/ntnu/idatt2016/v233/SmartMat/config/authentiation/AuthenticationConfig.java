@@ -24,9 +24,9 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 /**
  * Configures the authentication for the application.
- * @author Anders (young buck)
- * @version 1.0
- * @since 04.04.2023
+ * @author Anders and  birk
+ * @version 1.1
+ * @since 05.04.2023
  */
 @Configuration
 public class AuthenticationConfig {
@@ -55,17 +55,19 @@ public class AuthenticationConfig {
     }
 
     /**
-     * Configures the authentication manager.
-     *
-     * @param userDetailsService The UserDetailsService instance for managing user details.
-     * @return An AuthenticationManager instance.
+     * Configures the authentication manager for the application.
+     * @param userDetailsService the user details service
+     * @param passwordEncoder the password encoder
+     * @return the authentication manager
      */
     @Bean
-    public AuthenticationManager authManager(UserDetailsService userDetailsService) {
-        var authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        return new ProviderManager(authProvider);
+    AuthenticationManager authenticationManager (UserDetailsService userDetailsService, PasswordEncoder passwordEncoder){
+        DaoAuthenticationProvider autprovider = new DaoAuthenticationProvider();
+        autprovider.setUserDetailsService(userDetailsService);
+        autprovider.setPasswordEncoder(passwordEncoder);
+        return new ProviderManager(autprovider);
     }
+
 
     /**
      * Configures the JWKSource instance for handling RSA keys.

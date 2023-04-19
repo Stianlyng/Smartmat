@@ -1,10 +1,8 @@
 package ntnu.idatt2016.v233.SmartMat.service;
 
-import lombok.AllArgsConstructor;
-import ntnu.idatt2016.v233.SmartMat.model.product.Product;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.repository.ProductRepository;
 import ntnu.idatt2016.v233.SmartMat.util.ProductUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
