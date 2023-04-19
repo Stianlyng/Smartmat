@@ -2,8 +2,6 @@ package ntnu.idatt2016.v233.SmartMat.repository;
 
 import ntnu.idatt2016.v233.SmartMat.entity.Allergy;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
