@@ -1,4 +1,4 @@
-package ntnu.idatt2016.v233.SmartMat.entity.product;
+package ntnu.idatt2016.v233.SmartMat.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,12 +11,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity(name = "category")
+@Entity(name = "favorite")
 @Data
-public class Category {
+public class Favourite {
+
     @Id
-    @Column(name = "category_name")
-    String ean;
-    @Column(name = "category_description")
-    String description;
+    @Column(name = "recipe_id")
+    long recipeId;
+
+    @Column(name = "username")
+    String username;
 }
