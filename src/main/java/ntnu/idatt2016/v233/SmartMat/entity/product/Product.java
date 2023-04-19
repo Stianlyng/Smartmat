@@ -16,11 +16,11 @@ import lombok.NoArgsConstructor;
  * @version 1.1.001
  * @since 19.04.2023
  */
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity(name = "product")
-@Data
 public class Product{
     @Id
     @Column(name = "ean")
