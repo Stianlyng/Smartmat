@@ -2,7 +2,9 @@ package ntnu.idatt2016.v233.SmartMat.entity.user;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,13 +17,14 @@ import java.util.List;
  * It implements the UserDetails interface.
  *
  * @author Anders and Birk
- * @version 2.0
- * @since 05.04.2023
+ * @version 2.0.001
+ * @since 19.04.2023
  *
  */
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "users")
 @Builder
-
 public class User implements UserDetails {
     @Id
     @Column(name = "user_name")
