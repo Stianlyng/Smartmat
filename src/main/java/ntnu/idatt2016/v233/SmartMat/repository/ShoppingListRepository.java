@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import ntnu.idatt2016.v233.SmartMat.entity.ShoppingList;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 /**
  * This interface defines the methods for the shopping list repository
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Repository;
  * @version 1.1
  *
  */
-@Repository
 public interface ShoppingListRepository extends JpaRepository<ShoppingList, Long> {
    
     /**

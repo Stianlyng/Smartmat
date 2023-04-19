@@ -5,7 +5,6 @@ import ntnu.idatt2016.v233.SmartMat.entity.Allergy;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 /**
  * Repository for allergies
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Repository;
  * @version 1.0
  * @since 04.04.2023
  */
-@Repository
 public interface AllergyRepository extends JpaRepository<Allergy, String> {
 
     /**

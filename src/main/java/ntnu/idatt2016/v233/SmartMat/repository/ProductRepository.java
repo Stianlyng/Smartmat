@@ -5,7 +5,6 @@ import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 /**
  * Repository for Products
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Repository;
  * @version 1.0
  * @since 19.04.2023
  */
-@Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     /**
