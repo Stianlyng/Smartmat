@@ -3,7 +3,9 @@ package ntnu.idatt2016.v233.SmartMat.repository;
 import ntnu.idatt2016.v233.SmartMat.entity.Allergy;
 
 import java.util.List;
-import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * Repository for allergies
@@ -12,13 +14,8 @@ import java.util.Optional;
  * @version 1.0
  * @since 04.04.2023
  */
-public interface AllergyRepository {
-    /**
-     * Saves a allergy to the database
-     *
-     * @param allergy Allergy to save
-     */
-    Allergy save (Allergy allergy);
+@Repository
+public interface AllergyRepository extends JpaRepository<Allergy, String> {
 
     /**
      * Gets an allergy by name
@@ -26,21 +23,6 @@ public interface AllergyRepository {
      * @param name the name of the allergy
      * @return an optional containing the Allergy if it exists
      */
-    Optional<Allergy> getByName(String name);
+    List<Allergy> findByName(String name);
 
-    /**
-     * Gets all allergies
-     *
-     * @return an optional containing a list of all allergies
-     */
-    Optional<List<Allergy>> getAll();
-
-
-    /**
-     * Deletes an allergy by its name
-     *
-     * @param name the name of the allergy
-     */
-    void deleteById(String name);
-
-}
+    }
