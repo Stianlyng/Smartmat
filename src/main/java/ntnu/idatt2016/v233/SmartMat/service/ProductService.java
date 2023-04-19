@@ -11,8 +11,8 @@ import java.util.Optional;
  * Service for Products
  * uses both the ProductRepository and the ProductUtil
  * @author Birk
- * @version 1.0
- * @since 04.04.2023
+ * @version 1.1
+ * @since 05.04.2023
  */
 public class ProductService {
     ProductRepository productRepository;
@@ -31,16 +31,16 @@ public class ProductService {
      * @param id The ID of the product to get
      * @return The product with the given ID, if it exists
      */
-    public Optional<Product> getProductById(int id) {
-        return productRepository.getById(id);
+    public Optional<Product> getProductById(Long id) {
+        return productRepository.findById(id);
     }
 
     /**
      * Gets all products in the database
      * @return All products in the database
      */
-    public Optional<List<Product>> getAllProducts() {
-        return productRepository.getAll();
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 
     /**
@@ -56,7 +56,7 @@ public class ProductService {
      * Deletes a product by its ID
      * @param id The ID of the product to delete
      */
-    public void deleteProductById(int id) {
+    public void deleteProductById(long id) {
         productRepository.deleteById(id);
     }
 
@@ -65,7 +65,7 @@ public class ProductService {
      * @return The product with the given name, if it exists
      */
     public Optional<Product> getProductByName(String name) {
-        return productRepository.getByProductName(name);
+        return productRepository.getByName(name);
     }
 
     /**
@@ -73,11 +73,11 @@ public class ProductService {
      * @param id The id of the product to get the volume from
      * @return The volume of the product, if it exists
      */
-    public Optional<String> getProductVolume(int id) {
-        if(productRepository.getById(id).isEmpty())
+    public Optional<String> getProductVolume(long id) {
+        if(productRepository.findById(id).isEmpty())
             return Optional.empty();
 
-        return ProductUtil.getVolumeFromProduct(productRepository.getById(id).get());
+        return ProductUtil.getVolumeFromProduct(productRepository.findById(id).get());
     }
 
 

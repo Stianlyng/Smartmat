@@ -19,7 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     /**
      * Gets a Product by name
      *
-     * @param id the ID of the group
+     * @param name the name of the group
      * @return an optional containing the product if it exists
      */
-    Optional<Product> getByProductName(String name);}
+    Optional<Product> getByName(String name);}

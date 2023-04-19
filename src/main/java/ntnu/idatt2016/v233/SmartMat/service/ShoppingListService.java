@@ -10,7 +10,7 @@ import ntnu.idatt2016.v233.SmartMat.repository.ShoppingListRepository;
  * Service for the shopping list
  * 
  * @author Stian Lyng
- * @version 1.0
+ * @version 1.1
  */
 public class ShoppingListService {
     
@@ -39,8 +39,8 @@ public class ShoppingListService {
      * @param id the ID of the shopping list
      * @return an optional containing the shopping list if it exists
      */
-    public Optional<ShoppingList> getShoppingListById(int id) {
-        return shoppingListRepository.getById(id);
+    public Optional<ShoppingList> getShoppingListById(long id) {
+        return shoppingListRepository.findById(id);
     }
     
     /**
@@ -58,8 +58,8 @@ public class ShoppingListService {
      * 
      * @return an optional containing a list of all shopping lists if they exist
      */
-    public Optional<List<ShoppingList>> getAllShoppingLists() {
-        return shoppingListRepository.getAll();
+    public List<ShoppingList> getAllShoppingLists() {
+        return shoppingListRepository.findAll();
     } 
     
     /**
@@ -68,7 +68,7 @@ public class ShoppingListService {
      * @param id the ID of the group
      * @return an optional containing a list of all shopping lists if they exist
      */
-    public Optional<List<ShoppingList>> getAllShoppingListsByGroupId(int id) {
+    public List<ShoppingList> getAllShoppingListsByGroupId(long id) {
         return shoppingListRepository.getAllByGroupID(id);
     }
 
@@ -77,7 +77,7 @@ public class ShoppingListService {
      * 
      * @param id the ID of the shopping list
      */
-    public void deleteShoppingListById(int id) {
+    public void deleteShoppingListById(long id) {
         shoppingListRepository.deleteById(id);
     }
 

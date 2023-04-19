@@ -1,5 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.entity;
 
+import jakarta.persistence.*;
+
 /**
  * Recipe is a record class representing a recipe in the system.
  *
@@ -11,5 +13,15 @@ package ntnu.idatt2016.v233.SmartMat.entity;
  * @param name
  * @param description
  */
-public record Recipe(long id, String name, String description) {
+@Entity
+public class Recipe {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    long id;
+
+    @Column(name = "name")
+    String name;
+
+    @Column(name = "description")
+    String description;
 }
