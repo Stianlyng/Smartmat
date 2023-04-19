@@ -25,8 +25,8 @@ import lombok.NoArgsConstructor;
 public class Allergy{
 
     @Id
-    @Column(name = "name")
+    @Column(name = "allergy_name")
     String name;
-    @Column(name = "description")
+    @Column(name = "allergy_description")
     String description;
 }

@@ -19,33 +19,6 @@ VALUES
     ('mike', '{noop}password666', true, 'Mike', 'Taylor', 'USER', 'mike@example.com', '2008-09-09', 5),
     ('olivia', '{noop}password777', true, 'Olivia', 'Clark', 'USER', 'olivia@example.com', '2010-10-10', 5);
 
-
-INSERT INTO authorities (username, authority)
-VALUES 
-	('john', 'USER'),
-	('jane', 'ADMIN'),
-	('bob', 'USER'),
-	('alice', 'USER'),
-	('tom', 'USER'),
-    ('sarah', 'USER'),
-    ('david', 'ADMIN'),
-    ('emily', 'USER'),
-    ('mike', 'USER'),
-    ('olivia', 'ADMIN');
-
-INSERT INTO profiles (username, first_name, last_name,email, birthdate, group_id)
-VALUES
-    ('john','John','Smith','johnSmith@gmail.com','1998-05-07',1),
-    ('jane','jane','Lee','HappyJane@gmail.com','1973-02-14',1),
-    ('bob','Bob','Garcia','BigGarcia@gmail.com','1958-12-23',2),
-    ('alice','Alice','Lee','johnSmit2h@gmail.com','2002-01-04',2),
-    ('tom','Tom','Johnson','johnSmith3@gmail.com','1993-11-21',3),
-    ('sarah', 'Sarah', 'Taylor', 'sarahTaylor@gmail.com', '1987-09-18',3),
-    ('david', 'David', 'Miller', 'davidMiller@gmail.com', '1979-07-25',4),
-    ('emily', 'Emily', 'Chen', 'emilyChen@gmail.com', '1990-03-12',4),
-    ('mike', 'Mike', 'Johnson', 'mikeJohnson@gmail.com', '1985-06-30',5),
-    ('olivia', 'Olivia', 'Davis', 'oliviaDavis@gmail.com', '2000-10-15',5);
-
 INSERT INTO messages (senderName, group_id, message, is_deleted)
 VALUES
     ('john', 1, 'Hello everyone!', false),

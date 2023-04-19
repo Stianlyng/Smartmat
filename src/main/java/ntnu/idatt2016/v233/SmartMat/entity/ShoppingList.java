@@ -24,8 +24,9 @@ import lombok.NoArgsConstructor;
 public class ShoppingList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "shopping_list_id")
     long ShoppingListID;
 
-    @Column(name = "groupID")
+    @Column(name = "group_id")
     long groupID;
 }
