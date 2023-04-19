@@ -2,8 +2,8 @@ package ntnu.idatt2016.v233.SmartMat.controller;
 
 
 import lombok.AllArgsConstructor;
-import ntnu.idatt2016.v233.SmartMat.entity.request.RegisterUser;
-import ntnu.idatt2016.v233.SmartMat.entity.user.Authority;
+import ntnu.idatt2016.v233.SmartMat.dto.request.RegisterUserRequest;
+import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.service.user.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,7 +38,7 @@ public class UserController {
      * @param user The user to be registered.
      */
     @PostMapping("/register")
-    public void register(@RequestBody RegisterUser user) {
+    public void register(@RequestBody RegisterUserRequest user) {
 
         if(user.username() == null || user.username().trim().isEmpty() || user.username().length() > 50 ||
                 user.password() == null || user.password().trim().isEmpty() || user.password().length() > 50 ||

@@ -1,6 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.controller;
 
-import ntnu.idatt2016.v233.SmartMat.entity.request.LoginRequest;
+import ntnu.idatt2016.v233.SmartMat.dto.request.LoginRequest;
 import ntnu.idatt2016.v233.SmartMat.service.TokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
