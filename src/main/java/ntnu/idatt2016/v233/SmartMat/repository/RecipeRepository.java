@@ -3,6 +3,8 @@ package ntnu.idatt2016.v233.SmartMat.repository;
 import java.util.Optional;
 
 import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * This interface defines the methods for the recipe repository

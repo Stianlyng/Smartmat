@@ -27,7 +27,7 @@ public class ProductUtil {
      * @return The volume of the product, if it exists
      */
     public static Optional<String> getVolumeFromProduct(Product product) {
-        for (String desc : Arrays.asList(product.name(), product.description())) {
+        for (String desc : Arrays.asList(product.getName(), product.getDescription())) {
             List<String> words = List.of(desc.split(" "));
             if (words.size() > 1) {
                 String volume = "";
