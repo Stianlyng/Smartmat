@@ -1,6 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.repository;
 
-import ntnu.idatt2016.v233.SmartMat.model.Allergy;
+import ntnu.idatt2016.v233.SmartMat.entity.Allergy;
 
 import java.util.List;
 

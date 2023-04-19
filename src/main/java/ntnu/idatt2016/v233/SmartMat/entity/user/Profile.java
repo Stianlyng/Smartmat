@@ -1,4 +1,4 @@
-package ntnu.idatt2016.v233.SmartMat.model.user;
+package ntnu.idatt2016.v233.SmartMat.entity.user;
 
 /**
  * Profile is a record class representing a profile in the system.

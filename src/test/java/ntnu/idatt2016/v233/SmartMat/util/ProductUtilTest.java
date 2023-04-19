@@ -1,10 +1,8 @@
 package ntnu.idatt2016.v233.SmartMat.util;
 
-import ntnu.idatt2016.v233.SmartMat.model.product.Product;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.Console;
 
 import static org.junit.jupiter.api.Assertions.*;
 

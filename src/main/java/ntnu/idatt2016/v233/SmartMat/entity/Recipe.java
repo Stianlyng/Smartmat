@@ -1,4 +1,4 @@
-package ntnu.idatt2016.v233.SmartMat.model;
+package ntnu.idatt2016.v233.SmartMat.entity;
 
 /**
  * Recipe is a record class representing a recipe in the system.

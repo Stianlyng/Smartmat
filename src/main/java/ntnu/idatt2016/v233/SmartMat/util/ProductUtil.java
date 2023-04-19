@@ -1,6 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.util;
 
-import ntnu.idatt2016.v233.SmartMat.model.product.Product;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 
 import java.util.Arrays;
 import java.util.List;

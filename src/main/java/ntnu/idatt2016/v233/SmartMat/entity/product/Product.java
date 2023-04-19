@@ -1,4 +1,4 @@
-package ntnu.idatt2016.v233.SmartMat.model.product;
+package ntnu.idatt2016.v233.SmartMat.entity.product;
 
 import lombok.Builder;
 
