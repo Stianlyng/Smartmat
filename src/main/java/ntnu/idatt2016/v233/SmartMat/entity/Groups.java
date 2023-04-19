@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity(name = "groups")
 @Data
-public class Group {
+public class Groups {
 
     @Id
     @Column(name = "group_id")
