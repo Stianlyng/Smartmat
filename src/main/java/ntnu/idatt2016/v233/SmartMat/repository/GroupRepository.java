@@ -1,7 +1,5 @@
 package ntnu.idatt2016.v233.SmartMat.repository;
 
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import ntnu.idatt2016.v233.SmartMat.entity.Groups;
