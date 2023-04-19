@@ -1,15 +1,24 @@
-INSERT INTO users (username, password, enabled)
-VALUES 
-	('john', '{noop}password123', true),
-	('jane', '{noop}password456', true),
-	('bob', '{noop}password789', true),
-	('alice', '{noop}password111', true),
-	('tom', '{noop}password222', true),
-    ('sarah', '{noop}password333', true),
-    ('david', '{noop}password444', true),
-    ('emily', '{noop}password555', true),
-    ('mike', '{noop}password666', true),
-    ('olivia', '{noop}password777', true);
+INSERT INTO groups (group_name, level, points)
+VALUES
+    ('Group A', 1, 100),
+    ('Group B', 2, 250),
+    ('Group C', 3, 500),
+    ('Group D', 4, 750),
+    ('Group E', 1, 200);
+
+INSERT INTO users (username, password, enabled, first_name, last_name, authority, email, birthdate, group_id)
+VALUES
+    ('john', '{noop}password123', true, 'John', 'Doe', 'USER', 'john@example.com', '1990-01-01', 1),
+    ('jane', '{noop}password456', true, 'Jane', 'Doe', 'USER', 'jane@example.com', '1992-02-02', 1),
+    ('bob', '{noop}password789', true, 'Bob', 'Smith', 'USER', 'bob@example.com', '1995-03-03', 2),
+    ('alice', '{noop}password111', true, 'Alice', 'Johnson', 'USER', 'alice@example.com', '1998-04-04', 2),
+    ('tom', '{noop}password222', true, 'Tom', 'Brown', 'USER', 'tom@example.com', '2000-05-05', 3),
+    ('sarah', '{noop}password333', true, 'Sarah', 'Lee', 'USER', 'sarah@example.com', '2002-06-06', 3),
+    ('david', '{noop}password444', true, 'David', 'Wilson', 'USER', 'david@example.com', '2004-07-07', 4),
+    ('emily', '{noop}password555', true, 'Emily', 'Davis', 'USER', 'emily@example.com', '2006-08-08', 4),
+    ('mike', '{noop}password666', true, 'Mike', 'Taylor', 'USER', 'mike@example.com', '2008-09-09', 5),
+    ('olivia', '{noop}password777', true, 'Olivia', 'Clark', 'USER', 'olivia@example.com', '2010-10-10', 5);
+
 
 INSERT INTO authorities (username, authority)
 VALUES 
@@ -23,14 +32,6 @@ VALUES
     ('emily', 'USER'),
     ('mike', 'USER'),
     ('olivia', 'ADMIN');
-
-INSERT INTO groups (group_name, level, points)
-VALUES
-    ('Group A', 1, 100),
-    ('Group B', 2, 250),
-    ('Group C', 3, 500),
-    ('Group D', 4, 750),
-    ('Group E', 1, 200);
 
 INSERT INTO profiles (username, first_name, last_name,email, birthdate, group_id)
 VALUES
