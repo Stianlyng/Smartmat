@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.sql.Date;
 import java.util.Collection;
 import java.util.List;
 
@@ -27,12 +28,24 @@ import java.util.List;
 @Builder
 public class User implements UserDetails {
     @Id
-    @Column(name = "user_name")
+    @Column(name = "username")
     private String username;
     @Column(name = "password")
     private String password;
     @Column(name = "enabled")
     private boolean enabled;
+
+    @Column
+    private String email;
+
+    @Column
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "birthdate")
+    private Date dateOfBirth;
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
