@@ -61,16 +61,7 @@ public class ShoppingListService {
     public List<ShoppingList> getAllShoppingLists() {
         return shoppingListRepository.findAll();
     } 
-    
-    /**
-     * Gets all shopping lists by group ID
-     * 
-     * @param id the ID of the group
-     * @return an optional containing a list of all shopping lists if they exist
-     */
-    public List<ShoppingList> getAllShoppingListsByGroupId(long id) {
-        return shoppingListRepository.getAllByGroupID(id);
-    }
+
 
     /**
      * Deletes a shopping list by its ID

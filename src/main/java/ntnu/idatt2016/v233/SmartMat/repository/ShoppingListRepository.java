@@ -10,7 +10,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * This interface defines the methods for the shopping list repository
  *
  * @author Stian Lyng
- * @version 1.1
+ * @version 1.2
+ * @since 19.04.2023
  *
  */
 public interface ShoppingListRepository extends JpaRepository<ShoppingList, Long> {
@@ -22,13 +23,6 @@ public interface ShoppingListRepository extends JpaRepository<ShoppingList, Long
      * @return an optional containing the shopping list if it exists
      */
     Optional<ShoppingList> getByGroupID(long id);
-   
-    /**
-     * Gets all shopping lists by group ID
-     * 
-     * @param id the ID of the group
-     * @return an optional containing a list of all shopping lists in the group
-     */
-    List<ShoppingList> getAllByGroupID(long id);
+
    
 }
