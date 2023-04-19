@@ -1,4 +1,4 @@
-package ntnu.idatt2016.v233.SmartMat.entity.user;
+package ntnu.idatt2016.v233.SmartMat.dto.enums;
 
 /**
  * Authority is a enum representing an authority in the system.
