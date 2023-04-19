@@ -3,7 +3,7 @@ package ntnu.idatt2016.v233.SmartMat.repository;
 import java.util.List;
 import java.util.Optional;
 
-import ntnu.idatt2016.v233.SmartMat.model.ShoppingList;
+import ntnu.idatt2016.v233.SmartMat.entity.ShoppingList;
 
 /**
  * This interface defines the methods for the shopping list repository

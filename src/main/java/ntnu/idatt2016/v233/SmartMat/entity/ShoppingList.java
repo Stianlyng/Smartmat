@@ -1,4 +1,4 @@
-package ntnu.idatt2016.v233.SmartMat.model;
+package ntnu.idatt2016.v233.SmartMat.entity;
 
 
 /**
