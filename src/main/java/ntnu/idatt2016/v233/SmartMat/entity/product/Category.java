@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class Category {
     @Id
-    @Column(name = "cateogry_name")
+    @Column(name = "category_name")
     String ean;
     @Column(name = "category_description")
     String description;
