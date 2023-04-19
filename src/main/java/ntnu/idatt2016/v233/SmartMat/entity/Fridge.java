@@ -23,9 +23,9 @@ import lombok.NoArgsConstructor;
 public class Fridge{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "fridgeId")
+    @Column(name = "fridge_id")
     long fridgeId;
 
-    @Column(name = "groupId")
+    @Column(name = "group_id")
     long groupId;
 }

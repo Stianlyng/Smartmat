@@ -23,11 +23,12 @@ import lombok.NoArgsConstructor;
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "recipe_id")
     long id;
 
-    @Column(name = "name")
+    @Column(name = "recipe_name")
     String name;
 
-    @Column(name = "description")
+    @Column(name = "recipe_description")
     String description;
 }
