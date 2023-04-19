@@ -3,6 +3,10 @@ package ntnu.idatt2016.v233.SmartMat.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import ntnu.idatt2016.v233.SmartMat.dto.request.ShoppingListRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.ShoppingList;
 import ntnu.idatt2016.v233.SmartMat.repository.ShoppingListRepository;
 
@@ -12,24 +16,20 @@ import ntnu.idatt2016.v233.SmartMat.repository.ShoppingListRepository;
  * @author Stian Lyng
  * @version 1.1
  */
+@Service
 public class ShoppingListService {
     
+    @Autowired
     ShoppingListRepository shoppingListRepository;
-    /**
-     * Creates a new ShoppingListService
-     * 
-     * @param shoppingListRepository The repository to use
-     */
-    public ShoppingListService(ShoppingListRepository shoppingListRepository) {
-        this.shoppingListRepository = shoppingListRepository;
-    }
     
     /**
-     * Saves a shopping list to the database
+     * Create and save a shopping list to the database
      * @param shoppingList the shopping list to save
      * @return the saved shopping list
      */
-    public ShoppingList saveShoppingList(ShoppingList shoppingList) {
+    public ShoppingList createShoppingList(ShoppingListRequest shoppingListRequest) {
+        ShoppingList shoppingList = new ShoppingList();
+        shoppingList.setGroupID(shoppingListRequest.getGroupID());
         return shoppingListRepository.save(shoppingList);
     }
 
@@ -49,7 +49,7 @@ public class ShoppingListService {
      * @param id the ID of the group
      * @return an optional containing the shopping list if it exists
      */
-    public Optional<ShoppingList> getShoppingListByGroupId(int id) {
+    public Optional<ShoppingList> getShoppingListByGroupId(long id) {
         return shoppingListRepository.getByGroupID(id);
     }
     
@@ -78,7 +78,9 @@ public class ShoppingListService {
      * @param id the ID of the shopping list
      */
     public void deleteShoppingListById(long id) {
-        shoppingListRepository.deleteById(id);
+        Optional<ShoppingList> shoppingList = shoppingListRepository.findById(id);
+        if (shoppingList.isPresent()) {
+            shoppingListRepository.deleteById(id);
+        }
     }
-
 }
