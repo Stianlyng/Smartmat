@@ -1,18 +1,25 @@
 package ntnu.idatt2016.v233.SmartMat.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
- * Fridge is a record class representing a fridge in the system.
+ * Fridge is an entity class representing a fridge in the system.
  *
  * @author Anders
- * @version 1.1
- * @since 05.04.2023
+ * @version 1.1.001
+ * @since 19.04.2023
  *
- * @param fridgeId
- * @param groupId
  */
-@Entity
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity(name = "fridge")
+@Data
 public class Fridge{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

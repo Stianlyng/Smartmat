@@ -5,10 +5,8 @@ package ntnu.idatt2016.v233.SmartMat.entity.user;
  *
  * @author Birk
  * @version 2.0
- * @since 05.04.2023
+ * @since 19.04.2023
  *
- * @param username The username of the user.
- * @param authority The authority of the user.
  */
 public enum Authority{
     USER,
