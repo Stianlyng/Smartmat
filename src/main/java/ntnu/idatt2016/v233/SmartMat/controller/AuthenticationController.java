@@ -48,7 +48,7 @@ public class AuthenticationController {
      * @param userLogin A LoginRequest object containing the user's username and password.
      * @return A ResponseEntity containing the generated token or an error message.
      */
-    @PostMapping("/token")
+    @PostMapping("/credentials")
     public ResponseEntity<?> token(@RequestBody LoginRequest userLogin) {
         try {
             if(userLogin.username() == null || userLogin.username().trim().isEmpty() || userLogin.username().length() > 50 ||

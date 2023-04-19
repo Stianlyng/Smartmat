@@ -90,21 +90,4 @@ public class AuthenticationConfig {
     public PasswordEncoder encoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
-
-    /**
-     * Configures the UserDetailsService instance for managing user details.
-     * This is temporary in-memory user details for development purposes.
-     * TODO: Replace with a proper UserDetailsService implementation.
-     * @return A UserDetailsService instance.
-     */
-    //Temporary in-memory userdetails for development purposes
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new InMemoryUserDetailsManager(
-                User.withUsername("temp")
-                        .password("{noop}password")
-                        .authorities("read")
-                        .build()
-        );
-    }
 }
