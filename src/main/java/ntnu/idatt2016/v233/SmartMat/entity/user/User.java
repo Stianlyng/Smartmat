@@ -4,6 +4,7 @@ package ntnu.idatt2016.v233.SmartMat.entity.user;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,6 +24,8 @@ import java.util.List;
  * @since 19.04.2023
  *
  */
+
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "users")
