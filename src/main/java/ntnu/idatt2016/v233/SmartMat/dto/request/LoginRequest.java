@@ -1,4 +1,4 @@
-package ntnu.idatt2016.v233.SmartMat.entity.request;
+package ntnu.idatt2016.v233.SmartMat.dto.request;
 
 /**
  * LoginRequest is a record class representing a login request.

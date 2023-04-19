@@ -1,4 +1,4 @@
-package ntnu.idatt2016.v233.SmartMat.entity.request;
+package ntnu.idatt2016.v233.SmartMat.dto.request;
 
 import java.sql.Date;
 
@@ -9,6 +9,6 @@ import java.sql.Date;
  * @param email the email of the user
  *
  */
-public record RegisterUser (String username, String password, String email, String firstName, String lastName,
-                            Date birthDate){
+public record RegisterUserRequest(String username, String password, String email, String firstName, String lastName,
+                                  Date birthDate){
 }

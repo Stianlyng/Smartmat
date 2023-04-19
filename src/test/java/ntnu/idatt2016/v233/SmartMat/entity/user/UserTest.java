@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.entity.user;
 
+import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
