@@ -31,10 +31,14 @@ public class CorsConfig {
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
+            /**
+             * TODO: Change allowedOrigins setup (Can be done in application.properties?)
+             */
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(domainProperty.domain())
+                        .allowedOrigins("http://localhost:5173")
                         .allowedMethods(Arrays.asList(
                                 HttpMethod.GET.name(),
                                 HttpMethod.POST.name(),
