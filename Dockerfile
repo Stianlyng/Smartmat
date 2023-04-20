@@ -27,33 +27,15 @@
 #EXPOSE 8080
 #
 # Use the official Maven image as the base image
-FROM eclipse-temurin:19-jre-alpine as builder
 
-# Set the working directory
-WORKDIR /app
-
-# Copy the pom.xml file to the working directory
-COPY pom.xml .
-
-RUN apk add maven
-
-# Download and cache dependencies to improve build times
-RUN mvn dependency:go-offline
-
-# Copy the rest of the application code
-COPY src ./src
-
-# Build the application and package it as a JAR file
-RUN mvn clean package
-
-# Use the official OpenJDK image as the runtime image
+# Use the Eclipse Temurin JRE 19 image as the base image
 FROM eclipse-temurin:19-jre-alpine
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the JAR file from the builder stage
-COPY --from=builder /app/target/*.jar ./app.jar
+# Copy the JAR file to the working directory
+COPY your-jar-file.jar ./app.jar
 
 # Expose the port the application will run on
 EXPOSE 8080
