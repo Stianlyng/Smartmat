@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity(name = "groups")
+@Entity(name = "group")
 @Data
-public class Groups {
+public class Group {
 
     @Id
     @Column(name = "group_id")

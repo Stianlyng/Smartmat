@@ -32,4 +32,7 @@ public class Product{
 
     @Column(name ="category_name")
     String category_name;
+
+    @Column(name = "image_url")
+    String image_url;
 }
