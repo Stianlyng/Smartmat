@@ -26,8 +26,6 @@
 #ENTRYPOINT ["java","-jar","SmartMat.jar"]
 #EXPOSE 8080
 #
-# Use the official Maven image as the base image
-
 # Use the Eclipse Temurin JRE 19 image as the base image
 FROM eclipse-temurin:19-jre-alpine
 
@@ -35,7 +33,7 @@ FROM eclipse-temurin:19-jre-alpine
 WORKDIR /app
 
 # Copy the JAR file to the working directory
-COPY your-jar-file.jar ./app.jar
+COPY my-jar-file.jar ./app.jar
 
 # Expose the port the application will run on
 EXPOSE 8080
