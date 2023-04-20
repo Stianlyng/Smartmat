@@ -9,7 +9,7 @@ import ntnu.idatt2016.v233.SmartMat.entity.Groups;
  * 
  * @author Stian Lyng
  * @version 1.0
- * @since 04.04.2023
+ * @since 19.04.2023
  */
 public interface GroupRepository extends JpaRepository<Groups, Long> {
 
