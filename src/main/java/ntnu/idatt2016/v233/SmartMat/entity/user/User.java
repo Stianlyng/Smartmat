@@ -1,12 +1,15 @@
 package ntnu.idatt2016.v233.SmartMat.entity.user;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -53,6 +56,12 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
+
+
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    @JsonIgnoreProperties("users")
+    private Group group;
 
     /**
      * used when created jwts and validating user authority
