@@ -29,5 +29,28 @@ public class GroupService {
         return groupRepository.findByGroupName(name);
     }
 
+    /**
+     * Gets a group by its id
+     * @param id the id of the group
+     * @return an optional containing the group if it exists
+     */
+    public Optional<Group> getGroupById(long id) {
+        return groupRepository.findById(id);
+    }
 
+    /**
+     * Creates a new group
+     *
+     * @param group the group to create
+     *              the group must not already exist
+     *              the group must have a name
+     * @return the created group
+     */
+    public Group createGroup(Group group) {
+        if(group.getGroupName() == null || group.getGroupName().isEmpty())
+            throw new IllegalArgumentException("Group must have a name");
+        if(groupRepository.findByGroupName(group.getGroupName()).isPresent())
+            throw new IllegalArgumentException("Group already exists");
+        return groupRepository.save(group);
+    }
 }
