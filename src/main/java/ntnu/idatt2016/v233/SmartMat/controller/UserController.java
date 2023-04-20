@@ -65,6 +65,7 @@ public class UserController {
                 .firstName(user.firstName())
                 .lastName(user.lastName())
                 .dateOfBirth(user.birthDate())
+                .enabled(true)
                 .build();
 
         userService.saveUser(newUser);
