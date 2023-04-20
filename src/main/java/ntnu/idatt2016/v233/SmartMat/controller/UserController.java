@@ -6,6 +6,8 @@ import ntnu.idatt2016.v233.SmartMat.dto.request.RegisterUserRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.service.user.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,7 +40,7 @@ public class UserController {
      * @param user The user to be registered.
      */
     @PostMapping("/register")
-    public void register(@RequestBody RegisterUserRequest user) {
+    public ResponseEntity<User> register(@RequestBody RegisterUserRequest user) {
 
         if(user.username() == null || user.username().trim().isEmpty() || user.username().length() > 50 ||
                 user.password() == null || user.password().trim().isEmpty() || user.password().length() > 50 ||
@@ -46,11 +48,13 @@ public class UserController {
                 user.firstName() == null || user.firstName().trim().isEmpty() || user.firstName().length() > 50 ||
                 user.lastName() == null || user.lastName().trim().isEmpty() || user.lastName().length() > 50 ||
                 user.birthDate() == null) {
-            return;
+            return ResponseEntity.badRequest()
+                    .build();
         }
 
-        if(userService.getUserFromUsername(user.username()).isPresent()) {
-            return;
+        if(userService.getUserFromUsername(user.username()).isPresent() ||
+                userService.getUserFromEmail(user.email()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
         User newUser = User.builder()
@@ -64,6 +68,8 @@ public class UserController {
                 .build();
 
         userService.saveUser(newUser);
+        newUser.setPassword(null);
+        return ResponseEntity.ok(newUser);
     }
 
 
