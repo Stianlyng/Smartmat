@@ -35,6 +35,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth-> auth
                         .requestMatchers(HttpMethod.POST, "api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "api/user/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "swagger-ui/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
