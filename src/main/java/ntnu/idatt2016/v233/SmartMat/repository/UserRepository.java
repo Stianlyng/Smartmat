@@ -10,8 +10,8 @@ import java.util.Optional;
  * uses mysql from server when ran
  * uses h2 in memory database when testing
  * @author birk
- * @version 1.0
- * @since 05.04.2023
+ * @version 1.1
+ * @since 20.04.2023
  */
 public interface UserRepository extends JpaRepository<User, Long>{
 
@@ -23,4 +23,10 @@ public interface UserRepository extends JpaRepository<User, Long>{
     Optional<User> findByUsername(String username);
 
 
+    /**
+     * gets user from email out of database
+     * @param email email of user
+     * @return user
+     */
+    Optional<User> findByEmail(String email);
 }

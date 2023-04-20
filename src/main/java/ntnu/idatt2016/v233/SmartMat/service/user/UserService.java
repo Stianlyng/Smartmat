@@ -12,8 +12,8 @@ import java.util.Optional;
 /**
  * UserService is a class that implements the UserDetailsService interface.
  * @author Birk
- * @version 1.0
- * @since 05.04.2023
+ * @version 1.1
+ * @since 20.04.2023
  */
 @Service
 @AllArgsConstructor
@@ -89,4 +89,12 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    /**
+     * gets user from email out of database
+     * @param email email of user
+     * @return user
+     */
+    public Optional<User> getUserFromEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }

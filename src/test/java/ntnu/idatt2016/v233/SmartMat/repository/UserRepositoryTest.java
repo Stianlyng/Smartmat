@@ -2,9 +2,11 @@ package ntnu.idatt2016.v233.SmartMat.repository;
 
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.sql.Date;
 import java.util.List;
@@ -18,9 +20,14 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Test
-    void testSaveUser() {
-        User user = User.builder()
+    @Autowired
+    private TestEntityManager entityManager;
+
+    private User user;
+
+    @BeforeEach
+    public void setUp() {
+        user = User.builder()
                 .username("testuser")
                 .password("password")
                 .enabled(true)
@@ -28,6 +35,21 @@ public class UserRepositoryTest {
                 .firstName("Test")
                 .lastName("User")
                 .dateOfBirth(Date.valueOf("1990-01-01"))
+                .authority(Authority.USER)
+                .build();
+        entityManager.persist(user);
+    }
+
+    @Test
+    void testSaveUser() {
+        User user = User.builder()
+                .username("testuserTESTUSER")
+                .password("passwordTEST")
+                .enabled(true)
+                .email("testuser@example.no")
+                .firstName("TestUSERNAME")
+                .lastName("UserTEST")
+                .dateOfBirth(Date.valueOf("1989-01-01"))
                 .authority(Authority.USER)
                 .build();
         userRepository.save(user);
@@ -48,14 +70,6 @@ public class UserRepositoryTest {
 
     @Test
     public void findAllTest() {
-        User user1 = new User();
-        user1.setUsername("testuser1");
-        user1.setPassword("password1");
-        user1.setEnabled(true);
-        user1.setEmail("testuser1@example.com");
-        user1.setFirstName("Test1");
-        user1.setLastName("User1");
-        userRepository.save(user1);
         User user2 = new User();
         user2.setUsername("testuser2");
         user2.setPassword("password2");
@@ -66,7 +80,6 @@ public class UserRepositoryTest {
         userRepository.save(user2);
         List<User> users = userRepository.findAll();
         assertEquals(2, users.size());
-        assertEquals(user1.getUsername(), users.get(0).getUsername());
         assertEquals(user2.getUsername(), users.get(1).getUsername());
     }
 
@@ -87,19 +100,6 @@ public class UserRepositoryTest {
 
     @Test
     void testOverwriteUser() {
-        // Create a new user and save it to the database
-        User user = User.builder()
-                .username("testuser")
-                .password("password")
-                .enabled(true)
-                .email("testuser@example.com")
-                .firstName("Test")
-                .lastName("User")
-                .dateOfBirth(Date.valueOf("1990-01-01"))
-                .authority(Authority.USER)
-                .build();
-        userRepository.save(user);
-
         // Modify the user's details and save it again
         User modifiedUser = User.builder()
                 .username("testuser")
@@ -126,6 +126,18 @@ public class UserRepositoryTest {
         // Clean up by deleting the modified user
         userRepository.delete(modifiedUser);
         assertFalse(userRepository.findByUsername(user.getUsername()).isPresent());
+    }
+
+
+    @Test
+    void testFindByUsername() {
+        Optional<User> tempuser = userRepository.findByUsername("testuser");
+
+        assertTrue(tempuser.isPresent());
+        assertEquals("testuser", tempuser.get().getUsername());
+        assertEquals("password", tempuser.get().getPassword());
+        assertTrue(tempuser.get().isEnabled());
+
     }
 
 }
