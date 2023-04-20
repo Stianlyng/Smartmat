@@ -27,7 +27,7 @@
 #EXPOSE 8080
 #
 # Use the official Maven image as the base image
-FROM maven:3.6.3-jdk-11 as builder
+FROM maven:4.0.0-jdk-19 as builder
 
 # Set the working directory
 WORKDIR /app
@@ -45,7 +45,7 @@ COPY src ./src
 RUN mvn clean package
 
 # Use the official OpenJDK image as the runtime image
-FROM openjdk:11-jre-slim
+FROM openjdk:19-jre-slim
 
 # Set the working directory
 WORKDIR /app
