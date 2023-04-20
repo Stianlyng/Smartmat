@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 
+import java.util.Optional;
+
 /**
  * Repository for groups
  * 
@@ -12,5 +14,5 @@ import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
  * @since 19.04.2023
  */
 public interface GroupRepository extends JpaRepository<Group, Long> {
-
+    Optional<Group> findByGroupName(String name);
 }

@@ -20,5 +20,14 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
 
-    Optional<Group> 
+    /**
+     * Gets a group by its name
+     * @param name the name of the group
+     * @return an optional containing the group if it exists
+     */
+    public Optional<Group> getGroupByName(String name) {
+        return groupRepository.findByGroupName(name);
+    }
+
+
 }
