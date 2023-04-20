@@ -27,7 +27,7 @@
 #EXPOSE 8080
 #
 # Use the official Maven image as the base image
-FROM maven:4.0.0-jdk-19 as builder
+FROM eclipse-temurin:19-jre-alpine as builder
 
 # Set the working directory
 WORKDIR /app
