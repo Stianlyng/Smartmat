@@ -1,7 +1,7 @@
-package ntnu.idatt2016.v233.SmartMat.service;
+package ntnu.idatt2016.v233.SmartMat.service.group;
 
 import lombok.AllArgsConstructor;
-import ntnu.idatt2016.v233.SmartMat.entity.Group;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
 import org.springframework.stereotype.Service;
 
