@@ -313,3 +313,16 @@ VALUES
     (6, 100000000003, '2023-04-20 20:00:00', 1, 'kilogram'),
     (1, 100000000034, '2023-04-20 20:30:00', 250, 'grams'),
     (4, 100000000002, '2023-04-20 21:00:00', 1, 'bunch');
+
+INSERT INTO achievement  (achievement_name, achievement_description)
+VALUES
+    ('Novice', 'Reached level 10'),
+    ('Apprentice', 'Reached level 20'),
+    ('Journeyman', 'Reached level 30'),
+    ('Expert', 'Reached level 40'),
+    ('Master', 'Reached level 50'),
+    ('Legend', 'Reached level 60'),
+    ('Myth', 'Reached level 70'),
+    ('Epic', 'Reached level 80'),
+    ('Godlike', 'Reached level 90'),
+    ('Immortal', 'Reached level 100');
