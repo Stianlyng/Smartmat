@@ -45,7 +45,7 @@ COPY src ./src
 RUN mvn clean package
 
 # Use the official OpenJDK image as the runtime image
-FROM openjdk:19-jre-slim
+FROM eclipse-temurin:19-jre-alpine
 
 # Set the working directory
 WORKDIR /app
