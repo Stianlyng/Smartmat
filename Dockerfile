@@ -35,6 +35,8 @@ WORKDIR /app
 # Copy the pom.xml file to the working directory
 COPY pom.xml .
 
+RUN apk add maven
+
 # Download and cache dependencies to improve build times
 RUN mvn dependency:go-offline
 
