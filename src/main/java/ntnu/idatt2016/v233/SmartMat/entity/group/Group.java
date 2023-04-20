@@ -1,13 +1,15 @@
 package ntnu.idatt2016.v233.SmartMat.entity.group;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.entity.user.User;
+
+import java.util.List;
 
 /**
  * Group is an entity class representing a group in the system.
@@ -36,4 +38,9 @@ public class Group {
     
     @Column(name = "group_name")
     String groupName;
+
+    @OneToMany(mappedBy = "group")
+    @JsonIgnoreProperties({"password", "group"})
+    private List<User> users;
+
 }
