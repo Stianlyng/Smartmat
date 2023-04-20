@@ -9,6 +9,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Group is an entity class representing a group in the system.
+ *
+ * @author Stian Lyng, Anders Austlid
+ * @version 1.0.1
+ * @since 20.04.2023
+ */
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
