@@ -1,9 +1,7 @@
 FROM eclipse-temurin:19-jdk-alpine
-WORKDIR /app
 COPY . .
-RUN apk add maven
-RUN mvn clean install
 VOLUME /tmp
-COPY target/*.jar app.jar
-ENTRYPOINT ["java","-jar","app/app.jar"]
+RUN apk add maven
+RUN mvn clean package
+ENTRYPOINT ["java","-jar","target/SmartMat-0.0.1-SNAPSHOT.jar"]
 EXPOSE 8080
