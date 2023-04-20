@@ -20,8 +20,8 @@ import java.util.List;
  * It implements the UserDetails interface.
  *
  * @author Anders and Birk
- * @version 2.0.001
- * @since 19.04.2023
+ * @version 2.0.1
+ * @since 20.04.2023
  *
  */
 
