@@ -326,3 +326,15 @@ VALUES
     ('Epic', 'Reached level 80'),
     ('Godlike', 'Reached level 90'),
     ('Immortal', 'Reached level 100');
+
+INSERT INTO achievements_groups (achievement_name, group_id) VALUES
+                                                                 ('Novice', 2),
+                                                                 ('Apprentice', 2),
+                                                                 ('Journeyman', 3),
+                                                                 ('Expert', 4),
+                                                                 ('Master', 5),
+                                                                 ('Legend', 5),
+                                                                 ('Myth', 5),
+                                                                 ('Epic', 6),
+                                                                 ('Godlike', 6),
+                                                                 ('Immortal', 6);
