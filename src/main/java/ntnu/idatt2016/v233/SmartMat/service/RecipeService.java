@@ -6,17 +6,22 @@ import ntnu.idatt2016.v233.SmartMat.repository.RecipeRepository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 /**
  * This class defines the methods for the recipe service
  * 
  * @author Stian Lyng
  * @version 1.0
  */
+@Service
 public class RecipeService {
     
     /**
      * The recipe repository
      */
+    @Autowired
     private RecipeRepository recipeRepository;
 
     /**
@@ -44,7 +49,7 @@ public class RecipeService {
      * @return a list of recipes with the given name
      */
     public List<Recipe> getRecipesByName(String name) {
-        return recipeRepository.getByName(name);
+        return recipeRepository.findAllByName(name);
     }
     
     /**
