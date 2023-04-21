@@ -1,4 +1,4 @@
-package ntnu.idatt2016.v233.SmartMat.service;
+package ntnu.idatt2016.v233.SmartMat.service.product;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
