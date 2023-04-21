@@ -41,12 +41,12 @@ public class ShoppingListController {
     /**
      * Gets a shopping list by its ID
      *
-     * @param request the request containing the shopping list ID
+     * @param id the shopping list ID
      * @return the shopping list, or an error if the ID is invalid
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<ShoppingList> getShoppingListById(@RequestBody ShoppingListRequest request) {
-        Optional<ShoppingList> shoppingList = shoppingListService.getShoppingListById(request.getGroupID());
+    @GetMapping("shoppinglist/{id}")
+    public ResponseEntity<ShoppingList> getShoppingListById(@PathVariable("id") long id) {
+        Optional<ShoppingList> shoppingList = shoppingListService.getShoppingListById(id);
         return shoppingList.map(list -> ResponseEntity.status(HttpStatus.OK).body(list))
                            .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
@@ -57,7 +57,7 @@ public class ShoppingListController {
      * @param request the request containing the group ID
      * @return the shopping list, or an error if the ID is invalid
      */
-    @GetMapping("/group/{id}")
+    @GetMapping("/group/shoppinglist")
     public ResponseEntity<ShoppingList> getAllShoppingListsByGroupId(@RequestBody ShoppingListRequest request) {
         Optional<ShoppingList> shoppingList = shoppingListService.getShoppingListByGroupId(request.getGroupID());
         return shoppingList.map(list -> ResponseEntity.status(HttpStatus.OK).body(list))
