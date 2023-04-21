@@ -1,4 +1,4 @@
-package ntnu.idatt2016.v233.SmartMat.service;
+package ntnu.idatt2016.v233.SmartMat.service.product;
 
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.repository.ProductRepository;

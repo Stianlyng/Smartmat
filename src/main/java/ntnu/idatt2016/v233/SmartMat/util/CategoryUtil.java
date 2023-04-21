@@ -1,4 +1,4 @@
-package ntnu.idatt2016.v233.SmartMat.service;
+package ntnu.idatt2016.v233.SmartMat.util;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpEntity;
@@ -7,9 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
-
-
-public class CategoryService {
+public class CategoryUtil {
 
     private final static String[] meat = {"kjøtt", "fisk", "kylling", "svinekjøtt", "oksekjøtt", "lam", "kalkun", "hval", "elg", "rådyr", "reinsdyr", "kveite", "torsk", "laks", "sjøkreps", "blåskjell", "østers", "krabbe", "hummer", "kamskjell", "breiflabb", "makrell", "sardiner", "tuna", "hvitfisk", "skjell", "røkt laks", "spekeskinke", "pinnekjøtt", "ribbe", "fenalår", "sylte", "leverpostei", "pølse", "hamburgere", "kjøttboller", "kjøttdeig", "røykt kjøtt", "sushi", "grillet kylling", "fiskekaker", "fiskepudding", "fiskegrateng", "stekt fisk", "fiskefilet", "lutefisk", "sashimi", "sursild", "rakfisk", "gravet laks", "fiskeboller", "fiskegryte", "fiskepinner", "reker", "kamskjell", "kreps", "blåskjellsuppe", "fiskesuppe", "bouillabaisse", "kjøttkaker", "fårikål", "stroganoff", "kebab", "grillspyd", "svinekoteletter", "lammebiff", "okseskank", "hvalkjøtt", "viltgryte", "reinsdyrstek", "lammelår", "kyllingbryst", "kalkunbryst", "kyllinglår", "kalkunlår", "kyllingvinger", "kalkunvinger", "kyllingfilet", "kalkunfilet", "kebabtallerken", "biffsnadder", "reinsdyrkjøtt", "viltkjøtt", "svinefilet", "oksefilet", "kalkunfilet", "krydderpølse", "fårepølse", "biff", "indrefilet av svin", "ytrefilet av svin", "svinestek", "lammerull", "kalkunpålegg", "kyllingpålegg", "røkelaks", "røkt svinekjøtt", "fiskeboller i hvit saus", "fiskepudding med bacon", "kyllingsalat"};
     private final  static String[] bakedgoodsandgrains = {"brød", "rundstykke", "croissant", "bagel", "brioche", "knekkebrød", "havrekjeks", "kjeks", "kanelbolle", "skillingsbolle", "sjokoladebolle", "muffins", "cupcakes", "kaker", "småkaker", "kransekake", "kokosmakroner", "sukkerkake", "sjokoladekake", "gulrotkake", "brownies", "eplekake", "bærpai", "eplepai", "sjokoladepai", "quiche", "pizza", "pizzasnurrer", "focaccia", "ciabatta", "baguette", "surdeigsbrød", "hvitløksbrød", "fylt brød", "grissini", "lefser", "rugbrød", "speltbrød", "havrebrød", "byggbrød", "vollkornbrød", "knäckebröd", "smörgås", "taco-skjell", "tortilla", "naan-brød", "pita-brød", "falafel", "humus", "baba ghanoush", "tabbouleh", "couscous", "ris", "pasta", "nudler", "risotto", "quinoa", "couscous-salat", "potetsalat", "brødstapper", "krutonger", "popcorn", "risboller", "havregrøt", "risgrøt", "bokhvetegrøt", "knekkebrød med ost", "scones", "syltetøy", "honning", "peanøttsmør", "nutella", "pålegg", "fruktsalat", "fruktkake", "fruktbarer", "nøtteblanding", "kornblanding", "granola", "müsli", "havremel", "hvetemel", "rugmel", "byggmel", "maismel", "potetmel", "bokhvetemel", "hirse", "bulgur", "linser", "kikerter", "erter", "solsikkefrø", "gresskarfrø", "sesamfrø", "chiafrø", "havrekli", "kruskakli"};
