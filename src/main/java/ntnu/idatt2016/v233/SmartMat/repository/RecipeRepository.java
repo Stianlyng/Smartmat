@@ -1,6 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.repository;
 
-import java.util.Optional;
+import java.util.List;
 
 import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,6 +18,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      * @param name the name of the recipe
      * @return an optional containing the recipe if it exists
      */
-    Optional<Recipe> getByName(String name);
+    List<Recipe> getByName(String name);
 
 }
