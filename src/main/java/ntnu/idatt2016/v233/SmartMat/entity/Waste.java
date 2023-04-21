@@ -26,10 +26,10 @@ public class Waste {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "waste_id")
-    long wasteID;
+    long wasteId;
 
     @Column(name = "group_id")
-    long groupID;
+    long groupId;
 
     @Column(name = "ean")
     long ean;
