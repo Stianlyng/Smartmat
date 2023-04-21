@@ -1,9 +1,8 @@
 package ntnu.idatt2016.v233.SmartMat.repository;
 
 import ntnu.idatt2016.v233.SmartMat.entity.Fridge;
-import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,6 +11,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Stian
  * @version 1.0
  */
-public interface FridgeRepository extends JpaRepository<Product, Long> {
+public interface FridgeRepository extends JpaRepository<Fridge, Long> {
+
+    /**
+     * Gets all fridge items by their group id
+     *
+     * @param id the id of the group
+     * @return a list of fridge items
+     */
+    List<Fridge> findAllByGroupId(long id);
 
 }
