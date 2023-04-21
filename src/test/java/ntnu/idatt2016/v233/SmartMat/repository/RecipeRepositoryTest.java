@@ -24,8 +24,8 @@ public class RecipeRepositoryTest {
                 .build();
         recipeRepository.save(recipe);
 
-        List<Recipe> foundRecipes = recipeRepository.getByName("Pizza Margherita");
-        assertTrue(foundRecipes.isEmpty());
+        List<Recipe> foundRecipes = recipeRepository.findAllByName("Pizza Margherita");
+        assertFalse(foundRecipes.isEmpty());
         assertEquals(1, foundRecipes.size());
         assertEquals(recipe.getName(), foundRecipes.get(0).getName());
     }
