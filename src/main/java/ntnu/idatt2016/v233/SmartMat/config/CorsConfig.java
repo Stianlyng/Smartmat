@@ -32,12 +32,13 @@ public class CorsConfig {
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             /**
-             * TODO: Change allowedOrigins setup (Can be done in application.properties?)
+             * TODO: REMOVE * FROM ALLOWED WHEN POSSIBLE
              */
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(domainProperty.domain())
+                        .allowedOrigins("*")
                         .allowedMethods(Arrays.asList(
                                 HttpMethod.GET.name(),
                                 HttpMethod.POST.name(),
