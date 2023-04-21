@@ -1,6 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.repository.user;
 
-import ntnu.idatt2016.v233.SmartMat.entity.user.Achievement;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Achievement;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

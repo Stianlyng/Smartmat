@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -27,6 +29,7 @@ import java.util.List;
 public class Group {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_id")
     long groupId;
 
@@ -41,6 +44,15 @@ public class Group {
 
     @OneToMany(mappedBy = "group")
     @JsonIgnoreProperties({"password", "group"})
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<User> users;
+
+
+    @ManyToMany
+    @JoinTable(name = "group_achievement",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "achievement_name"))
+    @JsonIgnoreProperties({"groups"})
+    private List<Achievement> achievements;
 
 }

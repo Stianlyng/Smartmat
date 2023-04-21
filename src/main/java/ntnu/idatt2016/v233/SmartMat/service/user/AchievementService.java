@@ -1,7 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.service.user;
 
 import lombok.AllArgsConstructor;
-import ntnu.idatt2016.v233.SmartMat.entity.user.Achievement;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Achievement;
 import ntnu.idatt2016.v233.SmartMat.repository.user.AchievementRepository;
 import org.springframework.stereotype.Service;
 
