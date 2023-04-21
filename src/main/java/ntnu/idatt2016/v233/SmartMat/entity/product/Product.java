@@ -1,11 +1,14 @@
 package ntnu.idatt2016.v233.SmartMat.entity.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * Product is an entity class representing a product in the system.
@@ -42,4 +45,13 @@ public class Product{
 
     @Column(name = "expiration_date")
     int expirationDate;
+
+    @ManyToMany
+    @JsonIgnoreProperties({"products"})
+    @JoinTable(
+            name = "product_allergy",
+            joinColumns = @JoinColumn(name = "ean"),
+            inverseJoinColumns = @JoinColumn(name = "allergy_name"))
+    List<Allergy> allergies;
+
 }
