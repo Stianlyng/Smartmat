@@ -1,8 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.entity.product;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,8 +29,10 @@ public class Product{
     @Column(name = "description")
     String description;
 
-    @Column(name ="category_name")
-    String categoryName;
+    @ManyToOne
+    @JoinColumn(name = "category_name")
+    @JsonIgnoreProperties({"products"})
+    Category category;
 
     @Column(name = "image_url")
     String url;

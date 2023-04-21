@@ -1,12 +1,12 @@
 package ntnu.idatt2016.v233.SmartMat.entity.product;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,4 +19,7 @@ public class Category {
     String categoryName;
     @Column(name = "category_description")
     String description;
+
+    @OneToMany(mappedBy = "category")
+    private List<Product> products;
 }

@@ -1,13 +1,9 @@
 package ntnu.idatt2016.v233.SmartMat.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.List;
 import java.util.Optional;
 
+import ntnu.idatt2016.v233.SmartMat.entity.product.Category;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 public class ProductRepositoryTest {
@@ -34,7 +32,6 @@ public class ProductRepositoryTest {
                 .ean(1234567890123L)
                 .name("Test Product")
                 .description("This is a test product")
-                .categoryName("TestCategory")
                 .build();
         entityManager.persist(product);
     }
@@ -69,7 +66,6 @@ public class ProductRepositoryTest {
                 .ean(1234567890124L)
                 .name("New Product")
                 .description("This is a new product")
-                .categoryName("TestCategory")
                 .build();
         productRepository.save(newProduct);
         List<Product> products = productRepository.findAll();
@@ -85,5 +81,26 @@ public class ProductRepositoryTest {
         assertNotNull(products);
         assertEquals(0, products.size());
     }
+
+    @Test
+    void CategoryShouldBeSetCorrecltly() {
+        Product product = new Product();
+        Category category = Category.builder()
+                .categoryName("Test5")
+                .description("Test Description")
+                .build();
+        product.setCategory(category);
+        productRepository.save(product);
+
+        assertNotNull(product.getCategory());
+
+        Optional<Product> tempProduct = productRepository.findById(product.getEan());
+        assertTrue(tempProduct.isPresent());
+
+        assertNotNull(tempProduct.get().getCategory());
+
+        assertNull(tempProduct.get().getCategory().getProducts());
+    }
+
 
 }
