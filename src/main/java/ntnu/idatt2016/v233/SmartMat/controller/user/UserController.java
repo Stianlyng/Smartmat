@@ -1,4 +1,4 @@
-package ntnu.idatt2016.v233.SmartMat.controller;
+package ntnu.idatt2016.v233.SmartMat.controller.user;
 
 
 import lombok.AllArgsConstructor;
@@ -74,7 +74,7 @@ public class UserController {
 
         userService.saveUser(newUser);
         newUser.setPassword(null);
-        return ResponseEntity.ok(newUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
     /**
