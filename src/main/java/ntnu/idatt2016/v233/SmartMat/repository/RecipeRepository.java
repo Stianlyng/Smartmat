@@ -18,6 +18,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      * @param name the name of the recipe
      * @return an optional containing the recipe if it exists
      */
-    List<Recipe> getByName(String name);
+    List<Recipe> findAllByName(String name);
 
 }
