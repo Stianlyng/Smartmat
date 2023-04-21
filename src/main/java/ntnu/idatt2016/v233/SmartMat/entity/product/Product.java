@@ -46,6 +46,12 @@ public class Product{
     @Column(name = "expiration_date")
     int expirationDate;
 
+    @Column(name = "unit")
+    String unit;
+
+    @Column(name = "amount")
+    double amount;
+
     @ManyToMany
     @JsonIgnoreProperties({"products"})
     @JoinTable(
