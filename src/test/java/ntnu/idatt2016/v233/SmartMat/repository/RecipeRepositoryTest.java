@@ -3,7 +3,6 @@ package ntnu.idatt2016.v233.SmartMat.repository;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,10 @@ public class RecipeRepositoryTest {
                 .build();
         recipeRepository.save(recipe);
 
-        Optional<Recipe> foundRecipe = recipeRepository.getByName("Pizza Margherita");
-        assertTrue(foundRecipe.isPresent());
-        assertEquals(recipe.getName(), foundRecipe.get().getName());
+        List<Recipe> foundRecipes = recipeRepository.getByName("Pizza Margherita");
+        assertTrue(foundRecipes.isEmpty());
+        assertEquals(1, foundRecipes.size());
+        assertEquals(recipe.getName(), foundRecipes.get(0).getName());
     }
 
     @Test
