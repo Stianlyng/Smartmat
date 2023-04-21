@@ -31,8 +31,14 @@ public class Product{
     String description;
 
     @Column(name ="category_name")
-    String category_name;
+    String categoryName;
 
     @Column(name = "image_url")
-    String image_url;
+    String url;
+
+    @Column(name = "best_before")
+    int bestBefore;
+
+    @Column(name = "expirationDate")
+    int expirationDate;
 }
