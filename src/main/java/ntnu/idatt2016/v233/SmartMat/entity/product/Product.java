@@ -39,6 +39,6 @@ public class Product{
     @Column(name = "best_before")
     int bestBefore;
 
-    @Column(name = "expirationDate")
+    @Column(name = "expiration_date")
     int expirationDate;
 }
