@@ -38,7 +38,7 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(domainProperty.domain())
-                        .allowedOrigins("http://localhost:5173")
+                        .allowedOrigins("https://smartmat.app")
                         .allowedMethods(Arrays.asList(
                                 HttpMethod.GET.name(),
                                 HttpMethod.POST.name(),
