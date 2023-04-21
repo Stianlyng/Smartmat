@@ -23,6 +23,9 @@ public class SecurityConfig {
      * Configures the HttpSecurity for the application.
      * Dose not need ot have csrf enabled, because we are using jwt
      * and the application is stateless
+     * <p>
+     * TODO: Enable CORS policy when possible!
+     *
      * @param http HttpSecurity to configure
      * @return SecurityFilterChain with configured HttpSecurity
      * @throws Exception if an error occurs
@@ -30,7 +33,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .cors().and()
+                .cors().disable()
                 .csrf().disable()
                 .authorizeHttpRequests(auth-> auth
                         .requestMatchers(HttpMethod.POST, "api/auth/**").permitAll()
