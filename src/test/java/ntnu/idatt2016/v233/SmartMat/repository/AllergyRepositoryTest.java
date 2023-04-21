@@ -1,6 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.repository;
 
-import ntnu.idatt2016.v233.SmartMat.entity.Allergy;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Allergy;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,9 @@ class AllergyRepositoryTest {
 
     @Autowired
     private AllergyRepository allergyRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Test
     @DisplayName("Test findByName")
@@ -84,5 +88,34 @@ class AllergyRepositoryTest {
         Assertions.assertEquals(2, allergies.size());
         Assertions.assertTrue(allergies.contains(allergy1));
         Assertions.assertTrue(allergies.contains(allergy2));
+    }
+
+    @Test
+    void findByProductId() {
+        Allergy allergy = Allergy.builder()
+                .name("testName")
+                .description("testDescription")
+                .build();
+
+        Product product = Product.builder()
+                .ean(1234567890123L)
+                .name("Test Product")
+                .description("This is a test product")
+                .allergies(List.of(allergy))
+                .build();
+
+
+
+        allergyRepository.save(allergy);
+
+        productRepository.save(product);
+
+        Assertions.assertNotNull(allergyRepository.findAllByProductsEan(product.getEan()));
+
+        allergyRepository.findAllByProductsEan(product.getEan()).forEach(allergy1 -> {
+            Assertions.assertNull(allergy1.getProducts());
+        });
+
+
     }
 }

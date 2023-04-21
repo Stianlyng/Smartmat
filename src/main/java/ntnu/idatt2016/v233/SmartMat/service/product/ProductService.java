@@ -1,4 +1,4 @@
-package ntnu.idatt2016.v233.SmartMat.service;
+package ntnu.idatt2016.v233.SmartMat.service.product;
 
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.repository.ProductRepository;
@@ -15,6 +15,7 @@ import java.util.Optional;
  * @since 05.04.2023
  */
 public class ProductService {
+
     ProductRepository productRepository;
 
 
