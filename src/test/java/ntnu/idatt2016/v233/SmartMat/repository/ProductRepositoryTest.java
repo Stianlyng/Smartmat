@@ -34,7 +34,7 @@ public class ProductRepositoryTest {
                 .ean(1234567890123L)
                 .name("Test Product")
                 .description("This is a test product")
-                .category_name("TestCategory")
+                .categoryName("TestCategory")
                 .build();
         entityManager.persist(product);
     }
@@ -69,7 +69,7 @@ public class ProductRepositoryTest {
                 .ean(1234567890124L)
                 .name("New Product")
                 .description("This is a new product")
-                .category_name("TestCategory")
+                .categoryName("TestCategory")
                 .build();
         productRepository.save(newProduct);
         List<Product> products = productRepository.findAll();
