@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class Category {
     @Id
     @Column(name = "category_name")
-    String ean;
+    String categoryName;
     @Column(name = "category_description")
     String description;
 }
