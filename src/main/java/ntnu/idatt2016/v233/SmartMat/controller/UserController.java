@@ -9,12 +9,16 @@ import ntnu.idatt2016.v233.SmartMat.service.user.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
+/**
+ * The user controller is responsible for handling requests related to users.
+ * It uses the user service to handle the requests.
+ * @author Birk
+ * @version 1.2
+ * @since 20.04.2023
+ */
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/user")
@@ -65,11 +69,27 @@ public class UserController {
                 .firstName(user.firstName())
                 .lastName(user.lastName())
                 .dateOfBirth(user.birthDate())
+                .enabled(true)
                 .build();
 
         userService.saveUser(newUser);
         newUser.setPassword(null);
         return ResponseEntity.ok(newUser);
+    }
+
+    /**
+     * Get a user from the database.
+     * @param username The username of the user to be fetched.
+     * @return The user with the given username.
+     */
+    @GetMapping("/get/{username}")
+    public ResponseEntity<User> getUser(@PathVariable String username) {
+        return userService.getUserFromUsername(username)
+                .map(user -> {
+                    user.setPassword(null);
+                    return ResponseEntity.ok(user);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 

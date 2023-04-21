@@ -1,5 +1,11 @@
 # backend
 
+## Links
+- **Frontend:** https://smartmat.app
+- **API subdomain:** https://api.smartmat.app
+- **Backend Render URl:** https://smartmat.onrender.com/swagger-ui/index.html
+- **Swagger ui:** https://api.smartmat.app/swagger-ui/index.html
+
 
 
 ## Getting started
