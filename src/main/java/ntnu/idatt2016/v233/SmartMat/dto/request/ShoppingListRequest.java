@@ -11,12 +11,7 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 public class ShoppingListRequest {
-
-    /**
-     * The unique identifier of the shopping list.
-     */
-    private long id;
-
+    
     /**
     * The unique identifier of the group for which the shopping list is requested.
     */
