@@ -34,8 +34,10 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins(domainProperty.domain())
-                        .allowedOrigins(Arrays.asList("http://localhost:8080", "http://10.24.38.136:8080").toArray(String[]::new))
+                        .allowedOrigins(Arrays.asList("https://localhost",
+                                "https://10.24.38.136",
+                                domainProperty.domain()
+                        ).toArray(String[]::new))
                         .allowedMethods(Arrays.asList(
                                 HttpMethod.GET.name(),
                                 HttpMethod.POST.name(),
