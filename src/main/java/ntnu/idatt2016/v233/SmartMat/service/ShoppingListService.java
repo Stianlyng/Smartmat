@@ -24,7 +24,7 @@ public class ShoppingListService {
     
     /**
      * Create and save a shopping list to the database
-     * @param shoppingList the shopping list to save
+     * @param shoppingListRequest the shopping list to save
      * @return the saved shopping list
      */
     public ShoppingList createShoppingList(ShoppingListRequest shoppingListRequest) {
