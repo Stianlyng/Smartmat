@@ -37,7 +37,7 @@ public class Fridge{
     @ManyToMany
     @JoinTable(name = "fridge_product",
         joinColumns = @JoinColumn(name = "fridge_id"),
-        inverseJoinColumns = @JoinColumn(name = "product_id"))
+        inverseJoinColumns = @JoinColumn(name = "ean"))
     @JsonIgnoreProperties("fridges")
     List<Product> products;
 }
