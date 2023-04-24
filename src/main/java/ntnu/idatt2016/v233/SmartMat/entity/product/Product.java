@@ -1,6 +1,5 @@
 package ntnu.idatt2016.v233.SmartMat.entity.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
