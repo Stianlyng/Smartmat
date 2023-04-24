@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 
 import java.util.List;
 
@@ -16,8 +17,8 @@ import java.util.List;
  * Allergy is an entity class representing an allergy
  * 
  * @author Stian Lyng and Anders
- * @version 1.2
- * @since 19.04.2023
+ * @version 1.3
+ * @since 24.04.2023
  *
  */
 
@@ -37,4 +38,9 @@ public class Allergy{
     @ManyToMany(mappedBy = "allergies")
     @JsonIgnoreProperties({"allergies"})
     private List<Product> products;
+
+    @ManyToMany(mappedBy = "allergies")
+    @JsonIgnoreProperties({"allergies"})
+    private List<User> users;
+
 }
