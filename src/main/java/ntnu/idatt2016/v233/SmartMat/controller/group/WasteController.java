@@ -33,9 +33,22 @@ public class WasteController {
      * @param wasteId the id of the waste
      * @return a ResponseEntity containing the waste if it exists, or a 404 if it doesn't
      */
-    @GetMapping("/waste/{wasteId}")
+    @GetMapping("/{wasteId}")
     public ResponseEntity<Waste> getWasteById(@PathVariable("wasteId") long wasteId) {
         return wasteService.getWasteById(wasteId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Gets a waste by its group id
+     *
+     * @param groupId the id of the group
+     * @return a ResponseEntity containing the waste if it exists, or a 404 if it doesn't
+     */
+    @GetMapping("/group/{groupId}")
+    public ResponseEntity<Waste> getWasteByGroupId(@PathVariable("groupId") long groupId) {
+        return wasteService.getWasteByGroupId(groupId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
