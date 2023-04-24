@@ -22,7 +22,13 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      */
     List<Recipe> findAllByName(String name);
 
-
+    /**
+     * Finds the top 5 recipes with products that have a match with items in the given fridge.
+     * Returns a list of Object arrays, where each array contains the recipe details and product information.
+     *
+     * @param fridgeId the ID of the fridge to use for matching products
+     * @return a list of Object arrays with recipe and product details
+     */
     @Query(value = """
         WITH fridge_products AS (
             SELECT ean
