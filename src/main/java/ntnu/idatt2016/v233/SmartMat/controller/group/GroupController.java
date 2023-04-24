@@ -59,4 +59,17 @@ public class GroupController {
         }
         return ResponseEntity.ok(groupService.createGroup(group));
     }
+
+    /**
+     * Gets the level of a group
+     *
+     * @param groupId the id of the group
+     * @return a ResponseEntity containing the level of the group if it exists, or a 404 if it doesn't
+     */
+    @GetMapping("/group/{groupId}/level")
+    public ResponseEntity<Integer> getGroupLevel(@PathVariable("groupId") long groupId) {
+        return groupService.getGroupById(groupId)
+                .map(group -> ResponseEntity.ok(group.getLevel()))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }

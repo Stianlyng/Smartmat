@@ -11,10 +11,15 @@ import java.util.Optional;
  * Repository for groups
  * 
  * @author Stian Lyng, Anders Austlid
- * @version 1.2
- * @since 21.04.2023
+ * @version 1.3
+ * @since 24.04.2023
  */
 public interface GroupRepository extends JpaRepository<Group, Long> {
+    /**
+     * Finds a group by group name
+     * @param name the name of the group
+     * @return the group with the given name if it exists
+     */
     Optional<Group> findByGroupName(String name);
 
     /**
@@ -23,4 +28,12 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
      * @return list of groups with the given achievement
      */
     List<Group> findAllByAchievementsAchievementName(String achievementName);
+
+    /**
+     * Gets group level by group id
+     *
+     * @param id the id of the group
+     * @return the level of the group
+     */
+    int getLevelByGroupId(long id);
 }

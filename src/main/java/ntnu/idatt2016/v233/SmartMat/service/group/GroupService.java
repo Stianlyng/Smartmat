@@ -53,4 +53,14 @@ public class GroupService {
             throw new IllegalArgumentException("Group already exists");
         return groupRepository.save(group);
     }
+
+    /**
+     * Gets the level of a group
+     *
+     * @param id the id of the group
+     * @return the level of the group
+     */
+    public int getLevelByGroupId(long id) {
+        return groupRepository.getLevelByGroupId(id);
+    }
 }
