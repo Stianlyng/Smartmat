@@ -51,7 +51,7 @@ public class Product{
     String unit;
 
     @Column(name = "amount")
-    double amount;
+    Double amount;
 
     @ManyToMany
     @JsonIgnoreProperties({"products"})
