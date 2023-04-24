@@ -75,13 +75,6 @@ public class User implements UserDetails {
     private List<Allergy> allergies;
 
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_allergy",
-            joinColumns = @JoinColumn(name = "username"),
-            inverseJoinColumns = @JoinColumn(name = "allergy_name"))
-    @JsonIgnoreProperties("users")
-    private List<Allergy> allergies;
 
     /**
      * used when created jwts and validating user authority

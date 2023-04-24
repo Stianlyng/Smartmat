@@ -42,11 +42,7 @@ public class Group {
     @Column(name = "group_name")
     String groupName;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_group",
-            joinColumns = @JoinColumn(name = "group_id"),
-            inverseJoinColumns = @JoinColumn(name = "username"))
+    @ManyToMany(mappedBy = "groups")
     @JsonIgnoreProperties("groups")
     private List<User> users;
 
