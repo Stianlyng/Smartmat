@@ -30,4 +30,14 @@ public class WasteService {
     public Optional<Waste> getWasteById(long id) {
         return wasteRepository.findById(id);
     }
+
+    /**
+     * Gets a waste by its group id
+     *
+     * @param groupId the id of the group
+     * @return an optional containing the waste if it exists
+     */
+    public Optional<Waste> getWasteByGroupId(long groupId) {
+        return wasteRepository.findByGroupId(groupId);
+    }
 }
