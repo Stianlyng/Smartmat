@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Allergy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,10 +42,10 @@ public class User implements UserDetails {
     @Column(name = "enabled")
     private boolean enabled;
 
-    @Column
+    @Column(name = "email")
     private String email;
 
-    @Column
+    @Column(name = "first_name")
     private String firstName;
 
     @Column(name = "last_name")
@@ -57,10 +58,22 @@ public class User implements UserDetails {
     private Authority authority;
 
 
-    @ManyToOne
-    @JoinColumn(name = "group_id")
+    @ManyToMany
+    @JoinTable(
+            name = "user_group",
+            joinColumns = @JoinColumn(name = "username"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
     @JsonIgnoreProperties("users")
-    private Group group;
+    private List<Group> groups;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_allergy",
+            joinColumns = @JoinColumn(name = "username"),
+            inverseJoinColumns = @JoinColumn(name = "allergy_name"))
+    @JsonIgnoreProperties("users")
+    private List<Allergy> allergies;
+
 
     /**
      * used when created jwts and validating user authority
