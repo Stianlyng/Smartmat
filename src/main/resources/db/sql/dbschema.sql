@@ -8,8 +8,6 @@ CREATE TABLE users (
     email VARCHAR(50) NOT NULL UNIQUE,
     birthdate DATE NOT NULL,
     creation_time TIMESTAMP NOT NULL DEFAULT current_timestamp,
-    group_id BIGINT NOT NULL,
-    FOREIGN KEY (group_id) REFERENCES groups (group_id)
 );
 
 CREATE TABLE groups(
@@ -17,6 +15,14 @@ CREATE TABLE groups(
     group_name VARCHAR(50) NOT NULL,
     level INT NOT NULL DEFAULT 0,
     points INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE user_groups (
+                             username VARCHAR(255) NOT NULL,
+                             group_id INT NOT NULL,
+                             PRIMARY KEY (username, group_id),
+                             FOREIGN KEY (username) REFERENCES users (username),
+                             FOREIGN KEY (group_id) REFERENCES groups (group_id)
 );
 
 CREATE TABLE messages (

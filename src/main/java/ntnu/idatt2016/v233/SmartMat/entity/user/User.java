@@ -57,11 +57,6 @@ public class User implements UserDetails {
     private Authority authority;
 
 
-    @ManyToOne
-    @JoinColumn(name = "group_id")
-    @JsonIgnoreProperties("users")
-    private Group group;
-
     /**
      * used when created jwts and validating user authority
      * @return the users authority
