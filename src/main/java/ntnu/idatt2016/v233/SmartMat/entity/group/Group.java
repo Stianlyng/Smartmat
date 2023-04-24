@@ -42,16 +42,18 @@ public class Group {
     @Column(name = "group_name")
     String groupName;
 
-    @OneToMany(mappedBy = "group")
-    @JsonIgnoreProperties({"password", "group"})
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToMany
+    @JoinTable(name = "users_groups",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "username"))
+    @JsonIgnoreProperties({"groups"})
     private List<User> users;
 
 
     @ManyToMany
     @JoinTable(name = "group_achievement",
             joinColumns = @JoinColumn(name = "group_id"),
-            inverseJoinColumns = @JoinColumn(name = "achievement_name"))
+            inverseJoinColumns = @JoinColumn(name = "username"))
     @JsonIgnoreProperties({"groups"})
     private List<Achievement> achievements;
 

@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Achievement;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -41,10 +42,10 @@ public class User implements UserDetails {
     @Column(name = "enabled")
     private boolean enabled;
 
-    @Column
+    @Column(name = "email")
     private String email;
 
-    @Column
+    @Column (name = "first_name")
     private String firstName;
 
     @Column(name = "last_name")
@@ -52,6 +53,13 @@ public class User implements UserDetails {
 
     @Column(name = "birthdate")
     private Date dateOfBirth;
+
+    @ManyToMany
+    @JoinTable(name = "users_groups",
+            joinColumns = @JoinColumn(name = "username"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
+    @JsonIgnoreProperties({"users"})
+    private List<Group> groups;
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
