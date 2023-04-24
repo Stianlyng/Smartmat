@@ -1,6 +1,5 @@
 package ntnu.idatt2016.v233.SmartMat.entity.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.Fridge;
+import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
 
 import java.util.List;
 
@@ -64,4 +64,9 @@ public class Product{
     @ManyToMany(mappedBy = "products")
     @JsonIgnoreProperties({"products"})
     List<Fridge> fridges;
+    
+    @ManyToMany(mappedBy = "products")
+    @JsonIgnoreProperties({"products"})
+    List<Recipe> recipes;
+
 }

@@ -32,7 +32,7 @@ public class RecipeController {
      * @param id the id of the recipe
      * @return the recipe if it exists, otherwise 404
      */
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Recipe> getRecipeById(@PathVariable("id") Long id) {
         return recipeService.getRecipeById(id)
                 .map(ResponseEntity::ok)
