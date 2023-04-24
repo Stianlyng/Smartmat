@@ -1,6 +1,5 @@
 package ntnu.idatt2016.v233.SmartMat.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import ntnu.idatt2016.v233.SmartMat.entity.ShoppingList;
