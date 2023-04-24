@@ -42,9 +42,8 @@ public class Group {
     @Column(name = "group_name")
     String groupName;
 
-    @OneToMany(mappedBy = "group")
-    @JsonIgnoreProperties({"password", "group"})
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToMany(mappedBy = "groups")
+    @JsonIgnoreProperties("groups")
     private List<User> users;
 
 

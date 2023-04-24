@@ -1,6 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.repository;
 
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Allergy;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -137,6 +138,52 @@ public class UserRepositoryTest {
         assertEquals("testuser", tempuser.get().getUsername());
         assertEquals("password", tempuser.get().getPassword());
         assertTrue(tempuser.get().isEnabled());
+
+    }
+
+
+    @Autowired
+    AllergyRepository allergyRepository;
+
+    @Test
+    void shouldGetAllergiesByUser(){
+        Allergy allergy = new Allergy();
+        allergy.setName("testallergy");
+
+
+
+        User tempuser = User.builder()
+                .username("test2user")
+                .password("password")
+                .enabled(true)
+                .email("test@test.com")
+                .firstName("Test")
+                .lastName("User")
+                .dateOfBirth(Date.valueOf("1990-01-01"))
+                .authority(Authority.USER)
+                .allergies(List.of(allergy))
+                .build();
+
+
+        allergyRepository.save(allergy);
+
+        userRepository.save(tempuser);
+
+        Optional<User> tempuser2 = userRepository.findByUsername("test2user");
+
+        assertTrue(tempuser2.isPresent());
+
+
+        assertNotNull(tempuser2.get().getAllergies());
+
+        assertEquals(1, tempuser2.get().getAllergies().size());
+
+        assertEquals(1, tempuser2.get().getAllergies().size());
+        assertEquals("testallergy", tempuser2.get().getAllergies().get(0).getName());
+
+        tempuser2.get().getAllergies().forEach(allergy1 -> {
+            assertNull(allergy1.getUsers());
+        });
 
     }
 
