@@ -33,7 +33,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .cors().disable()
+                .csrf().disable()
                 .authorizeHttpRequests(auth-> auth
                         .requestMatchers(HttpMethod.POST, "api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "api/user/**").permitAll()
@@ -46,5 +46,4 @@ public class SecurityConfig {
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
-
 }
