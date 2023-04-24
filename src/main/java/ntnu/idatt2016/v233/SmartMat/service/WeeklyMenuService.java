@@ -5,8 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
-import ntnu.idatt2016.v233.SmartMat.repository.FridgeRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.RecipeRepository;
 
 /**
  * Service class for weekly menu
@@ -15,15 +14,10 @@ import ntnu.idatt2016.v233.SmartMat.repository.FridgeRepository;
 public class WeeklyMenuService {
     
     @Autowired
-    FridgeRepository fridgeRepository;
-    
+    RecipeRepository recipeRepository;
+     
+    public List<Object[]> getTop5RecipesWithProducts(long groupId) {
+        return recipeRepository.findTop5RecipesWithProducts(groupId);
+    }
 
-    public List<Product> getWeeklyMenu(long id) {
-        List<Product> products = fridgeRepository.findById(id).get().getProducts();
-        // TODO: Cross reference the products with the recipe_products table
-        // Now it just returns the products in the fridge
-        return products;
-        
-    }     
-    
 }
