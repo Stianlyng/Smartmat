@@ -100,4 +100,17 @@ public class GroupController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    /**
+     * Updates the open/closed status of the group with the specified ID.
+     *
+     * @param groupId the ID of the group to update
+     * @return a ResponseEntity with a Boolean value indicating whether the operation was successful
+     */
+    @PutMapping("/group/{groupId}/changeOpen")
+    public ResponseEntity<Boolean> changeOpenValue(@PathVariable("groupId") long groupId) {
+        return groupService.OpenOrCloseGroup(groupId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }

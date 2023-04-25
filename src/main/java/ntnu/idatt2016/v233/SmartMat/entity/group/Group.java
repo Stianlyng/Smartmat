@@ -41,6 +41,12 @@ public class Group {
     @Column(name = "group_name")
     String groupName;
 
+    @Column(name = "link_code")
+    String linkCode;
+
+    @Column(name = "is_open")
+    boolean open;
+
     @OneToMany
     @JoinColumn(name = "group_id")
     @JsonIgnoreProperties("group")

@@ -3,9 +3,10 @@ package ntnu.idatt2016.v233.SmartMat.service.group;
 import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
-import ntnu.idatt2016.v233.SmartMat.util.LevelUtil;
+import ntnu.idatt2016.v233.SmartMat.util.GroupUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -52,6 +53,12 @@ public class GroupService {
             throw new IllegalArgumentException("Group must have a name");
         if(groupRepository.findByGroupName(group.getGroupName()).isPresent())
             throw new IllegalArgumentException("Group already exists");
+        String code = GroupUtil.generateUniqueCode();
+        List<String> codes = groupRepository.findAllLinkCode();
+        while (codes.contains(code)){
+            code = GroupUtil.generateUniqueCode();
+        }
+        group.setLinkCode(code);
         return groupRepository.save(group);
     }
 
@@ -77,7 +84,7 @@ public class GroupService {
         if (answer.isPresent()) {
             Group realGroup = answer.get();
             realGroup.setPoints(exp);
-            realGroup.setLevel(LevelUtil.getLevel(exp));
+            realGroup.setLevel(GroupUtil.getLevel(exp));
             return Optional.of(groupRepository.save(realGroup));
         }
         return Optional.empty();
@@ -93,8 +100,26 @@ public class GroupService {
         Optional<Group> answer = groupRepository.findByGroupId(id);
         if (answer.isPresent()) {
             Group realGroup = answer.get();
-            return Optional.of(LevelUtil.getProgressOfLevel(realGroup.getPoints()));
+            return Optional.of(GroupUtil.getProgressOfLevel(realGroup.getPoints()));
         }
         return Optional.empty();
     }
+
+    /**
+     * Updates the open/closed status of the group with the specified ID.
+     *
+     * @param id the ID of the group to update
+     * @return an Optional with a Boolean value indicating whether the operation was successful
+     */
+    public Optional<Boolean> OpenOrCloseGroup(long id){
+        Optional<Group> answer = groupRepository.findByGroupId(id);
+        if (answer.isPresent()) {
+            Group realGroup = answer.get();
+            realGroup.setOpen(!realGroup.isOpen());
+            System.out.println(realGroup.isOpen());
+            return Optional.of(groupRepository.save(realGroup).isOpen());
+        }
+        return Optional.empty();
+    }
+
 }
