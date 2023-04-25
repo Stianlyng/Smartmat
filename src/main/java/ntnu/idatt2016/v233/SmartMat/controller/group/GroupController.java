@@ -67,9 +67,37 @@ public class GroupController {
      * @return a ResponseEntity containing the level of the group if it exists, or a 404 if it doesn't
      */
     @GetMapping("/group/{groupId}/level")
-    public ResponseEntity<Integer> getGroupLevel(@PathVariable("groupId") long groupId) {
+    public ResponseEntity<Long> getGroupLevel(@PathVariable("groupId") long groupId) {
         return groupService.getGroupById(groupId)
                 .map(group -> ResponseEntity.ok(group.getLevel()))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    /**
+     * Sets the level of the group identified by the given ID to the level corresponding to the given experience points.
+     * Returns a ResponseEntity containing the new level of the group, or a 404 Not Found response if no Group with the given ID was found.
+     *
+     * @param groupId the ID of the group to update
+     * @param exp     the new experience points of the group
+     * @return a ResponseEntity containing the new level of the group, or a 404 Not Found response if no Group with the given ID was found
+     */
+    @PutMapping("/group/{groupId}/newLevel/{exp}")
+    public ResponseEntity<Long> setNewLevel(@PathVariable("groupId") long groupId, @PathVariable("exp") long exp) {
+        return groupService.setLevelByGroupId(groupId, exp)
+                .map(group -> ResponseEntity.ok(group.getLevel()))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Returns the progress of the level for the group identified by the given ID.
+     * Returns a ResponseEntity containing the progress of the current level as a percentage, or a 404 Not Found response if no Group with the given ID was found.
+     *
+     * @param groupId the ID of the group to query
+     * @return a ResponseEntity containing the progress of the current level as a percentage, or a 404 Not Found response if no Group with the given ID was found
+     */
+    @GetMapping("/group/{groupId}/progress")
+    public ResponseEntity<Integer> getProgressOfLevel(@PathVariable("groupId") long groupId) {
+        return groupService.getProgressOfLevel(groupId)
+                .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

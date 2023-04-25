@@ -1,8 +1,12 @@
 package ntnu.idatt2016.v233.SmartMat.repository.group;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,5 +39,12 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
      * @param id the id of the group
      * @return the level of the group
      */
-    int getLevelByGroupId(long id);
+    Optional<Long> getLevelByGroupId(long id);
+
+    /**
+     * Finds a group by group id
+     * @param id the id of the group
+     * @return the group with the given id if it exists
+     */
+    Optional<Group> findByGroupId(long id);
 }
