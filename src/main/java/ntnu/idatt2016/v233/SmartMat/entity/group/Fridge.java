@@ -1,4 +1,4 @@
-package ntnu.idatt2016.v233.SmartMat.entity;
+package ntnu.idatt2016.v233.SmartMat.entity.group;
 
 import java.util.List;
 
@@ -15,9 +15,8 @@ import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
  * Fridge is an entity class representing a fridge in the system.
  *
  * @author Anders
- * @version 1.1.001
- * @since 19.04.2023
- *
+ * @version 1.1.002
+ * @since 15.04.2023
  */
 
 @NoArgsConstructor
@@ -38,6 +37,6 @@ public class Fridge{
     @JoinTable(name = "fridge_product",
         joinColumns = @JoinColumn(name = "fridge_id"),
         inverseJoinColumns = @JoinColumn(name = "ean"))
-    @JsonIgnoreProperties("fridges")
+    @JsonIgnoreProperties({"allergies", "fridges"})
     List<Product> products;
 }
