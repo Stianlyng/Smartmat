@@ -1,4 +1,4 @@
-package ntnu.idatt2016.v233.SmartMat.entity;
+package ntnu.idatt2016.v233.SmartMat.entity.group;
 
 import java.util.List;
 

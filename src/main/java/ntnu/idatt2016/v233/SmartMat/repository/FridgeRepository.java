@@ -1,6 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.repository;
 
-import ntnu.idatt2016.v233.SmartMat.entity.Fridge;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 
 import java.util.List;
 

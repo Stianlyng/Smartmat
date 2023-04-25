@@ -1,8 +1,8 @@
 package ntnu.idatt2016.v233.SmartMat.service.group;
 
 import lombok.AllArgsConstructor;
-import ntnu.idatt2016.v233.SmartMat.entity.Fridge;
-import ntnu.idatt2016.v233.SmartMat.entity.group.FridgeRepository;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
+import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeRepository;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 import org.springframework.stereotype.Service;
@@ -41,7 +41,7 @@ public class FridgeService {
      * @param ean the ean of the product
      * @return true if the product was added
      */
-    public boolean addProduct(long groupId, long ean) {
+    public boolean addProductToFridge(long groupId, long ean) {
         Optional<Product> product = productService.getProductById(ean);
         Fridge fridge = fridgeRepository.findByGroupId(groupId).orElseThrow(() -> new IllegalArgumentException("Fridge does not exist"));
         if(product.isPresent()) {

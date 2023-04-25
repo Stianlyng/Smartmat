@@ -1,6 +1,6 @@
-package ntnu.idatt2016.v233.SmartMat.entity.group;
+package ntnu.idatt2016.v233.SmartMat.repository.group;
 
-import ntnu.idatt2016.v233.SmartMat.entity.Fridge;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
