@@ -62,7 +62,6 @@ public class UserController {
         }
 
         User newUser = User.builder()
-                .authority(Authority.USER)
                 .username(user.username())
                 .password(passwordEncoder.encode(user.password()))
                 .email(user.email())
@@ -71,8 +70,8 @@ public class UserController {
                 .dateOfBirth(user.birthDate())
                 .enabled(true)
                 .build();
-
         userService.saveUser(newUser);
+        userService.addAuthorityToUser(newUser.getUsername(), Authority.USER);
         newUser.setPassword(null);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }

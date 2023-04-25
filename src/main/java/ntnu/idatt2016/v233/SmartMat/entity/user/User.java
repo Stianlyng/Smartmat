@@ -56,9 +56,6 @@ public class User implements UserDetails {
     @Column(name = "birthdate")
     private Date dateOfBirth;
 
-    @Enumerated(EnumType.STRING)
-    private Authority authority;
-
 
     @OneToMany
     @JoinColumn(name = "username")
@@ -82,6 +79,15 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "recipe_id"))
     @JsonIgnoreProperties({"users"})
     private List<Recipe> recipes;
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_authority",
+            joinColumns = @JoinColumn(name = "username"),
+            inverseJoinColumns = @JoinColumn(name = "authority"))
+    @JsonIgnoreProperties({"users"})
+    private List<AuthorityTable> authorities;
 
 
     /**
@@ -124,7 +130,9 @@ public class User implements UserDetails {
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(authority.name()));
+        return List.of(this.authorities.stream().map(AuthorityTable::getAuthority)
+                .map(Authority::toString).map(SimpleGrantedAuthority::new)
+                .toArray(GrantedAuthority[]::new));
     }
 
     /**
@@ -179,6 +187,13 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return this.enabled;
+    }
+
+    public void addAuthority(AuthorityTable authority){
+        if (this.authorities == null) {
+            this.authorities = new ArrayList<>();
+        }
+        this.authorities.add(authority);
     }
 
 }

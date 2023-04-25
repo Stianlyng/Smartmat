@@ -39,7 +39,6 @@ public class UserRepositoryTest {
                 .firstName("Test")
                 .lastName("User")
                 .dateOfBirth(Date.valueOf("1990-01-01"))
-                .authority(Authority.USER)
                 .build();
         entityManager.persist(user);
     }
@@ -54,7 +53,6 @@ public class UserRepositoryTest {
                 .firstName("TestUSERNAME")
                 .lastName("UserTEST")
                 .dateOfBirth(Date.valueOf("1989-01-01"))
-                .authority(Authority.USER)
                 .build();
         userRepository.save(user);
 
@@ -113,7 +111,6 @@ public class UserRepositoryTest {
                 .firstName("New")
                 .lastName("Name")
                 .dateOfBirth(Date.valueOf("1995-01-01"))
-                .authority(Authority.ADMIN)
                 .build();
         userRepository.save(modifiedUser);
 
@@ -163,7 +160,6 @@ public class UserRepositoryTest {
                 .firstName("Test")
                 .lastName("User")
                 .dateOfBirth(Date.valueOf("1990-01-01"))
-                .authority(Authority.USER)
                 .allergies(List.of(allergy))
                 .build();
 
