@@ -8,9 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,10 +41,19 @@ public class Group {
     @Column(name = "group_name")
     String groupName;
 
-    @ManyToMany(mappedBy = "groups")
-    @JsonIgnoreProperties("groups")
-    private List<User> users;
+    @OneToMany
+    @JoinColumn(name = "group_id")
+    @JsonIgnoreProperties("group")
+    private List<UserGroupAsso> user = new ArrayList<>();
 
+
+    public void addUser(UserGroupAsso userGroupTable){
+        if (this.user == null) {
+            this.user = new ArrayList<>();
+        }
+
+        this.user.add(userGroupTable);
+    }
 
     @ManyToMany
     @JoinTable(name = "group_achievement",

@@ -1,8 +1,10 @@
 package ntnu.idatt2016.v233.SmartMat.repository;
 
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Allergy;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
+import ntnu.idatt2016.v233.SmartMat.repository.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -171,6 +174,7 @@ public class UserRepositoryTest {
 
         Optional<User> tempuser2 = userRepository.findByUsername("test2user");
 
+
         assertTrue(tempuser2.isPresent());
 
 
@@ -186,5 +190,6 @@ public class UserRepositoryTest {
         });
 
     }
+
 
 }

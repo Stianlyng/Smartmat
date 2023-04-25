@@ -3,7 +3,7 @@ package ntnu.idatt2016.v233.SmartMat.service.user;
 
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
-import ntnu.idatt2016.v233.SmartMat.repository.UserRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

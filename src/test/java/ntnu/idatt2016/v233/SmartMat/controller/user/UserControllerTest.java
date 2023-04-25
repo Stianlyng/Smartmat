@@ -2,7 +2,7 @@ package ntnu.idatt2016.v233.SmartMat.controller.user;
 
 import ntnu.idatt2016.v233.SmartMat.dto.request.RegisterUserRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
-import ntnu.idatt2016.v233.SmartMat.repository.UserRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

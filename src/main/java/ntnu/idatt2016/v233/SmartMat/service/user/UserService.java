@@ -2,7 +2,7 @@ package ntnu.idatt2016.v233.SmartMat.service.user;
 
 import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
-import ntnu.idatt2016.v233.SmartMat.repository.UserRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.user.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
