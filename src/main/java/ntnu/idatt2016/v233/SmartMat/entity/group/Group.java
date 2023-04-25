@@ -45,7 +45,7 @@ public class Group {
     String linkCode;
 
     @Column(name = "is_open")
-    boolean open;
+    Boolean open;
 
     @OneToMany
     @JoinColumn(name = "group_id")

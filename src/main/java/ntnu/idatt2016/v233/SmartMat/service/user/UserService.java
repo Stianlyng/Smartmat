@@ -1,8 +1,11 @@
 package ntnu.idatt2016.v233.SmartMat.service.user;
 
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
 import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
+import ntnu.idatt2016.v233.SmartMat.entity.user.AuthorityTable;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
+import ntnu.idatt2016.v233.SmartMat.repository.user.AuthoritesRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.user.UserRepository;
 import ntnu.idatt2016.v233.SmartMat.service.RecipeService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,6 +27,10 @@ public class UserService {
     private UserRepository userRepository;
 
     private RecipeService recipeService;
+
+    private AuthoritesService authoritesService;
+
+    private AuthoritesRepository authoritesRepository;
 
 
     /**
@@ -117,5 +124,25 @@ public class UserService {
 
         recipeService.addUserToRecipe(tempRecipe, user);
         userRepository.save(user);
+    }
+
+
+    /**
+     * Adds authority to user
+     * @param username  username of user
+     * @param authority authority to add
+     * @return user with added authority
+     */
+    public User addAuthorityToUser(String username, Authority authority){
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(()-> new UsernameNotFoundException("did not find user"));
+        AuthorityTable auth = authoritesService.getAuthorityByAuth(authority);
+
+        user.addAuthority(auth);
+        auth.addUser(user);
+
+        authoritesRepository.save(auth);
+
+        return userRepository.save(user);
     }
 }

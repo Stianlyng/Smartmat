@@ -1,20 +1,26 @@
 package ntnu.idatt2016.v233.SmartMat.entity.user;
 
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
+import ntnu.idatt2016.v233.SmartMat.service.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
 
+
     @Test
     void testGetAuthorities() {
         User user = User.builder()
-                .authority(Authority.USER)
+                .username("johndoe")
+                .authorities(List.of(new AuthorityTable(Authority.USER)))
                 .build();
+
+
 
         assertEquals(Collections.singletonList(new SimpleGrantedAuthority(Authority.USER.name())), user.getAuthorities());
     }

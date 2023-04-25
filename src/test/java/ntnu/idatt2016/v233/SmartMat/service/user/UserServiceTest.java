@@ -40,7 +40,6 @@ public class UserServiceTest {
                 .firstName("Test")
                 .lastName("User")
                 .dateOfBirth(Date.valueOf("1990-01-01"))
-                .authority(Authority.USER)
                 .build();
         when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
 
@@ -93,7 +92,6 @@ public class UserServiceTest {
                 .firstName("Test")
                 .lastName("User")
                 .dateOfBirth(Date.valueOf("1990-01-01"))
-                .authority(Authority.USER)
                 .build();
 
         when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
@@ -119,7 +117,6 @@ public class UserServiceTest {
                 .firstName("Test")
                 .lastName("User")
                 .dateOfBirth(Date.valueOf("1990-01-01"))
-                .authority(Authority.USER)
                 .build();
 
         when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
@@ -141,7 +138,6 @@ public class UserServiceTest {
                 .firstName("Test")
                 .lastName("User")
                 .dateOfBirth(Date.valueOf("1990-01-01"))
-                .authority(Authority.USER)
                 .build();
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
@@ -166,7 +162,6 @@ public class UserServiceTest {
                 .firstName("Test")
                 .lastName("User")
                 .dateOfBirth(Date.valueOf("1990-01-01"))
-                .authority(Authority.USER)
                 .build();
 
         when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));

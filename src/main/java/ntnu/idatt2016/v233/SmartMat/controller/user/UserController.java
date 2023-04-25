@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+
 
 /**
  * The user controller is responsible for handling requests related to users.
@@ -62,7 +64,6 @@ public class UserController {
         }
 
         User newUser = User.builder()
-                .authority(Authority.USER)
                 .username(user.username())
                 .password(passwordEncoder.encode(user.password()))
                 .email(user.email())
@@ -70,9 +71,10 @@ public class UserController {
                 .lastName(user.lastName())
                 .dateOfBirth(user.birthDate())
                 .enabled(true)
+                .authorities(new ArrayList<>())
                 .build();
-
         userService.saveUser(newUser);
+        userService.addAuthorityToUser(newUser.getUsername(), Authority.USER);
         newUser.setPassword(null);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
