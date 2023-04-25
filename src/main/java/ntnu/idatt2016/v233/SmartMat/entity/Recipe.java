@@ -10,13 +10,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
+import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 
 /**
  * Recipe is an entity class representing a recipe in the system.
  *
- * @author Anders & Stian
- * @version 1.0.001
- * @since 19.04.2023
+ * @author Anders & Stian + Birk
+ * @version 1.1
+ * @since 25.04.2023
  *
  */
 
@@ -43,5 +44,9 @@ public class Recipe {
         inverseJoinColumns = @JoinColumn(name = "ean"))
     @JsonIgnoreProperties({"recipes"})
     List<Product> products;
+
+    @ManyToMany(mappedBy = "recipes")
+    @JsonIgnoreProperties({"recipes"})
+    List<User> users;
     
 }
