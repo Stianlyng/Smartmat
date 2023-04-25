@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -48,5 +49,32 @@ public class Recipe {
     @ManyToMany(mappedBy = "recipes")
     @JsonIgnoreProperties({"recipes"})
     List<User> users;
-    
+
+
+    /**
+     * Adds a product to the recipe
+     * @param product product to add
+     */
+    public void addProduct(Product product){
+
+        if(products ==  null){
+            products = new ArrayList<>();
+        }
+
+        products.add(product);
+    }
+
+    /**
+     * Adds a user to the recipe
+     * used for adding favorites
+     * @param user user to add
+     */
+    public void addUser(User user){
+
+        if(users ==  null){
+            users = new ArrayList<>();
+        }
+
+        users.add(user);
+    }
 }

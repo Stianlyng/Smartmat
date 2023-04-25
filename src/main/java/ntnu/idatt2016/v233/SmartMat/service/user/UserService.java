@@ -1,8 +1,10 @@
 package ntnu.idatt2016.v233.SmartMat.service.user;
 
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.repository.user.UserRepository;
+import ntnu.idatt2016.v233.SmartMat.service.RecipeService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ import java.util.Optional;
 public class UserService {
 
     private UserRepository userRepository;
+
+    private RecipeService recipeService;
 
 
     /**
@@ -96,5 +100,22 @@ public class UserService {
      */
     public Optional<User> getUserFromEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    /**
+     * adds recipe to users favorite recipes
+     * @param username username of user
+     * @param recipeId id of recipe
+     * @throws RuntimeException if user or recipe does not exist or user
+     */
+    public void addFavoriteRecipe(String username, long recipeId) throws RuntimeException{
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(()-> new UsernameNotFoundException("did not find user"));
+        Recipe tempRecipe = recipeService.getRecipeById(recipeId)
+                .orElseThrow(()-> new RuntimeException("did not find recipe"));
+        user.addRecipe(tempRecipe);
+
+        recipeService.addUserToRecipe(tempRecipe, user);
+        userRepository.save(user);
     }
 }
