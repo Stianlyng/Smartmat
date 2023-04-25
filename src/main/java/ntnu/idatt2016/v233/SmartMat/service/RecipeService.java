@@ -1,6 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.service;
 
 import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
+import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.repository.RecipeRepository;
 
 import java.util.List;
@@ -87,6 +88,18 @@ public class RecipeService {
      */
     public void deleteRecipeById(Long id) {
         recipeRepository.deleteById(id);
+    }
+
+
+    /**
+     * Adds a user to a recipe
+     * used for adding favorite recipes
+     * @param recipe recipe to add user to
+     * @param user user to add to recipe
+     */
+    public void addUserToRecipe(Recipe recipe, User user){
+        recipe.addUser(user);
+        recipeRepository.save(recipe);
     }
 
 }

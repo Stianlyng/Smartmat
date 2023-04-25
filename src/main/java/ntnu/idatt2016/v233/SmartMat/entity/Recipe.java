@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,13 +11,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
+import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 
 /**
  * Recipe is an entity class representing a recipe in the system.
  *
- * @author Anders & Stian
- * @version 1.0.001
- * @since 19.04.2023
+ * @author Anders & Stian + Birk
+ * @version 1.1
+ * @since 25.04.2023
  *
  */
 
@@ -43,5 +45,36 @@ public class Recipe {
         inverseJoinColumns = @JoinColumn(name = "ean"))
     @JsonIgnoreProperties({"recipes"})
     List<Product> products;
-    
+
+    @ManyToMany(mappedBy = "recipes")
+    @JsonIgnoreProperties({"recipes"})
+    List<User> users;
+
+
+    /**
+     * Adds a product to the recipe
+     * @param product product to add
+     */
+    public void addProduct(Product product){
+
+        if(products ==  null){
+            products = new ArrayList<>();
+        }
+
+        products.add(product);
+    }
+
+    /**
+     * Adds a user to the recipe
+     * used for adding favorites
+     * @param user user to add
+     */
+    public void addUser(User user){
+
+        if(users ==  null){
+            users = new ArrayList<>();
+        }
+
+        users.add(user);
+    }
 }
