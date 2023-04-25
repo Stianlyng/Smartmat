@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/groups")
 public class GroupController {
     private final GroupService groupService;
+    private long groupId;
 
     /**
      * Gets a group by its name
@@ -97,6 +98,20 @@ public class GroupController {
     @GetMapping("/group/{groupId}/progress")
     public ResponseEntity<Integer> getProgressOfLevel(@PathVariable("groupId") long groupId) {
         return groupService.getProgressOfLevel(groupId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Updates the open/closed status of the group with the specified ID.
+     *
+     * @param groupId the ID of the group to update
+     * @return a ResponseEntity with a Boolean value indicating whether the operation was successful
+     */
+    @PutMapping("/group/{groupId}/changeOpen")
+    public ResponseEntity<Boolean> changeOpenValue(@PathVariable("groupId") long groupId) {
+        this.groupId = groupId;
+        return groupService.OpenOrCloseGroup(groupId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

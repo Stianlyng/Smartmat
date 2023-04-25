@@ -47,4 +47,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
      * @return the group with the given id if it exists
      */
     Optional<Group> findByGroupId(long id);
+
+    @Query(value = "SELECT link_code FROM  groups", nativeQuery = true)
+    List<String> findAllLinkCode();
 }
