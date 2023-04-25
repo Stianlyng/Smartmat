@@ -51,10 +51,15 @@ public class FridgeController {
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
-        if (fridgeService.addProductToFridge(groupId, productId)) {
-            return ResponseEntity.ok("Success");
+
+        try {
+            if (fridgeService.addProductToFridge(groupId, productId)) {
+                return ResponseEntity.ok("Success");
+            }
+            return ResponseEntity.badRequest().body("Product already exists in the fridge");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Internal server error");
         }
-        return ResponseEntity.badRequest().build();
     }
 
     /**
@@ -73,10 +78,15 @@ public class FridgeController {
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
-        if (fridgeService.removeProductFromFridge(groupId, productId)) {
-            return ResponseEntity.ok("Success");
+
+        try {
+            if (fridgeService.removeProductFromFridge(groupId, productId)) {
+                return ResponseEntity.ok("Success");
+            }
+            return ResponseEntity.badRequest().body("Product not found in the fridge");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Internal server error");
         }
-        return ResponseEntity.badRequest().build();
     }
 
 }

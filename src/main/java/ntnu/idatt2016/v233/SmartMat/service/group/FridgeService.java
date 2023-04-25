@@ -44,8 +44,13 @@ public class FridgeService {
     public boolean addProductToFridge(long groupId, long ean) {
         Optional<Product> product = productService.getProductById(ean);
         Fridge fridge = fridgeRepository.findByGroupId(groupId).orElseThrow(() -> new IllegalArgumentException("Fridge does not exist"));
-        if(product.isPresent()) {
-            fridge.getProducts().add(product.get());
+
+        if (product.isPresent()) {
+            Product productToAdd = product.get();
+            if (fridge.getProducts().contains(productToAdd)) {
+                return false;
+            }
+            fridge.getProducts().add(productToAdd);
             fridgeRepository.save(fridge);
             return true;
         } else {
@@ -64,8 +69,13 @@ public class FridgeService {
     public boolean removeProductFromFridge(long groupId, long ean) {
         Optional<Product> product = productService.getProductById(ean);
         Fridge fridge = fridgeRepository.findByGroupId(groupId).orElseThrow(() -> new IllegalArgumentException("Fridge does not exist"));
+
         if (product.isPresent()) {
-            fridge.getProducts().remove(product.get());
+            Product productToRemove = product.get();
+            if (!fridge.getProducts().contains(productToRemove)) {
+                return false;
+            }
+            fridge.getProducts().remove(productToRemove);
             fridgeRepository.save(fridge);
             return true;
         } else {
