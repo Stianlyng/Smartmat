@@ -3,6 +3,7 @@ package ntnu.idatt2016.v233.SmartMat.service.group;
 import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
+import ntnu.idatt2016.v233.SmartMat.util.LevelUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -60,7 +61,27 @@ public class GroupService {
      * @param id the id of the group
      * @return the level of the group
      */
-    public int getLevelByGroupId(long id) {
+    public Optional<Long> getLevelByGroupId(long id) {
         return groupRepository.getLevelByGroupId(id);
+    }
+
+    public Optional<Group> setLevelByGroupId(long id, long exp){
+        Optional<Group> answer = groupRepository.findByGroupId(id);
+        if(answer.isPresent()){
+            Group realGroup = answer.get();
+            realGroup.setPoints(exp);
+            realGroup.setLevel(LevelUtil.getLevel(exp));
+            return Optional.of(groupRepository.save(realGroup));
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Integer> getProgressOfLevel(long id){
+        Optional<Group> answer = groupRepository.findByGroupId(id);
+        if(answer.isPresent()){
+            Group realGroup = answer.get();
+            return Optional.of(LevelUtil.getProgressOfLevel(realGroup.getPoints()));
+        }
+        return Optional.empty();
     }
 }

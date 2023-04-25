@@ -34,10 +34,10 @@ public class Group {
     long groupId;
 
     @Column(name = "level")
-    int level;
+    long level;
 
     @Column(name = "points")
-    int points;
+    long points;
     
     @Column(name = "group_name")
     String groupName;

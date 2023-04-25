@@ -67,9 +67,23 @@ public class GroupController {
      * @return a ResponseEntity containing the level of the group if it exists, or a 404 if it doesn't
      */
     @GetMapping("/group/{groupId}/level")
-    public ResponseEntity<Integer> getGroupLevel(@PathVariable("groupId") long groupId) {
+    public ResponseEntity<Long> getGroupLevel(@PathVariable("groupId") long groupId) {
         return groupService.getGroupById(groupId)
                 .map(group -> ResponseEntity.ok(group.getLevel()))
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/group/{groupId}/newLevel/{exp}")
+    public ResponseEntity<Long> setNewLevel(@PathVariable("groupId") long groupId, @PathVariable("exp") long exp){
+        return groupService.setLevelByGroupId(groupId,exp)
+                .map(group -> ResponseEntity.ok(group.getLevel()))
+                .orElseGet(()->ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/group/{groupId}/progress")
+    public ResponseEntity<Integer> getProgressOfLevel(@PathVariable("groupId") long groupId){
+        return groupService.getProgressOfLevel(groupId)
+                .map(ResponseEntity::ok)
+                .orElseGet(()->ResponseEntity.notFound().build());
     }
 }
