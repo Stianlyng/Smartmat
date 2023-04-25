@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ntnu.idatt2016.v233.SmartMat.entity.Fridge;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 
 import java.sql.Date;
@@ -27,6 +27,8 @@ public class FridgeProductAsso {
     @JoinColumn(name = "ean")
     private Product ean;
 
+    @Id
+    @MapsId("purchase_date")
     @Column(name = "purchase_date")
     private Date purchaseDate;
 

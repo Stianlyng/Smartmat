@@ -8,6 +8,8 @@ import ntnu.idatt2016.v233.SmartMat.service.group.FridgeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
+
 /**
  * Controller for fridges API, providing endpoints for fridge management
  *
@@ -64,6 +66,7 @@ public class FridgeController {
 
     /**
      * Removes a product from the fridge of a group
+     * todo: remove the date parameter when the frontend is done
      *
      * @param groupId the id of the group
      *                group must exist
@@ -80,7 +83,7 @@ public class FridgeController {
         }
 
         try {
-            if (fridgeService.removeProductFromFridge(groupId, productId)) {
+            if (fridgeService.removeProductFromFridge(groupId, productId, Date.valueOf("2023-04-24"))) {
                 return ResponseEntity.ok("Success");
             }
             return ResponseEntity.badRequest().body("Product not found in the fridge");

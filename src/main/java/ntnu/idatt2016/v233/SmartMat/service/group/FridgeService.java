@@ -1,12 +1,15 @@
 package ntnu.idatt2016.v233.SmartMat.service.group;
 
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeRepository;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
 /**
@@ -22,6 +25,8 @@ public class FridgeService {
 
     private final FridgeRepository fridgeRepository;
     private final ProductService productService;
+
+    private final FridgeProductAssoService fridgeProductAssoService;
 
     /**
      * Gets the fridge of a group
@@ -47,10 +52,11 @@ public class FridgeService {
 
         if (product.isPresent()) {
             Product productToAdd = product.get();
-            if (fridge.getProducts().contains(productToAdd)) {
+            FridgeProductAsso temp = new FridgeProductAsso(fridge, productToAdd, new Date(LocalDate.now().toEpochDay()));
+            if (fridge.getProducts().contains(temp)) {
                 return false;
             }
-            fridge.getProducts().add(productToAdd);
+            fridge.getProducts().add(temp);
             fridgeRepository.save(fridge);
             return true;
         } else {
@@ -66,20 +72,35 @@ public class FridgeService {
      * @param ean the ean of the product
      * @return true if the product was removed
      */
-    public boolean removeProductFromFridge(long groupId, long ean) {
+    public boolean removeProductFromFridge(long groupId, long ean, Date purchaseDate) {
         Optional<Product> product = productService.getProductById(ean);
         Fridge fridge = fridgeRepository.findByGroupId(groupId).orElseThrow(() -> new IllegalArgumentException("Fridge does not exist"));
 
+
+
         if (product.isPresent()) {
             Product productToRemove = product.get();
-            if (!fridge.getProducts().contains(productToRemove)) {
+            if (!fridge.getProducts().contains(
+                    new FridgeProductAsso(fridge, productToRemove, purchaseDate))) {
                 return false;
             }
-            fridge.getProducts().remove(productToRemove);
+            fridgeProductAssoService.deleteFridgeProductAsso(new FridgeProductAsso(fridge,
+                    productToRemove, purchaseDate));
+
             fridgeRepository.save(fridge);
             return true;
         } else {
             return false;
         }
+    }
+
+    /**
+     * Updates a fridge
+     * @param fridge the fridge to update
+     */
+    public void updateFridge(Fridge fridge) {
+        if (fridgeRepository.findById(fridge.getFridgeId()).isEmpty())
+            return;
+        fridgeRepository.save(fridge);
     }
 }

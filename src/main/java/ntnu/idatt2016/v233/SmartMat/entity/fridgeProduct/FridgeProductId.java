@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 /**
  * This class represents a fridge product association id
@@ -20,4 +21,6 @@ public class FridgeProductId implements Serializable {
     private long fridgeId;
 
     private long ean;
+
+    private Date purchaseDate;
 }
