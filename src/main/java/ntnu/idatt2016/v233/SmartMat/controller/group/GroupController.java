@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/groups")
 public class GroupController {
     private final GroupService groupService;
-    private long groupId;
 
     /**
      * Gets a group by its name
@@ -110,7 +109,6 @@ public class GroupController {
      */
     @PutMapping("/group/{groupId}/changeOpen")
     public ResponseEntity<Boolean> changeOpenValue(@PathVariable("groupId") long groupId) {
-        this.groupId = groupId;
         return groupService.OpenOrCloseGroup(groupId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

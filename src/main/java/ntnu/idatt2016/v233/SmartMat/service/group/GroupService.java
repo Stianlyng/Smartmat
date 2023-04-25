@@ -116,6 +116,7 @@ public class GroupService {
         if (answer.isPresent()) {
             Group realGroup = answer.get();
             realGroup.setOpen(!realGroup.isOpen());
+            System.out.println(realGroup.isOpen());
             return Optional.of(groupRepository.save(realGroup).isOpen());
         }
         return Optional.empty();
