@@ -83,5 +83,16 @@ public class ProductService {
         return ProductUtil.getVolumeFromProduct(productRepository.findById(id).get());
     }
 
+    /**
+     * Updates a product
+     * @param product The product to update
+     */
+    public void updateProduct(Product product) {
+        if(productRepository.findById(product.getEan()).isEmpty())
+            return;
+
+        productRepository.save(product);
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.entity.group;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -9,14 +10,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
+import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 
 /**
  * Fridge is an entity class representing a fridge in the system.
  *
- * @author Anders
- * @version 1.1.002
- * @since 15.04.2023
+ * @author Anders & Birk
+ * @version 1.2
+ * @since 25.04.2023
  */
 
 @NoArgsConstructor
@@ -33,10 +34,21 @@ public class Fridge{
     @Column(name = "group_id")
     long groupId;
     
-    @ManyToMany
-    @JoinTable(name = "fridge_product",
-        joinColumns = @JoinColumn(name = "fridge_id"),
-        inverseJoinColumns = @JoinColumn(name = "ean"))
-    @JsonIgnoreProperties({"allergies", "fridges"})
-    List<Product> products;
+    @OneToMany
+    @JoinColumn(name = "ean")
+    @JsonIgnoreProperties("fridge")
+    List<FridgeProductAsso> products;
+
+
+    /**
+     * Adds a product to the fridge
+     * @param product the product to add to the fridge
+     */
+    public void addProduct(FridgeProductAsso product){
+        if(products == null){
+            products = new ArrayList<>();
+        }
+
+        products.add(product);
+    }
 }

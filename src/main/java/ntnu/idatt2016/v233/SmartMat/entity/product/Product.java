@@ -8,7 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
+import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,12 +63,24 @@ public class Product{
             inverseJoinColumns = @JoinColumn(name = "allergy_name"))
     List<Allergy> allergies;
 
-    @ManyToMany(mappedBy = "products")
+    @OneToMany
+    @JoinColumn(name = "ean")
     @JsonIgnoreProperties({"products"})
-    List<Fridge> fridges;
+    List<FridgeProductAsso> fridges;
     
     @ManyToMany(mappedBy = "products")
     @JsonIgnoreProperties({"products"})
     List<Recipe> recipes;
 
+    /**
+     * Adds a fridge to the product
+     * @param fridge the fridge product association to add to the product
+     */
+    public void addFridge(FridgeProductAsso fridge){
+        if(fridges == null){
+            fridges = new ArrayList<>();
+        }
+
+        fridges.add(fridge);
+    }
 }
