@@ -1,7 +1,9 @@
 package ntnu.idatt2016.v233.SmartMat.repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import ntnu.idatt2016.v233.SmartMat.dto.response.WeeklyMenuResponse;
 import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -75,5 +77,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
             t.recipe_id,
             p.ean;
         """, nativeQuery = true)
-    List<Object[]> findTop5RecipesWithProducts(@Param("fridgeId") long fridgeId);
+    List<Object[]> findTop5RecipesWithProductsRaw(@Param("fridgeId") long fridgeId);
+    
 }

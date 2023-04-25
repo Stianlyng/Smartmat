@@ -42,11 +42,12 @@ public class WeeklyMenuService {
      * @return a list of RecipeWithProductsDTO objects with recipe and product details
      */    
     public List<WeeklyMenuResponse> getTop5RecipesWithProducts(long groupId) {
-        List<Object[]> weeklyMenu = recipeRepository.findTop5RecipesWithProducts(groupId);
-        
-        return weeklyMenu.stream()
+
+        List<Object[]> rawData = recipeRepository.findTop5RecipesWithProductsRaw(groupId);
+
+        List<WeeklyMenuResponse> result = rawData.stream()
             .map(row -> new WeeklyMenuResponse(
-                (Long) row[0],
+                (Integer) row[0],
                 (String) row[1],
                 (Long) row[2],
                 (String) row[3],
@@ -54,6 +55,7 @@ public class WeeklyMenuService {
                 (Boolean) row[5]
             ))
             .collect(Collectors.toList());
-    }
-
+            
+                return result;
+            }
 }
