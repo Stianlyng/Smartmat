@@ -2,6 +2,7 @@ package ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
@@ -13,6 +14,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @Data
 @Entity(name = "fridge_product")
+@Builder
 @IdClass(FridgeProductId.class)
 public class FridgeProductAsso {
     @Id

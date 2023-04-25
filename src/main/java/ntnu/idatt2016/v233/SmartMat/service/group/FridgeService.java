@@ -56,8 +56,7 @@ public class FridgeService {
             if (fridge.getProducts().contains(temp)) {
                 return false;
             }
-            fridge.getProducts().add(temp);
-            fridgeRepository.save(fridge);
+            fridgeProductAssoService.createFridgeProductAsso(fridge, productToAdd, new Date(LocalDate.now().toEpochDay()));
             return true;
         } else {
             return false;
@@ -87,7 +86,6 @@ public class FridgeService {
             fridgeProductAssoService.deleteFridgeProductAsso(new FridgeProductAsso(fridge,
                     productToRemove, purchaseDate));
 
-            fridgeRepository.save(fridge);
             return true;
         } else {
             return false;

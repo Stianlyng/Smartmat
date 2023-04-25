@@ -2,6 +2,7 @@ package ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +18,7 @@ import java.sql.Date;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class FridgeProductId implements Serializable {
     private long fridgeId;
 

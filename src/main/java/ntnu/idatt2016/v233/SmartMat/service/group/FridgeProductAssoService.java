@@ -36,6 +36,14 @@ public class FridgeProductAssoService {
         temp.setEan(product);
         temp.setPurchaseDate(purchaseDate);
         fridgeProductAssoRepository.save(temp);
+
+        fridge.addProduct(temp);
+        product.addFridge(temp);
+
+        fridgeRepository.save(fridge);
+
+        productRepository.save(product);
+
         return temp;
     }
 

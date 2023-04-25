@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.entity.group;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -38,4 +39,16 @@ public class Fridge{
     @JsonIgnoreProperties("fridge")
     List<FridgeProductAsso> products;
 
+
+    /**
+     * Adds a product to the fridge
+     * @param product the product to add to the fridge
+     */
+    public void addProduct(FridgeProductAsso product){
+        if(products == null){
+            products = new ArrayList<>();
+        }
+
+        products.add(product);
+    }
 }
