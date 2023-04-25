@@ -3,6 +3,7 @@ package ntnu.idatt2016.v233.SmartMat.service.product;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.repository.ProductRepository;
 import ntnu.idatt2016.v233.SmartMat.util.ProductUtil;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import java.util.Optional;
  * @version 1.1
  * @since 05.04.2023
  */
+@Service
 public class ProductService {
 
     ProductRepository productRepository;

@@ -12,8 +12,8 @@ import java.util.Optional;
  * Service for groups
  *
  * @author Anders Austlid
- * @version 1.0
- * @since 20.04.2023
+ * @version 1.1
+ * @since 25.04.2023
  */
 @AllArgsConstructor
 @Service
