@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 
 /**
@@ -34,10 +35,8 @@ public class Fridge{
     @Column(name = "group_id")
     long groupId;
     
-    @ManyToMany
-    @JoinTable(name = "fridge_product",
-        joinColumns = @JoinColumn(name = "fridge_id"),
-        inverseJoinColumns = @JoinColumn(name = "ean"))
-    @JsonIgnoreProperties("fridges")
-    List<Product> products;
+    @OneToMany
+    @JoinColumn(name = "ean")
+    @JsonIgnoreProperties("fridge")
+    List<FridgeProductAsso> products;
 }

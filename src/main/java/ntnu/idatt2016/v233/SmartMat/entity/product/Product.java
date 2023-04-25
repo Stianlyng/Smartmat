@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
+import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 
 import java.util.List;
 
@@ -61,9 +62,10 @@ public class Product{
             inverseJoinColumns = @JoinColumn(name = "allergy_name"))
     List<Allergy> allergies;
 
-    @ManyToMany(mappedBy = "products")
+    @OneToMany
+    @JoinColumn(name = "ean")
     @JsonIgnoreProperties({"products"})
-    List<Fridge> fridges;
+    List<FridgeProductAsso> fridges;
     
     @ManyToMany(mappedBy = "products")
     @JsonIgnoreProperties({"products"})
