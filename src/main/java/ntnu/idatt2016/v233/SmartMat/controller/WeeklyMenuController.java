@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.dto.response.WeeklyMenuResponse;
 import ntnu.idatt2016.v233.SmartMat.service.WeeklyMenuService;
 
 @AllArgsConstructor
@@ -19,8 +20,8 @@ public class WeeklyMenuController {
     private WeeklyMenuService weeklyMenuService;
 
     @GetMapping("/getWeeklyMenu/{fridgeId}")
-    public ResponseEntity<List<Object[]>> getWeeklyMenu(@PathVariable("fridgeId") Long fridgeId) {
-        List<Object[]> weeklyMenu = weeklyMenuService.getTop5RecipesWithProducts(fridgeId);
+    public ResponseEntity<List<WeeklyMenuResponse>> getWeeklyMenu(@PathVariable("fridgeId") Long fridgeId) {
+        List<WeeklyMenuResponse> weeklyMenu = weeklyMenuService.getTop5RecipesWithProducts(fridgeId);
         
         if (weeklyMenu.isEmpty()) {
             return ResponseEntity.notFound().build();
