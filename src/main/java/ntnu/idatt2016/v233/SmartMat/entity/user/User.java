@@ -87,7 +87,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "username"),
             inverseJoinColumns = @JoinColumn(name = "authority"))
     @JsonIgnoreProperties({"users"})
-    private List<AuthorityTable> authorities;
+    private List<AuthorityTable> authorities = new ArrayList<>();
 
 
     /**
