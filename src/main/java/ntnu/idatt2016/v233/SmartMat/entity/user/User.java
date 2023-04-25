@@ -1,6 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.entity.user;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,23 +9,22 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
-import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
+import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Allergy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Date;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * User is a class representing a user in the system.
  * It implements the UserDetails interface.
  *
  * @author Anders and Birk
- * @version 2.0.1
- * @since 20.04.2023
+ * @version 2.0.2
+ * @since 25.04.2023
  *
  */
 
@@ -38,6 +38,7 @@ public class User implements UserDetails {
     @Column(name = "username")
     private String username;
     @Column(name = "password")
+    @JsonIgnore
     private String password;
     @Column(name = "enabled")
     private boolean enabled;
@@ -58,23 +59,31 @@ public class User implements UserDetails {
     private Authority authority;
 
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_group",
-            joinColumns = @JoinColumn(name = "username"),
-            inverseJoinColumns = @JoinColumn(name = "group_id"))
-    @JsonIgnoreProperties("users")
-    private List<Group> groups;
+    @OneToMany
+    @JoinColumn(name = "username")
+    @JsonIgnoreProperties("user")
+    private List<UserGroupAsso> group;
+
 
     @ManyToMany
     @JoinTable(
             name = "user_allergy",
             joinColumns = @JoinColumn(name = "username"),
             inverseJoinColumns = @JoinColumn(name = "allergy_name"))
-    @JsonIgnoreProperties("users")
+    @JsonIgnoreProperties({"users", "products"})
     private List<Allergy> allergies;
 
 
+    /**
+     * adds a group to the user
+     * @param userGroupTable the userGroupTable to add to the user
+     */
+    public void addGroup(UserGroupAsso userGroupTable){
+        if (this.group == null) {
+            this.group = new ArrayList<>();
+        }
+        this.group.add(userGroupTable);
+    }
 
     /**
      * used when created jwts and validating user authority
@@ -138,4 +147,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return this.enabled;
     }
+
 }

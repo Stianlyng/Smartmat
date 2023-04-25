@@ -1,8 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.repository.group;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import ntnu.idatt2016.v233.SmartMat.repository.user.AchievementRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +31,9 @@ public class GroupRepositoryTest {
 
     @Autowired
     AchievementRepository achievementRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
 
     private Group group;
@@ -144,5 +147,6 @@ public class GroupRepositoryTest {
         assertNull(groupRepository.findByGroupName("test").get().getAchievements().get(0).getGroups());
 
     }
+
 
 }

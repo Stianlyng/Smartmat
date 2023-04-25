@@ -131,4 +131,3 @@ CREATE TABLE achievement_person(
     FOREIGN KEY (username) REFERENCES users(username),
     FOREIGN KEY (achievement_name) REFERENCES achievement(achievement_name)
 );
-
