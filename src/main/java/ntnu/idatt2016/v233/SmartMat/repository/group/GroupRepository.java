@@ -41,5 +41,10 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
      */
     Optional<Long> getLevelByGroupId(long id);
 
+    /**
+     * Finds a group by group id
+     * @param id the id of the group
+     * @return the group with the given id if it exists
+     */
     Optional<Group> findByGroupId(long id);
 }
