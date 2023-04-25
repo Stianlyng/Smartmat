@@ -23,6 +23,8 @@ class UserGroupAssoRepositoryTest {
     @Autowired
     UserGroupAssoRepository userGroupAssoRepository;
 
+
+    Group tempgroup;
     @BeforeEach
     void setUp() {
         UserGroupAsso tempAsso = new UserGroupAsso();
@@ -34,12 +36,13 @@ class UserGroupAssoRepositoryTest {
 
         entityManager.persist(user);
 
-        Group tempgroup = new Group();
+        tempgroup = new Group();
         tempgroup.setGroupName("test");
 
         entityManager.persist(tempgroup);
 
-        tempAsso.setId(UserGroupId.builder().username("test").groupId(1L).build());
+        tempAsso.setId(UserGroupId.builder()
+                .username("test").groupId(tempgroup.getGroupId()).build());
         tempAsso.setGroup(tempgroup);
         tempAsso.setUser(user);
         tempAsso.setPrimaryGroup(true);
@@ -55,11 +58,11 @@ class UserGroupAssoRepositoryTest {
     @Test
     void shouldFindByGroupGroupId() {
         Optional<UserGroupAsso> foundasso = userGroupAssoRepository.findById(UserGroupId.builder()
-                .groupId(1L).username("test").build());
+                .groupId(tempgroup.getGroupId()).username("test").build());
 
         assertTrue(foundasso.isPresent());
 
-        assertEquals(foundasso.get().getGroup().getGroupId(), 1L);
+        assertNotNull(foundasso.get().getGroup());
 
         assertNotNull(foundasso.get().getUser());
 
@@ -70,10 +73,10 @@ class UserGroupAssoRepositoryTest {
         assertNotNull(entityManager.find(User.class, "test").getGroup());
 
         entityManager.find(User.class, "test").getGroup().forEach(asso -> {
-            assertEquals(asso.getGroup().getGroupId(), 1L);
+            assertEquals(tempgroup.getGroupId(), asso.getGroup().getGroupId());
         });
 
-        entityManager.find(Group.class, 1L).getUser().forEach(asso -> {
+        entityManager.find(Group.class, tempgroup.getGroupId()).getUser().forEach(asso -> {
             assertEquals(asso.getUser().getUsername(), "test");
         });
     }
