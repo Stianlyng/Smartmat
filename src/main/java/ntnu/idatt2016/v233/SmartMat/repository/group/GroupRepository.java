@@ -50,4 +50,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 
     @Query(value = "SELECT link_code FROM  groups", nativeQuery = true)
     List<String> findAllLinkCode();
+
+    Optional<Group> findByLinkCode(String linkCode);
+
 }

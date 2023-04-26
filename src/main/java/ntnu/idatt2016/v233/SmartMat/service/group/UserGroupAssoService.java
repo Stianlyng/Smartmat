@@ -68,18 +68,32 @@ public class UserGroupAssoService {
         Optional<Group> newGroup = groupRepository.findByGroupId(newId);
         Optional<User> user =  userRepository.findByUsername(username);
 
-        if (oldGroup.isEmpty()) return Optional.empty();
         if (newGroup.isEmpty()) return Optional.empty();
         if (user.isEmpty()) return Optional.empty();
 
-        UserGroupAsso userGroupAsso = userGroupAssoRepository.findAllByGroupAndUser(oldGroup.get(),user.get()).get();
-        userGroupAsso.setPrimaryGroup(false);
-
-        userGroupAssoRepository.save(userGroupAsso);
+        UserGroupAsso userGroupAsso;
+        if (oldGroup.isPresent()){
+            userGroupAsso = userGroupAssoRepository.findAllByGroupAndUser(oldGroup.get(),user.get()).get();
+            userGroupAsso.setPrimaryGroup(false);
+            userGroupAssoRepository.save(userGroupAsso);
+        }
         userGroupAsso = userGroupAssoRepository.findAllByGroupAndUser(newGroup.get(),user.get()).get();
         userGroupAsso.setPrimaryGroup(true);
         userGroupAssoRepository.save(userGroupAsso);
 
         return Optional.of(userGroupAsso);
     }
+
+    public Optional<Object> addPersonToGroup(String username, String linkCode, String authority){
+
+        Optional<Group> group = groupRepository.findByLinkCode(linkCode);
+        Optional<User> user =  userRepository.findByUsername(username);
+        if(group.isEmpty()) return Optional.empty();
+        if(user.isEmpty()) return Optional.empty();
+        if(userGroupAssoRepository.findAllByGroupAndUser(group.get(),user.get()).isPresent()) return Optional.of("User is already in this group!");
+        save(user.get(),group.get(),authority);
+        changePrimaryGroup(userGroupAssoRepository.findFirstByUserAndPrimaryGroup(user.get(),true).get().getGroup().getGroupId(), group.get().getGroupId(),username);
+        return Optional.of(userGroupAssoRepository.findAllByGroupAndUser(group.get(),user.get()).get());
+    }
+
 }
