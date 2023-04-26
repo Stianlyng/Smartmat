@@ -35,6 +35,7 @@ public class Product{
     @Column(name = "description")
     String description;
 
+
     @ManyToOne
     @JoinColumn(name = "category_name")
     @JsonIgnoreProperties({"products"})

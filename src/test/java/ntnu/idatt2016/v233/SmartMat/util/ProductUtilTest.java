@@ -4,6 +4,8 @@ import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProductUtilTest {
@@ -20,7 +22,7 @@ class ProductUtilTest {
 
     @Test
     void getVolumeFromProduct() {
-        assertEquals("24x500ml", ProductUtil.getVolumeFromProduct(product).get());
+        assertEquals(List.of("24x500", "ml"), ProductUtil.getVolumeFromProduct(product).get());
 
         this.product = Product.builder()
                 .ean(123456789)
@@ -28,7 +30,7 @@ class ProductUtilTest {
                 .description("Pepsi Original 24x500 ml")
                 .build();
 
-        assertEquals("24x500ml", ProductUtil.getVolumeFromProduct(product).get());
+        assertEquals(List.of("24x500", "ml"), ProductUtil.getVolumeFromProduct(product).get());
 
         this.product = Product.builder()
                 .ean(123456789)
@@ -37,7 +39,7 @@ class ProductUtilTest {
                 .build();
 
 
-        assertEquals("24x500ml", ProductUtil.getVolumeFromProduct(product).get());
+        assertEquals(List.of("24x500", "ml"), ProductUtil.getVolumeFromProduct(product).get());
 
         this.product = Product.builder()
                 .ean(123456789)
@@ -46,6 +48,6 @@ class ProductUtilTest {
                 .build();
 
 
-        assertEquals("24x500ml", ProductUtil.getVolumeFromProduct(product).get());
+        assertEquals(List.of("24x500", "ml"), ProductUtil.getVolumeFromProduct(product).get());
     }
 }

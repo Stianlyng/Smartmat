@@ -5,6 +5,7 @@ import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * Utility class for products
@@ -26,7 +27,7 @@ public class ProductUtil {
      * @param product The product to get the volume from
      * @return The volume of the product, if it exists
      */
-    public static Optional<String> getVolumeFromProduct(Product product) {
+    public static Optional<List<String>> getVolumeFromProduct(Product product) {
         for (String desc : Arrays.asList(product.getName(), product.getDescription())) {
             List<String> words = List.of(desc.split(" "));
             if (words.size() > 1) {
@@ -34,16 +35,25 @@ public class ProductUtil {
                 for (String unit : VOLUME_UNITS) {
                     int i = words.indexOf(unit);
                     if (i != -1) {
-                        return Optional.of(words.get(i - 1) + unit);
+                        return Optional.of(List.of(words.get(i - 1), unit));
                     }
                 }
 
-                volume = words.stream().filter(word -> Arrays.stream(VOLUME_UNITS).anyMatch(word::contains))
+                volume = words.stream().map(word -> Arrays.stream(VOLUME_UNITS).map(unit -> {
+                                    int index = word.indexOf(unit);
+                                    if (index == -1) {
+                                        if (!Pattern.matches("[a-zA-Z]+", word) && ProductUtil.hasNumbers(word)) {
+                                            return word;
+                                        }
+                                        return "";
+                                    }
+                                    return word.substring(0, index) + " " + word.substring(index);
+                                }).findAny().orElse(""))
                         .filter(ProductUtil::hasNumbers)
                         .findAny()
                         .orElse("");
                 if (!volume.equals("")){
-                    return Optional.of(volume);
+                    return Optional.of(List.of(volume.split(" ")));
                 }
             }
         }

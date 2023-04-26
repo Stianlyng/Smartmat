@@ -133,9 +133,9 @@ public class ProductServiceTest {
         ProductService productService = new ProductService(mockRepository);
 
         // Verify that the service returns the correct volume
-        Optional<String> returnedVolume = productService.getProductVolume(productId);
+        Optional<List<String>> returnedVolume = productService.getProductVolume(productId);
         assertTrue(returnedVolume.isPresent());
-        assertEquals("500ml", returnedVolume.get());
+        assertEquals(List.of("500", "ml"), returnedVolume.get());
     }
 
     @Test
@@ -150,7 +150,7 @@ public class ProductServiceTest {
         ProductService productService = new ProductService(mockRepository);
 
         // Verify that the service returns an empty optional
-        Optional<String> returnedVolume = productService.getProductVolume(productId);
+        Optional<List<String>> returnedVolume = productService.getProductVolume(productId);
         assertTrue(returnedVolume.isEmpty());
     }
 
