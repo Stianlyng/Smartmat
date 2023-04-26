@@ -22,12 +22,12 @@ public class UserGroupAssoService {
     private GroupRepository groupRepository;
     private final UserRepository userRepository;
 
-    public void save(User user, Group group, String userAuthority) {
+    public void save(User user, Group group, String authority) {
         UserGroupAsso userGroupTable1 = new UserGroupAsso();
         userGroupTable1.setGroup(group);
         userGroupTable1.setUser(user);
         userGroupTable1.setPrimaryGroup(true);
-        userGroupTable1.setGroupAuthority(userAuthority);
+        userGroupTable1.setGroupAuthority(authority);
         userGroupTable1.setId(UserGroupId.builder()
                         .groupId(group.getGroupId())
                         .username(user.getUsername())
