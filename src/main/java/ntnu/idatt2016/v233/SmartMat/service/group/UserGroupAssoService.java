@@ -8,6 +8,7 @@ import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.UserGroupAssoRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.user.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class UserGroupAssoService {
 
     private UserGroupAssoRepository userGroupAssoRepository;
     private GroupRepository groupRepository;
+    private final UserRepository userRepository;
 
     public void save(User user, Group group, boolean primaryGroup) {
         UserGroupAsso userGroupTable1 = new UserGroupAsso();
@@ -34,6 +36,9 @@ public class UserGroupAssoService {
 
         user.addGroup(userGroupTable1);
         group.addUser(userGroupTable1);
+
+        groupRepository.save(group);
+        userRepository.save(user);
 
     }
 
