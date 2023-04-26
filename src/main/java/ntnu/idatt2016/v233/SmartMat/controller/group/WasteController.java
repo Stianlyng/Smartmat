@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.Waste;
 import ntnu.idatt2016.v233.SmartMat.service.group.WasteService;
+import ntnu.idatt2016.v233.SmartMat.util.CategoryUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,4 +54,19 @@ public class WasteController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+
+    /**
+     * Retrieves a list of Waste objects of a specific category from a group
+     *
+     * @param groupId the ID of the group to search for
+     * @param categoryNumber the number representing the category to search for
+     * @return a ResponseEntity containing a list of Waste objects if successful, or a not found ResponseEntity if the data is not found
+     */
+    @GetMapping("/group/{groupId}/category/{categoryNumber}")
+    public ResponseEntity<List<Waste>> getWasteOfCategoryByGroupId(@PathVariable("groupId") long groupId,
+                                                                   @PathVariable("categoryNumber")  int categoryNumber){
+        return wasteService.getWasteOfCategoryByGroupId(groupId, CategoryUtil.getCategoryName(categoryNumber)).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
 }

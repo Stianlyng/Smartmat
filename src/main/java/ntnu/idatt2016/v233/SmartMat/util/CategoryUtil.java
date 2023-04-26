@@ -31,4 +31,22 @@ public class CategoryUtil {
         if(Arrays.stream(FRUIT_AND_VEGETABLES).anyMatch(response::contains)) return "fruit and vegetables";
         return "other";
     }
+
+    /**
+     * Returns the category name corresponding to the given category number.
+     *
+     * @param categoryNumber the category number
+     * @return the category name
+     * @throws IllegalArgumentException if the given category number is invalid
+     */
+    public static String getCategoryName(int categoryNumber) {
+        return switch (categoryNumber) {
+            case 1 -> "meat, fish and chicken";
+            case 2 -> "baked goods and grains";
+            case 3 -> "dairy and egg";
+            case 4 -> "other";
+            case 5 -> "fruit and vegetables";
+            default -> throw new IllegalArgumentException("Invalid category number: " + categoryNumber);
+        };
+    }
 }
