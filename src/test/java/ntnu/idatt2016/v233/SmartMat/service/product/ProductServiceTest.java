@@ -15,8 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
-import ntnu.idatt2016.v233.SmartMat.repository.ProductRepository;
-import ntnu.idatt2016.v233.SmartMat.util.ProductUtil;
+import ntnu.idatt2016.v233.SmartMat.repository.product.ProductRepository;
 
 public class ProductServiceTest {
 

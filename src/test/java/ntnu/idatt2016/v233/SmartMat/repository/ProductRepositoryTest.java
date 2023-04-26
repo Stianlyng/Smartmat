@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import ntnu.idatt2016.v233.SmartMat.entity.product.Category;
+import ntnu.idatt2016.v233.SmartMat.repository.product.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
