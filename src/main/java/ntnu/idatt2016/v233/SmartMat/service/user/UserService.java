@@ -3,13 +3,17 @@ package ntnu.idatt2016.v233.SmartMat.service.user;
 import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
 import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Allergy;
 import ntnu.idatt2016.v233.SmartMat.entity.user.AuthorityTable;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
+import ntnu.idatt2016.v233.SmartMat.repository.AllergyRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.user.AuthoritesRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.user.UserRepository;
 import ntnu.idatt2016.v233.SmartMat.service.RecipeService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import jakarta.persistence.EntityNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +35,8 @@ public class UserService {
     private AuthoritesService authoritesService;
 
     private AuthoritesRepository authoritesRepository;
-
+ 
+    AllergyRepository allergyRepository;
 
     /**
      * gets user from username out of database
@@ -144,5 +149,28 @@ public class UserService {
         authoritesRepository.save(auth);
 
         return userRepository.save(user);
+    }
+
+    /**
+     * Adds allergy to user
+     * @param username username of user
+     * @param allergyName name of allergy
+     * @return user with added allergy
+     * @throws EntityNotFoundException if user or allergy does not exist
+     */
+    public Optional<User> addAllergyToUser(String username, String allergyName){
+
+        Optional<User> user = userRepository.findByUsername(username);
+        Optional<Allergy> allergy = allergyRepository.findByName(allergyName);
+
+        if (user.isPresent() && allergy.isPresent()){
+            user.get().addAllergy(allergy.get());
+            return Optional.of(userRepository.save(user.get()));
+        } else if (!user.isPresent()) {
+            throw new EntityNotFoundException("User not found");
+        } else if (!allergy.isPresent()) {
+            throw new EntityNotFoundException("Allergy not found");
+        }
+        return Optional.empty();
     }
 }
