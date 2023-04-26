@@ -58,21 +58,8 @@ public class FridgeController {
      * @return success if the product was added, bad request if the product was already in the fridge, or not found if the group or product doesn't exist
      */
     @PostMapping("/group/product")
-    public ResponseEntity<String> addProductToFridge(@RequestBody FridgeProductRequest request) {
-        long groupId = request.groupId();
-        long productId = request.productId();
-
-        Optional<Fridge> fridgeOpt = fridgeService.getFridgeByGroupId(groupId);
-        if (fridgeOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        try {
-            fridgeService.addProductToFridge(groupId, productId, request.amount(), request.days());
-            return ResponseEntity.ok("Success");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Internal server error");
-        }
+    public ResponseEntity<Object> addProductToFridge(@RequestBody FridgeProductRequest request) {
+        return fridgeService.addProductToFridge(request).map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.notFound().build());
     }
 
 

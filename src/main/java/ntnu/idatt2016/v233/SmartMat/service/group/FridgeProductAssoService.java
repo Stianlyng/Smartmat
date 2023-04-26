@@ -1,6 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.service.group;
 
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.dto.request.FridgeProductRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
@@ -10,6 +11,7 @@ import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -20,6 +22,8 @@ public class FridgeProductAssoService {
     FridgeRepository fridgeRepository;
 
     ProductRepository productRepository;
+
+
 
     /**
      * Creates a fridge product association
@@ -52,4 +56,5 @@ public class FridgeProductAssoService {
 
         return true;
     }
+
 }

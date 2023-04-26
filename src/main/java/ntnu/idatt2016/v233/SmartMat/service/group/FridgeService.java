@@ -1,6 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.service.group;
 
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.dto.request.FridgeProductRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
@@ -11,6 +12,7 @@ import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 import org.springframework.stereotype.Service;
 
+import java.nio.channels.FileChannel;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -64,15 +66,13 @@ public class FridgeService {
      * @param ean the ean of the product
      * @return true if the product was added
      */
-    public Optional<Object> addProductToFridge(long groupId, long ean, int amount, int days) {
-        Optional<Product> product = productService.getProductById(ean);
-        Fridge fridge = fridgeRepository.findByGroupGroupId(groupId).orElseThrow(() -> new IllegalArgumentException("Fridge does not exist"));
+    public Optional<Object> addProductToFridge(FridgeProductRequest fridgeProductRequest) {
+        Optional<Product> product = productService.getProductById(fridgeProductRequest.productId());
+        Optional<Fridge> fridge = fridgeRepository.findByGroupGroupId(fridgeProductRequest.groupId());
+        if(product.isEmpty() || fridge.isEmpty()) return Optional.empty();
 
-        if (product.isPresent()) {
-            return Optional.of(fridgeProductAssoService.createFridgeProductAsso(fridge, product.get(),amount,days));
-        } else {
-            return Optional.empty();
-        }
+        return Optional.of(fridgeProductAssoService.createFridgeProductAsso(fridge.get(), product.get(), fridgeProductRequest.amount(), fridgeProductRequest.days()));
+
     }
 
     /**
