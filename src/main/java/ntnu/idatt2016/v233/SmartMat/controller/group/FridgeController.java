@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.util.Optional;
 
 /**
  * Controller for fridges API, providing endpoints for fridge management
@@ -61,21 +62,19 @@ public class FridgeController {
         long groupId = request.groupId();
         long productId = request.productId();
 
-        try {
-            fridgeService.getFridgeByGroupId(groupId).orElseThrow();
-        } catch (Exception e) {
+        Optional<Fridge> fridgeOpt = fridgeService.getFridgeByGroupId(groupId);
+        if (fridgeOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
         try {
-            if (fridgeService.addProductToFridge(groupId,productId, request.amount(), request.days()).isPresent()) {
-                return ResponseEntity.ok("Success");
-            }
-            return ResponseEntity.badRequest().body("Product already exists in the fridge");
+            fridgeService.addProductToFridge(groupId, productId, request.amount(), request.days());
+            return ResponseEntity.ok("Success");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Internal server error");
         }
     }
+
 
     /**
      * Removes a product from the fridge of a group
