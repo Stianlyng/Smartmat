@@ -37,6 +37,17 @@ public class FridgeService {
     public Optional<Fridge> getFridgeByGroupId(long groupId) {
         return fridgeRepository.findByGroupId(groupId);
     }
+    
+    /**
+     * Gets the fridge by its fridge id
+     * 
+     * @param fridgeId the id of the fridge
+     * @return the fridge if it exists
+     */
+    public Optional<Fridge> getFridgeByFridgeId(long fridgeId) {
+        return fridgeRepository.findById(fridgeId);
+    }
+
 
     /**
      * Add a product to the fridge of a group

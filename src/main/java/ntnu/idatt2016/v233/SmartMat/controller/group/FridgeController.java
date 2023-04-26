@@ -38,6 +38,19 @@ public class FridgeController {
     }
 
     /**
+     * Gets the fridge by its fridge id
+     * @param fridgeId the id of the fridge
+     * @return the fridge if it exists, or a 404 if it doesn't
+     */
+    @GetMapping("/fridge/{fridgeId}")
+    public ResponseEntity<Fridge> getFridgeByFridgeId(@PathVariable("fridgeId") long fridgeId) {
+        return fridgeService.getFridgeByFridgeId(fridgeId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+
+    /**
      * Adds a product to the fridge of a group
      *
      * @param request the request containing the group id and product id
