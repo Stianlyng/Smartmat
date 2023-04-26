@@ -5,14 +5,17 @@ import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.dto.request.AllergyRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.request.RegisterUserRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
+import ntnu.idatt2016.v233.SmartMat.dto.request.UpdateUserRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.service.user.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 
 /**
@@ -101,5 +104,71 @@ public class UserController {
         return userService.addAllergyToUser(allergyRequest.getUsername(), allergyRequest.getAllergyName())
                 .map(user -> ResponseEntity.ok(user.getAllergies().size() > 0))
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Update a user in the database.
+     * @param username The username of the user to be updated.
+     * @param updateUser The new values for the user.
+     * @param authentication The authentication object of the user.
+     * @return The updated user.
+     */
+    @PutMapping("/update/{username}")
+    public ResponseEntity<User> updateUser(@PathVariable String username, @RequestBody UpdateUserRequest updateUser,
+                                           Authentication authentication) {
+        if(!username.equals(authentication.getName()))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        Optional<User> user = userService.getUserFromUsername(username);
+
+
+        if(user.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        User userEntity = user.get();
+
+        if(updateUser.firstName() != null &&
+                !updateUser.firstName().trim().isEmpty() && updateUser.firstName().length() <= 50){
+            userEntity.setFirstName(updateUser.firstName());
+        }
+
+        if(updateUser.lastName() != null &&
+                !updateUser.lastName().trim().isEmpty() && updateUser.lastName().length() <= 50){
+            userEntity.setLastName(updateUser.lastName());
+        }
+
+        if(updateUser.email() != null &&
+                !updateUser.email().trim().isEmpty() && updateUser.email().length() <= 50){
+            userEntity.setEmail(updateUser.email());
+        }
+
+        if(updateUser.password() != null &&
+                !updateUser.password().trim().isEmpty() && updateUser.password().length() <= 50){
+            userEntity.setPassword(passwordEncoder.encode(updateUser.password()));
+        }
+
+        if(updateUser.birthDate() != null){
+            userEntity.setDateOfBirth(updateUser.birthDate());
+        }
+
+
+        if(updateUser.allergies() != null){
+            userEntity.getAllergies().stream().filter(allergy -> !updateUser.allergies().contains(allergy.getName()))
+                    .forEach(allergy -> userService.removeAllergyFromUser(username, allergy.getName()));
+
+            updateUser.allergies().stream().filter(allergy -> userEntity.getAllergies().stream()
+                    .noneMatch(allergy1 -> allergy1.getName().equals(allergy))).forEach(
+                    allergy -> userService.addAllergyToUser(username, allergy)
+            );
+
+        }
+
+        userService.updateUser(userEntity);
+
+
+        userEntity.setPassword(null);
+
+        return ResponseEntity.ok(userEntity);
+
     }
 }

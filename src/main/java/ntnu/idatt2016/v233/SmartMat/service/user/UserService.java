@@ -173,4 +173,25 @@ public class UserService {
         }
         return Optional.empty();
     }
+
+    /**
+     * Removes allergy from user
+     * @param username username of user
+     * @param allergyName name of allergy
+     * @return user with removed allergy
+     */
+    public Optional<User> removeAllergyFromUser(String username, String allergyName){
+        Optional<User> user = userRepository.findByUsername(username);
+        Optional<Allergy> allergy = allergyRepository.findByName(allergyName);
+
+        if (user.isPresent() && allergy.isPresent()){
+            user.get().getAllergies().remove(allergy.get());
+            return Optional.of(userRepository.save(user.get()));
+        } else if (user.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        } else if (allergy.isEmpty()) {
+            throw new EntityNotFoundException("Allergy not found");
+        }
+        return Optional.empty();
+    }
 }

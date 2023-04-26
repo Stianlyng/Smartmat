@@ -4,10 +4,7 @@ package ntnu.idatt2016.v233.SmartMat.entity.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
 import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
@@ -31,6 +28,7 @@ import java.util.*;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode
 @AllArgsConstructor
 @Entity(name = "users")
 @Builder
