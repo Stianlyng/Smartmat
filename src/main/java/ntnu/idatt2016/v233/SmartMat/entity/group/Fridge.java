@@ -35,7 +35,7 @@ public class Fridge{
     long groupId;
     
     @OneToMany
-    @JoinColumn(name = "ean")
+    @JoinColumn(name = "fridge_id")
     @JsonIgnoreProperties("fridge")
     List<FridgeProductAsso> products;
 
