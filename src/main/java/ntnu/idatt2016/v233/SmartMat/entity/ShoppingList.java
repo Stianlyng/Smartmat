@@ -1,11 +1,16 @@
 package ntnu.idatt2016.v233.SmartMat.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class represents a shopping list
@@ -29,4 +34,23 @@ public class ShoppingList {
 
     @Column(name = "group_id")
     long groupID;
+
+    @ManyToMany
+    @JoinTable(
+            name = "shopping_list_product",
+            joinColumns = @JoinColumn(name = "shopping_list_id"),
+            inverseJoinColumns = @JoinColumn(name = "ean"))
+    @JsonIgnoreProperties("shoppingList")
+    private List<Product> products;
+
+
+    /**
+     * Adds a product to the shopping list
+     * @param product  the product to add to the shopping list
+     */
+    public void addProduct(Product product) {
+        if (products == null)
+            products = new ArrayList<>();
+        products.add(product);
+    }
 }

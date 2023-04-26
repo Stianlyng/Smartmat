@@ -2,9 +2,13 @@ package ntnu.idatt2016.v233.SmartMat.controller;
 
 import java.util.Optional;
 
+import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
+import ntnu.idatt2016.v233.SmartMat.entity.user.User;
+import ntnu.idatt2016.v233.SmartMat.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -26,6 +30,9 @@ public class ShoppingListController {
 
     @Autowired
     ShoppingListService shoppingListService;
+
+    @Autowired
+    UserService userService;
     
     /**
      * Creates a shopping list
@@ -63,4 +70,74 @@ public class ShoppingListController {
         return shoppingList.map(list -> ResponseEntity.status(HttpStatus.OK).body(list))
                            .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
+
+    /**
+     * Adds a product to a shopping list
+     * @param shoppingListId the shopping list ID
+     * @param ean           the product EAN
+     * @param auth         the authentication object
+     * @return the shopping list with the added product, or an error if the shopping list ID or EAN is invalid
+     */
+    @PostMapping("/addProduct/{shoppingListId}/{ean}")
+    public ResponseEntity<ShoppingList> addItemToShoppingList(@PathVariable("shoppingListId") long shoppingListId,
+                                                              @PathVariable("ean") String ean, Authentication auth){
+
+        Optional<ShoppingList> shoppingList = shoppingListService.getShoppingListById(shoppingListId);
+
+        if(shoppingList.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        Optional<User> user = userService.getUserFromUsername(auth.getName());
+
+        if(user.isEmpty())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+
+        if(user.get().getGroup().stream().anyMatch(userGroupAsso ->
+                userGroupAsso.getGroup().getGroupId() == shoppingList.get().getGroupID()))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+
+        Optional<Product> product = shoppingList.get().getProducts().stream().filter(p ->
+                p.getEan() == (Long.parseLong(ean))).findFirst();
+
+        if(product.isPresent())
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+
+        Optional<ShoppingList> returnVal = shoppingListService
+                .addProductToShoppingList(shoppingListId, Long.parseLong(ean));
+
+        return returnVal.map(list -> ResponseEntity.status(HttpStatus.OK).body(list))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+
+
+    }
+
+    /**
+     * Removes a product from a shopping list
+     *
+     * @param shoppingListId the shopping list ID
+     * @param ean           the product EAN
+     * @return the shopping list with the removed product, or an error if the shopping list ID or EAN is invalid
+     */
+    @DeleteMapping("/removeProduct/{shoppingListId}/{ean}")
+    public ResponseEntity<ShoppingList> removeProductFromShoppingList(@PathVariable("shoppingListId") String shoppingListId,
+                                                                      @PathVariable("ean") String ean) {
+        Optional<ShoppingList> shoppingList = shoppingListService.getShoppingListById(Long.parseLong(shoppingListId));
+        if(shoppingList.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        Optional<Product> product = shoppingList.get().getProducts().stream().filter(p ->
+                p.getEan() == (Long.parseLong(ean))).findFirst();
+
+        if(product.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        Optional<ShoppingList> returnVal = shoppingListService
+                .removeProductFromShoppingList(Long.parseLong(shoppingListId), Long.parseLong(ean));
+
+        return returnVal.map(list -> ResponseEntity.status(HttpStatus.OK).body(list))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
 }

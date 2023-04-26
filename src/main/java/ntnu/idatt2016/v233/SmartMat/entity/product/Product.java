@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.entity.ShoppingList;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
 import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
@@ -35,6 +36,10 @@ public class Product{
     String name;
     @Column(name = "description")
     String description;
+
+    @ManyToMany(mappedBy = "products")
+    @JsonIgnoreProperties({"products"})
+    List<ShoppingList> shoppingLists;
 
 
     @ManyToOne
@@ -91,5 +96,15 @@ public class Product{
     @Override
     public String toString(){
         return String.valueOf(this.ean);
+    }
+
+    /**
+     * Adds a shopping list to the product
+     * @param shoppingList the shopping list to add to the product
+     */
+    public void addShoppingList(ShoppingList shoppingList) {
+        if (shoppingLists == null)
+            shoppingLists = new ArrayList<>();
+        shoppingLists.add(shoppingList);
     }
 }
