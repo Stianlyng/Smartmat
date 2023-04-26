@@ -121,5 +121,4 @@ public class GroupService {
         }
         return Optional.empty();
     }
-
 }

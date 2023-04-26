@@ -6,14 +6,19 @@ import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupId;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
+import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.UserGroupAssoRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class UserGroupAssoService {
 
     private UserGroupAssoRepository userGroupAssoRepository;
+    private GroupRepository groupRepository;
 
     public void save(User user, Group group, boolean primaryGroup) {
         UserGroupAsso userGroupTable1 = new UserGroupAsso();
@@ -31,4 +36,19 @@ public class UserGroupAssoService {
         group.addUser(userGroupTable1);
 
     }
+
+    /**
+     * Retrieves a list of UserGroupAsso objects for the specified group ID.
+     *
+     * @param id the ID of the group to retrieve information for
+     * @return an Optional containing a list of UserGroupAsso objects for the specified group ID, or an empty Optional if no information is found
+     */
+    public Optional<List<UserGroupAsso>> getInformationByGroupId(long id){
+        if (groupRepository.findByGroupId(id).isPresent()){
+            List<UserGroupAsso> list = userGroupAssoRepository.findAllByGroup(groupRepository.findByGroupId(id).get());
+            if(!list.isEmpty()) return Optional.of(list);
+        }
+        return Optional.empty();
+    }
+
 }
