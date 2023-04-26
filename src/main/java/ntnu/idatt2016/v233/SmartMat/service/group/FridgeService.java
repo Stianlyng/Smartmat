@@ -35,7 +35,7 @@ public class FridgeService {
      * @return the fridge of the group
      */
     public Optional<Fridge> getFridgeByGroupId(long groupId) {
-        return fridgeRepository.findByGroupId(groupId);
+        return fridgeRepository.findByGroupGroupId(groupId);
     }
     
     /**
@@ -59,7 +59,7 @@ public class FridgeService {
      */
     public boolean addProductToFridge(long groupId, long ean) {
         Optional<Product> product = productService.getProductById(ean);
-        Fridge fridge = fridgeRepository.findByGroupId(groupId).orElseThrow(() -> new IllegalArgumentException("Fridge does not exist"));
+        Fridge fridge = fridgeRepository.findByGroupGroupId(groupId).orElseThrow(() -> new IllegalArgumentException("Fridge does not exist"));
 
         if (product.isPresent()) {
             Product productToAdd = product.get();
@@ -84,7 +84,7 @@ public class FridgeService {
      */
     public boolean removeProductFromFridge(long groupId, long ean, Date purchaseDate) {
         Optional<Product> product = productService.getProductById(ean);
-        Fridge fridge = fridgeRepository.findByGroupId(groupId).orElseThrow(() -> new IllegalArgumentException("Fridge does not exist"));
+        Fridge fridge = fridgeRepository.findByGroupGroupId(groupId).orElseThrow(() -> new IllegalArgumentException("Fridge does not exist"));
 
 
 

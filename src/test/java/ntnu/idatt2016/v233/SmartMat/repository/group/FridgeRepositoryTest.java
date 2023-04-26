@@ -1,6 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.repository.group;
 
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,31 +19,42 @@ class FridgeRepositoryTest {
     @Autowired
     TestEntityManager entityManager;
     Fridge fridge;
+
+    Group group;
+
     @BeforeEach
     void setUp() {
         fridge = new Fridge();
-        fridge.setGroupId(1L);
 
+        group = new Group();
+
+        fridge.setGroup(group);
+        group.setFridge(fridge);
+
+        entityManager.persist(group);
         entityManager.persist(fridge);
     }
 
 
     @Test
     void shouldFindByGroupId() {
-        assertEquals(fridge, fridgeRepository.findByGroupId(fridge.getGroupId()).get());
+        assertEquals(fridge, fridgeRepository.findByGroupGroupId(fridge.getGroup().getGroupId()).get());
     }
 
     @Test
     void shouldNotFindByGroupId() {
-        assertFalse(fridgeRepository.findByGroupId(2L).isPresent());
+        assertFalse(fridgeRepository.findByGroupGroupId(2L).isPresent());
     }
 
     @Test
     void shouldSave() {
         Fridge fridge2 = new Fridge();
-        fridge2.setGroupId(2L);
+        Group group2 = new Group();
+        entityManager.persist(group2);
+        fridge2.setGroup(group2);
+        group2.setFridge(fridge2);
         fridgeRepository.save(fridge2);
-        assertEquals(fridge2, fridgeRepository.findByGroupId(fridge2.getGroupId()).get());
+        assertEquals(fridge2, fridgeRepository.findByGroupGroupId(fridge2.getGroup().getGroupId()).get());
 
     }
 

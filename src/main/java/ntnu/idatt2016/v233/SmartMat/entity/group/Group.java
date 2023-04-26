@@ -61,6 +61,11 @@ public class Group {
         this.user.add(userGroupTable);
     }
 
+    @OneToOne
+    @JoinColumn(name = "group_id")
+    @JsonIgnoreProperties("group")
+    private Fridge fridge;
+
     @ManyToMany
     @JoinTable(name = "group_achievement",
             joinColumns = @JoinColumn(name = "group_id"),

@@ -31,8 +31,10 @@ public class Fridge{
     @Column(name = "fridge_id")
     long fridgeId;
 
-    @Column(name = "group_id")
-    long groupId;
+    @OneToOne
+    @JoinColumn(name = "group_id")
+    @JsonIgnoreProperties("fridge")
+    Group group;
     
     @OneToMany
     @JoinColumn(name = "fridge_id")
