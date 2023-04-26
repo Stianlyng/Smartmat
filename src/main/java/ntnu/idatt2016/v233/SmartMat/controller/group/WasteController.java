@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.controller.group;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.Waste;
 import ntnu.idatt2016.v233.SmartMat.service.group.WasteService;
@@ -47,7 +48,7 @@ public class WasteController {
      * @return a ResponseEntity containing the waste if it exists, or a 404 if it doesn't
      */
     @GetMapping("/group/{groupId}")
-    public ResponseEntity<Waste> getWasteByGroupId(@PathVariable("groupId") long groupId) {
+    public ResponseEntity<List<Waste>> getWasteByGroupId(@PathVariable("groupId") long groupId) {
         return wasteService.getWasteByGroupId(groupId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
