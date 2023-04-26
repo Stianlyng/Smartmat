@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,12 +22,14 @@ public class FridgeProductAsso {
     @ManyToOne
     @MapsId("fridge_id")
     @JoinColumn(name = "fridge_id")
+    @JsonIgnoreProperties({"products"})
     private Fridge fridgeId;
 
     @Id
     @ManyToOne
     @MapsId("ean")
     @JoinColumn(name = "ean")
+    @JsonIgnoreProperties({"fridges"})
     private Product ean;
 
     @Id

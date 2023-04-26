@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.entity.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -57,7 +58,7 @@ public class Product{
     Double amount;
 
     @ManyToMany
-    @JsonIgnoreProperties({"products"})
+    @JsonIgnoreProperties({"products", "users"})
     @JoinTable(
             name = "product_allergy",
             joinColumns = @JoinColumn(name = "ean"),
@@ -67,10 +68,12 @@ public class Product{
     @OneToMany
     @JoinColumn(name = "ean")
     @JsonIgnoreProperties({"products"})
+    @JsonIgnore
     List<FridgeProductAsso> fridges;
     
     @ManyToMany(mappedBy = "products")
     @JsonIgnoreProperties({"products"})
+    @JsonIgnore
     List<Recipe> recipes;
 
     /**
@@ -83,5 +86,10 @@ public class Product{
         }
 
         fridges.add(fridge);
+    }
+
+    @Override
+    public String toString(){
+        return String.valueOf(this.ean);
     }
 }
