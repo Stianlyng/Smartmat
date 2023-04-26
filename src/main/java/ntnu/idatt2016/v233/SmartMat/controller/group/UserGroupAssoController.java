@@ -62,4 +62,20 @@ public class UserGroupAssoController {
         return userGroupAssoService.addPersonToGroup(username,linkCode,"USER").map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.notFound().build());
     }
 
+    /**
+     * Changes the authority level of a user in a group.
+     *
+     * @param groupId the ID of the group
+     * @param username the username of the user whose authority level is to be changed
+     * @param authority the new authority level of the user
+     * @return a ResponseEntity object containing the updated UserGroupAsso object and an HTTP status code of 200,
+     *         or a ResponseEntity object with an HTTP status code of 404 if the group or user does not exist
+     */
+    @PutMapping("/changeAuthority/{groupId}/{username}/{authority}")
+    public ResponseEntity<?> changeAuthority(@PathVariable("groupId") long groupId,
+                                             @PathVariable("username") String username,
+                                             @PathVariable("authority") String authority){
+        return userGroupAssoService.changeAuthorityOfUser(username,groupId,authority).map(ResponseEntity::ok).orElseGet(() ->ResponseEntity.notFound().build());
+    }
+
 }

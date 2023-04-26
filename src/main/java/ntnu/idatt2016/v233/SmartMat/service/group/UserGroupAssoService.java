@@ -26,7 +26,7 @@ public class UserGroupAssoService {
         UserGroupAsso userGroupTable1 = new UserGroupAsso();
         userGroupTable1.setGroup(group);
         userGroupTable1.setUser(user);
-        userGroupTable1.setPrimaryGroup(true);
+        userGroupTable1.setPrimaryGroup(false);
         userGroupTable1.setGroupAuthority(authority);
         userGroupTable1.setId(UserGroupId.builder()
                         .groupId(group.getGroupId())
@@ -84,13 +84,39 @@ public class UserGroupAssoService {
         return Optional.of(userGroupAsso);
     }
 
+    /**
+     * Adds a new user to a group.
+     *
+     * @param username the username of the user to add
+     * @param linkCode the link code of the group to which the user is to be added
+     * @param authority the authority level of the user in the group
+     * @return an Optional object containing the UserGroupAsso object of the user in the group,
+     *         or an empty Optional if the group or user does not exist, or if the user is already in the group
+     */
     public Optional<Object> addPersonToGroup(String username, String linkCode, String authority){
-
         Optional<Group> group = groupRepository.findByLinkCode(linkCode);
         Optional<User> user =  userRepository.findByUsername(username);
         if(group.isEmpty()) return Optional.empty();
         if(user.isEmpty()) return Optional.empty();
         if(userGroupAssoRepository.findAllByGroupAndUser(group.get(),user.get()).isPresent()) return Optional.of("User is already in this group!");
+        save(user.get(),group.get(),authority);
+        changePrimaryGroup(userGroupAssoRepository.findFirstByUserAndPrimaryGroup(user.get(),true).get().getGroup().getGroupId(), group.get().getGroupId(),username);
+        return Optional.of(userGroupAssoRepository.findAllByGroupAndUser(group.get(),user.get()).get());
+    }
+
+    /**
+     * Changes the authority of a user in a group and updates the primary group if necessary.
+     * @param username the username of the user whose authority will be changed.
+     * @param groupId the ID of the group in which the user's authority will be changed.
+     * @param authority the new authority level for the user in the group.
+     * @return an Optional containing the updated UserGroupAsso object, or an empty Optional if the user or group does not exist, or if the user is not in the group.
+     */
+    public Optional<Object> changeAuthorityOfUser(String username, long groupId, String authority){
+        Optional<Group> group = groupRepository.findByGroupId(groupId);
+        Optional<User> user =  userRepository.findByUsername(username);
+        if(group.isEmpty()) return Optional.empty();
+        if(user.isEmpty()) return Optional.empty();
+        if(userGroupAssoRepository.findAllByGroupAndUser(group.get(),user.get()).isEmpty()) return Optional.of("User is not in this group!");
         save(user.get(),group.get(),authority);
         changePrimaryGroup(userGroupAssoRepository.findFirstByUserAndPrimaryGroup(user.get(),true).get().getGroup().getGroupId(), group.get().getGroupId(),username);
         return Optional.of(userGroupAssoRepository.findAllByGroupAndUser(group.get(),user.get()).get());
