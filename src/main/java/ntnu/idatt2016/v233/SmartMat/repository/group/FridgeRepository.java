@@ -12,5 +12,5 @@ public interface FridgeRepository extends JpaRepository<Fridge, Long> {
      * @param groupId the id of the group
      * @return an Optional containing the fridge of the group if it exists
      */
-    Optional<Fridge> findByGroupId(long groupId);
+    Optional<Fridge> findByGroupGroupId(long groupId);
 }

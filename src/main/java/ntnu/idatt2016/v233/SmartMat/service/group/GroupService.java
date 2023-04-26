@@ -1,7 +1,9 @@
 package ntnu.idatt2016.v233.SmartMat.service.group;
 
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
+import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
 import ntnu.idatt2016.v233.SmartMat.util.GroupUtil;
 import org.springframework.stereotype.Service;
@@ -12,15 +14,17 @@ import java.util.Optional;
 /**
  * Service for groups
  *
- * @author Anders Austlid
- * @version 1.1
- * @since 25.04.2023
+ * @author Anders Austlid & Birk
+ * @version 1.2
+ * @since 26.04.2023
  */
 @AllArgsConstructor
 @Service
 public class GroupService {
 
     private final GroupRepository groupRepository;
+
+    private final FridgeRepository fridgeRepository;
 
     /**
      * Gets a group by its name
@@ -120,5 +124,21 @@ public class GroupService {
             return Optional.of(groupRepository.save(realGroup).getOpen());
         }
         return Optional.empty();
+    }
+
+    /**
+     * Adds a group to a fridge
+     * @param fridgeId the id of the fridge
+     * @param groupId the id of the group
+     */
+    public void addFridgeToGroup(long fridgeId, long groupId) {
+        Optional<Fridge> fridge = fridgeRepository.findById(fridgeId);
+        Optional<Group> group = groupRepository.findByGroupId(groupId);
+        if (fridge.isPresent() && group.isPresent()) {
+            fridge.get().setGroup(group.get());
+            group.get().setFridge(fridge.get());
+            groupRepository.save(group.get());
+            fridgeRepository.save(fridge.get());
+        }
     }
 }

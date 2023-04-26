@@ -2,8 +2,11 @@ package ntnu.idatt2016.v233.SmartMat.controller.product;
 
 import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.dto.request.ProductRequest;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Category;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
+import ntnu.idatt2016.v233.SmartMat.service.product.CategoryService;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
+import ntnu.idatt2016.v233.SmartMat.util.CategoryUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +27,8 @@ public class ProductController {
 
     private final ProductService productService;
 
+    private final CategoryService categoryService;
+
     /**
      * Creates a product if it does not already exist.
      * @param productRequest The product to be registered.
@@ -37,6 +42,16 @@ public class ProductController {
                 .description(productRequest.description())
                 .url(productRequest.image())
                 .build();
+
+        Category category = categoryService
+                .getCategoryByName(CategoryUtil.defineCategory(product.getName(),product.getDescription()))
+                .orElse(null);
+
+        if (category == null)
+            return ResponseEntity.badRequest().build();
+
+        product.setCategory(category);
+
 
         if(productService.getProductById(productRequest.ean()).isPresent())
             return ResponseEntity.status(409).build();

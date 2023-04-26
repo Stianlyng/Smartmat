@@ -1,28 +1,31 @@
 package ntnu.idatt2016.v233.SmartMat.service.group;
 
+import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
+import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
-import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
-import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
-import ntnu.idatt2016.v233.SmartMat.util.GroupUtil;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
-class GroupServiceTest {
-
-    @InjectMocks
-    private GroupService groupService;
+public class GroupServiceTest {
 
     @Mock
     private GroupRepository groupRepository;
+
+    @Mock
+    private FridgeRepository fridgeRepository;
+
+    @InjectMocks
+    private GroupService groupService;
 
     @BeforeEach
     void setUp() {
@@ -31,62 +34,61 @@ class GroupServiceTest {
 
     @Test
     void testGetGroupByName() {
+        // Arrange
         String groupName = "Test Group";
         Group group = new Group();
         group.setGroupName(groupName);
-
         when(groupRepository.findByGroupName(groupName)).thenReturn(Optional.of(group));
 
+        // Act
         Optional<Group> result = groupService.getGroupByName(groupName);
 
-        assertTrue(result.isPresent());
-        assertEquals(groupName, result.get().getGroupName());
-    }
-
-    @Test
-    void testGetGroupById() {
-        long groupId = 1L;
-        Group group = new Group();
-        group.setGroupId(groupId);
-
-        when(groupRepository.findById(groupId)).thenReturn(Optional.of(group));
-
-        Optional<Group> result = groupService.getGroupById(groupId);
-
-        assertTrue(result.isPresent());
-        assertEquals(groupId, result.get().getGroupId());
+        // Assert
+        assertEquals(group, result.get());
+        verify(groupRepository).findByGroupName(groupName);
     }
 
     @Test
     void testCreateGroup() {
-        String groupName = "New Group";
+        // Arrange
+        String groupName = "Test Group";
         Group group = new Group();
         group.setGroupName(groupName);
-
         when(groupRepository.findByGroupName(groupName)).thenReturn(Optional.empty());
-        when(groupRepository.findAllLinkCode()).thenReturn(Collections.emptyList());
-        when(groupRepository.save(any(Group.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(groupRepository.findAllLinkCode()).thenReturn(List.of());
+        when(groupRepository.save(group)).thenReturn(group);
 
-        Group createdGroup = groupService.createGroup(group);
+        // Act
+        Group result = groupService.createGroup(group);
 
-        assertEquals(groupName, createdGroup.getGroupName());
-        assertNotNull(createdGroup.getLinkCode());
+        // Assert
+        assertEquals(group, result);
+        verify(groupRepository).findByGroupName(groupName);
+        verify(groupRepository).findAllLinkCode();
+        verify(groupRepository).save(group);
     }
 
     @Test
-    void testGetLevelByGroupId() {
-        long groupId = 1L;
-        long level = 3L;
+    void testAddFridgeToGroup() {
+        // Arrange
+        long fridgeId = 1L;
+        long groupId = 2L;
+        Fridge fridge = new Fridge();
         Group group = new Group();
-        group.setGroupId(groupId);
-        group.setLevel(level);
+        when(fridgeRepository.findById(fridgeId)).thenReturn(Optional.of(fridge));
+        when(groupRepository.findByGroupId(groupId)).thenReturn(Optional.of(group));
+        when(groupRepository.save(group)).thenReturn(group);
+        when(fridgeRepository.save(fridge)).thenReturn(fridge);
 
-        when(groupRepository.findById(groupId)).thenReturn(Optional.of(group));
-        when(groupRepository.getLevelByGroupId(groupId)).thenReturn(Optional.of(level));
+        // Act
+        groupService.addFridgeToGroup(fridgeId, groupId);
 
-        Optional<Long> result = groupService.getLevelByGroupId(groupId);
-
-        assertTrue(result.isPresent());
-        assertEquals(level, result.get());
+        // Assert
+        assertEquals(group, fridge.getGroup());
+        assertEquals(fridge, group.getFridge());
+        verify(fridgeRepository).findById(fridgeId);
+        verify(groupRepository).findByGroupId(groupId);
+        verify(groupRepository).save(group);
+        verify(fridgeRepository).save(fridge);
     }
 }

@@ -4,10 +4,9 @@ import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
-import ntnu.idatt2016.v233.SmartMat.repository.ProductRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.product.ProductRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeProductAssoRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeRepository;
-import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -51,7 +50,7 @@ public class FridgeProductAssoService {
      * Deletes a fridge product association
      * @param fridgeProductAsso the fridge product association to delete
      */
-    public void deleteFridgeProductAsso(FridgeProductAsso fridgeProductAsso) {
+    public boolean deleteFridgeProductAsso(FridgeProductAsso fridgeProductAsso) {
         fridgeProductAsso.getFridgeId().getProducts().remove(fridgeProductAsso);
         fridgeProductAsso.getEan().getFridges().remove(fridgeProductAsso);
         fridgeProductAssoRepository.delete(fridgeProductAsso);
@@ -59,5 +58,7 @@ public class FridgeProductAssoService {
         fridgeRepository.save(fridgeProductAsso.getFridgeId());
 
         productRepository.save(fridgeProductAsso.getEan());
+
+        return true;
     }
 }

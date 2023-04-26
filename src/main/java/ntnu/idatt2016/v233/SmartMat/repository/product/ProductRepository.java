@@ -1,4 +1,4 @@
-package ntnu.idatt2016.v233.SmartMat.repository;
+package ntnu.idatt2016.v233.SmartMat.repository.product;
 
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 

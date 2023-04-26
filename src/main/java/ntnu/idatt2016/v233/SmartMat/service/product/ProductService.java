@@ -1,7 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.service.product;
 
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
-import ntnu.idatt2016.v233.SmartMat.repository.ProductRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.product.ProductRepository;
 import ntnu.idatt2016.v233.SmartMat.util.ProductUtil;
 import org.springframework.stereotype.Service;
 
