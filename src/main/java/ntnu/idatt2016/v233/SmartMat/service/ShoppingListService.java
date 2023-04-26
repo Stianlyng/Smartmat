@@ -3,6 +3,7 @@ package ntnu.idatt2016.v233.SmartMat.service;
 import java.util.List;
 import java.util.Optional;
 
+import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,4 +75,9 @@ public class ShoppingListService {
             shoppingListRepository.deleteById(id);
         }
     }
+
+    public Product addProductToShoppingList(long ean, long shoppingListId){
+        return null;
+    }
+
 }
