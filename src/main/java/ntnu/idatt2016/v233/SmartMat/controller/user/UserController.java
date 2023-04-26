@@ -151,6 +151,7 @@ public class UserController {
             userEntity.setDateOfBirth(updateUser.birthDate());
         }
 
+
         if(updateUser.allergies() != null){
             userEntity.getAllergies().stream().filter(allergy -> !updateUser.allergies().contains(allergy.getName()))
                     .forEach(allergy -> userService.removeAllergyFromUser(username, allergy.getName()));
@@ -162,14 +163,12 @@ public class UserController {
 
         }
 
-        if(userEntity.equals(userService.getUserFromUsername(username).get()))
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        userService.updateUser(userEntity);
 
-        User updateduser = userService.updateUser(userEntity);
 
-        updateduser.setPassword(null);
+        userEntity.setPassword(null);
 
-        return ResponseEntity.ok(updateduser);
+        return ResponseEntity.ok(userEntity);
 
     }
 }
