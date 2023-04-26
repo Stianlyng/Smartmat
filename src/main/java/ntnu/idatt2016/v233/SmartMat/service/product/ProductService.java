@@ -76,7 +76,7 @@ public class ProductService {
      * @param id The id of the product to get the volume from
      * @return The volume of the product, if it exists
      */
-    public Optional<String> getProductVolume(long id) {
+    public Optional<List<String>> getProductVolume(long id) {
         if(productRepository.findById(id).isEmpty())
             return Optional.empty();
 
