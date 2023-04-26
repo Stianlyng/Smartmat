@@ -97,4 +97,14 @@ public class Product{
     public String toString(){
         return String.valueOf(this.ean);
     }
+
+    /**
+     * Adds a shopping list to the product
+     * @param shoppingList the shopping list to add to the product
+     */
+    public void addShoppingList(ShoppingList shoppingList) {
+        if (shoppingLists == null)
+            shoppingLists = new ArrayList<>();
+        shoppingLists.add(shoppingList);
+    }
 }

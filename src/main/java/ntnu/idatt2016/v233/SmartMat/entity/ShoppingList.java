@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,4 +43,14 @@ public class ShoppingList {
     @JsonIgnoreProperties("shoppingList")
     private List<Product> products;
 
+
+    /**
+     * Adds a product to the shopping list
+     * @param product  the product to add to the shopping list
+     */
+    public void addProduct(Product product) {
+        if (products == null)
+            products = new ArrayList<>();
+        products.add(product);
+    }
 }
