@@ -50,7 +50,7 @@ class UserGroupAssoServiceTest {
                 .thenReturn(tempAsso);
 
 
-        userGroupAssoService.save(user, tempgroup, true);
+        userGroupAssoService.save(user, tempgroup,"Admin");
 
         //make sure the correct assisiation is saved
         verify(userGroupAssoRepository, times(1)).save(tempAsso);
