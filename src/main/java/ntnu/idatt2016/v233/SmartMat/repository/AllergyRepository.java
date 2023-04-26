@@ -5,6 +5,7 @@ import ntnu.idatt2016.v233.SmartMat.entity.product.Allergy;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository for allergies
@@ -20,4 +21,12 @@ public interface AllergyRepository extends JpaRepository<Allergy, String> {
      * @return list of allergies
      */
     List<Allergy> findAllByProductsEan(long id);
-    }
+    
+    /**
+     * Finds a allergy by its name
+     * @param name the name of the allergy
+     * @return optional of allergy if found
+     */
+    Optional<Allergy> findByName(String name);
+
+}

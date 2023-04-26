@@ -2,6 +2,7 @@ package ntnu.idatt2016.v233.SmartMat.controller.user;
 
 
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.dto.request.AllergyRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.request.RegisterUserRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
@@ -95,4 +96,10 @@ public class UserController {
     }
 
 
+    @PostMapping("/addAllergy")
+    public ResponseEntity<Boolean> addAllergyToUser(@RequestBody AllergyRequest allergyRequest) {
+        return userService.addAllergyToUser(allergyRequest.getUsername(), allergyRequest.getAllergyName())
+                .map(user -> ResponseEntity.ok(user.getAllergies().size() > 0))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }
