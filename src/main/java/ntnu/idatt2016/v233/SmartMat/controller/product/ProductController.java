@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.dto.request.ProductRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
+import ntnu.idatt2016.v233.SmartMat.util.CategoryUtil;
+import ntnu.idatt2016.v233.SmartMat.util.ProductUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +39,11 @@ public class ProductController {
                 .description(productRequest.description())
                 .url(productRequest.image())
                 .build();
+
+
+
+
+         CategoryUtil.defineCategory(product.getName(),product.getDescription());
 
         if(productService.getProductById(productRequest.ean()).isPresent())
             return ResponseEntity.status(409).build();

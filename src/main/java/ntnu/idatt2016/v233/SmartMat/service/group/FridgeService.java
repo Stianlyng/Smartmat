@@ -91,7 +91,6 @@ public class FridgeService {
         Fridge fridge = fridgeRepository.findByGroupGroupId(groupId).orElseThrow(() -> new IllegalArgumentException("Fridge does not exist"));
 
 
-
         if (product.isPresent()) {
             Product productToRemove = product.get();
             if (!fridge.getProducts().contains(

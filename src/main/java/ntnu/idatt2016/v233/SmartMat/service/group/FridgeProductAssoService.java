@@ -51,7 +51,7 @@ public class FridgeProductAssoService {
      * Deletes a fridge product association
      * @param fridgeProductAsso the fridge product association to delete
      */
-    public void deleteFridgeProductAsso(FridgeProductAsso fridgeProductAsso) {
+    public boolean deleteFridgeProductAsso(FridgeProductAsso fridgeProductAsso) {
         fridgeProductAsso.getFridgeId().getProducts().remove(fridgeProductAsso);
         fridgeProductAsso.getEan().getFridges().remove(fridgeProductAsso);
         fridgeProductAssoRepository.delete(fridgeProductAsso);
@@ -59,5 +59,7 @@ public class FridgeProductAssoService {
         fridgeRepository.save(fridgeProductAsso.getFridgeId());
 
         productRepository.save(fridgeProductAsso.getEan());
+
+        return true;
     }
 }
