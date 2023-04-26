@@ -2,9 +2,7 @@ package ntnu.idatt2016.v233.SmartMat.entity.group;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 
 /**
@@ -17,7 +15,7 @@ import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter @Setter
 @Table(name = "user_group")
 public class UserGroupAsso {
 
@@ -33,7 +31,7 @@ public class UserGroupAsso {
     @ManyToOne
     @MapsId("group_id")
     @JoinColumn(name = "group_id")
-    @JsonIgnoreProperties("user")
+    @JsonIgnoreProperties({"group", "user"})
     private Group group;
 
     @Column(name = "primary_group")

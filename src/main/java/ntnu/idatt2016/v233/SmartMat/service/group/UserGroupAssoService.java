@@ -22,11 +22,12 @@ public class UserGroupAssoService {
     private GroupRepository groupRepository;
     private final UserRepository userRepository;
 
-    public void save(User user, Group group, boolean primaryGroup) {
+    public void save(User user, Group group, String authority) {
         UserGroupAsso userGroupTable1 = new UserGroupAsso();
         userGroupTable1.setGroup(group);
         userGroupTable1.setUser(user);
-        userGroupTable1.setPrimaryGroup(primaryGroup);
+        userGroupTable1.setPrimaryGroup(true);
+        userGroupTable1.setGroupAuthority(authority);
         userGroupTable1.setId(UserGroupId.builder()
                         .groupId(group.getGroupId())
                         .username(user.getUsername())
@@ -56,4 +57,29 @@ public class UserGroupAssoService {
         return Optional.empty();
     }
 
+    /**
+     * Changes the primary group of a user by unmarking the current primary group and marking a new primary group.
+     *
+     * @param newId The ID of the new primary group.
+     * @param username The username of the user whose primary group is being changed.
+     */
+    public Optional<Object> changePrimaryGroup(long oldId, long newId, String username){
+        Optional<Group> oldGroup = groupRepository.findByGroupId(oldId);
+        Optional<Group> newGroup = groupRepository.findByGroupId(newId);
+        Optional<User> user =  userRepository.findByUsername(username);
+
+        if (oldGroup.isEmpty()) return Optional.empty();
+        if (newGroup.isEmpty()) return Optional.empty();
+        if (user.isEmpty()) return Optional.empty();
+
+        UserGroupAsso userGroupAsso = userGroupAssoRepository.findAllByGroupAndUser(oldGroup.get(),user.get()).get();
+        userGroupAsso.setPrimaryGroup(false);
+
+        userGroupAssoRepository.save(userGroupAsso);
+        userGroupAsso = userGroupAssoRepository.findAllByGroupAndUser(newGroup.get(),user.get()).get();
+        userGroupAsso.setPrimaryGroup(true);
+        userGroupAssoRepository.save(userGroupAsso);
+
+        return Optional.of(userGroupAsso);
+    }
 }

@@ -5,10 +5,7 @@ import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
 import ntnu.idatt2016.v233.SmartMat.service.group.UserGroupAssoService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,4 +32,10 @@ public class UserGroupAssoController {
         return userGroupAssoService.getInformationByGroupId(groupId).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/markNewPrimary/{username}/{oldId}/{newId}")
+    public ResponseEntity<?> markNewPrimaryGroup(@PathVariable("username") String username,
+                                                 @PathVariable("newId") long newId,
+                                                 @PathVariable("oldId") long oldId){
+        return userGroupAssoService.changePrimaryGroup(oldId,newId,username).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }

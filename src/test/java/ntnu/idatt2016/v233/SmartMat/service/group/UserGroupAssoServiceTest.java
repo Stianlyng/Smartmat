@@ -47,6 +47,7 @@ public class UserGroupAssoServiceTest {
         userGroupAsso.setUser(user);
         userGroupAsso.setGroup(group);
         userGroupAsso.setPrimaryGroup(true);
+        userGroupAsso.setGroupAuthority("ADMIN");
         userGroupAsso.setId(UserGroupId.builder()
                 .groupId(group.getGroupId())
                 .username(user.getUsername())
@@ -55,9 +56,9 @@ public class UserGroupAssoServiceTest {
 
     @Test
     public void testSave() {
-        userGroupAssoService.save(user, group, true);
+        userGroupAssoService.save(user, group, "ADMIN");
 
-        verify(userGroupAssoRepository, times(1)).save(userGroupAsso);
+        verify(userGroupAssoRepository, times(1)).save(any(userGroupAsso.getClass()));
         verify(userRepository, times(1)).save(user);
         verify(groupRepository, times(1)).save(group);
     }
