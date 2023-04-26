@@ -20,11 +20,12 @@ public class UserGroupAssoService {
     private UserGroupAssoRepository userGroupAssoRepository;
     private GroupRepository groupRepository;
 
-    public void save(User user, Group group, boolean primaryGroup) {
+    public void save(User user, Group group, String userLevel) {
         UserGroupAsso userGroupTable1 = new UserGroupAsso();
         userGroupTable1.setGroup(group);
         userGroupTable1.setUser(user);
-        userGroupTable1.setPrimaryGroup(primaryGroup);
+        userGroupTable1.setPrimaryGroup(true);
+        userGroupTable1.setGroupAuthority(userLevel);
         userGroupTable1.setId(UserGroupId.builder()
                         .groupId(group.getGroupId())
                         .username(user.getUsername())
@@ -49,6 +50,21 @@ public class UserGroupAssoService {
             if(!list.isEmpty()) return Optional.of(list);
         }
         return Optional.empty();
+    }
+
+    /**
+     * Changes the primary group of a user by unmarking the current primary group and marking a new primary group.
+     *
+     * @param newId The ID of the new primary group.
+     * @param username The username of the user whose primary group is being changed.
+     */
+    public void changePrimaryGroup(long newId, String username){
+
+        try {
+            userGroupAssoRepository.unmarkOldPrimaryGroup(username);
+        }finally {
+            userGroupAssoRepository.markNewPrimaryGroup(username,newId);
+        }
     }
 
 }

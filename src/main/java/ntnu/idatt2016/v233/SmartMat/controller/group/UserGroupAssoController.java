@@ -5,10 +5,7 @@ import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
 import ntnu.idatt2016.v233.SmartMat.service.group.UserGroupAssoService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,6 +30,23 @@ public class UserGroupAssoController {
     @GetMapping("/information/{groupId}")
     public ResponseEntity<List<UserGroupAsso>> getInformationByGroupId(@PathVariable("groupId") long groupId){
         return userGroupAssoService.getInformationByGroupId(groupId).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Updates the user's primary group in the database.
+     *
+     * @param username the username of the user whose primary group will be updated
+     * @param newId the ID of the new primary group to set
+     * @return a ResponseEntity with a 200 OK status code
+     */
+    @PutMapping("/markNewPrimary/{username}/{newId}")
+    public ResponseEntity<?> markNewPrimaryGroup(@PathVariable("username") String username,
+                                                 @PathVariable("newId") long newId){
+        try {
+            userGroupAssoService.changePrimaryGroup(newId,username);
+        }finally {
+            return ResponseEntity.ok().build();
+        }
     }
 
 }
