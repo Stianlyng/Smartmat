@@ -55,7 +55,7 @@ public class UserGroupAssoServiceTest {
 
     @Test
     public void testSave() {
-        userGroupAssoService.save(user, group, true);
+        userGroupAssoService.save(user, group, "ADMIN");
 
         verify(userGroupAssoRepository, times(1)).save(userGroupAsso);
         verify(userRepository, times(1)).save(user);

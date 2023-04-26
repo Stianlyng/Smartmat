@@ -3,6 +3,7 @@ package ntnu.idatt2016.v233.SmartMat.repository.group;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupId;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
+import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -30,4 +31,5 @@ public interface UserGroupAssoRepository extends JpaRepository<UserGroupAsso, Us
      */
     List<UserGroupAsso> findAllByGroup(Group group);
 
+    Optional<UserGroupAsso> findAllByGroupAndUser(Group group, User user);
 }

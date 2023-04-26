@@ -33,7 +33,7 @@ public class UserGroupAsso {
     @ManyToOne
     @MapsId("group_id")
     @JoinColumn(name = "group_id")
-    @JsonIgnoreProperties("user")
+    @JsonIgnoreProperties({"group", "user"})
     private Group group;
 
     @Column(name = "primary_group")
