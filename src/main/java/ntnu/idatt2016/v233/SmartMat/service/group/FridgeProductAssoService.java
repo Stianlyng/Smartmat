@@ -11,6 +11,7 @@ import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.Calendar;
 import java.util.Optional;
 
 @Service
@@ -33,7 +34,7 @@ public class FridgeProductAssoService {
      * @return the fridge product association
      */
     public FridgeProductAsso createFridgeProductAsso(Fridge fridge, Product product, int amount, int days) {
-        FridgeProductAsso temp = FridgeProductAsso.builder().fridgeId(fridge).ean(product).amount(amount).daysToExpiration(days).build();
+        FridgeProductAsso temp = FridgeProductAsso.builder().fridgeId(fridge).ean(product).amount(amount).daysToExpiration(days).purchaseDate(new Date(Calendar.getInstance().getTime().getTime())).build();
         fridgeProductAssoRepository.save(temp);
         fridge.addProduct(temp);
         product.addFridge(temp);

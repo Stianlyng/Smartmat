@@ -59,6 +59,7 @@ public class FridgeController {
      */
     @PostMapping("/group/product")
     public ResponseEntity<Object> addProductToFridge(@RequestBody FridgeProductRequest request) {
+        System.out.println(request);
         return fridgeService.addProductToFridge(request).map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.notFound().build());
     }
 
