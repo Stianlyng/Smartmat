@@ -4,60 +4,61 @@ import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupId;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
+import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.UserGroupAssoRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.user.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserGroupAssoServiceTest {
+public class UserGroupAssoServiceTest {
 
     @Mock
-    UserGroupAssoRepository userGroupAssoRepository;
+    private UserGroupAssoRepository userGroupAssoRepository;
+
+    @Mock
+    private GroupRepository groupRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
-    UserGroupAssoService userGroupAssoService;
+    private UserGroupAssoService userGroupAssoService;
+
+    private User user;
+    private Group group;
+    private UserGroupAsso userGroupAsso;
+
+    @BeforeEach
+    public void setUp() {
+        user = new User();
+        user.setUsername("testUser");
+
+        group = new Group();
+        group.setGroupId(1L);
+
+        userGroupAsso = new UserGroupAsso();
+        userGroupAsso.setUser(user);
+        userGroupAsso.setGroup(group);
+        userGroupAsso.setPrimaryGroup(true);
+        userGroupAsso.setId(UserGroupId.builder()
+                .groupId(group.getGroupId())
+                .username(user.getUsername())
+                .build());
+    }
 
     @Test
-    void save() {
+    public void testSave() {
+        userGroupAssoService.save(user, group, true);
 
-        UserGroupAsso tempAsso = new UserGroupAsso();
-
-        User user = new User();
-        user.setFirstName("test");
-        user.setLastName("test");
-        user.setUsername("test");
-
-        Group tempgroup = new Group();
-        tempgroup.setGroupName("test");
-
-        tempAsso.setId(UserGroupId.builder().username(user.getUsername())
-                .groupId(tempgroup.getGroupId()).build());
-        tempAsso.setGroup(tempgroup);
-        tempAsso.setUser(user);
-        tempAsso.setPrimaryGroup(true);
-
-        tempgroup.addUser(tempAsso);
-        user.addGroup(tempAsso);
-
-
-        when(userGroupAssoRepository.save(tempAsso))
-                .thenReturn(tempAsso);
-
-
-        userGroupAssoService.save(user, tempgroup, true);
-
-        //make sure the correct assisiation is saved
-        verify(userGroupAssoRepository, times(1)).save(tempAsso);
-
-
-        assertEquals(user.getGroup().get(0), tempgroup.getUser().get(0));
-
-
+        verify(userGroupAssoRepository, times(1)).save(userGroupAsso);
+        verify(userRepository, times(1)).save(user);
+        verify(groupRepository, times(1)).save(group);
     }
 }
