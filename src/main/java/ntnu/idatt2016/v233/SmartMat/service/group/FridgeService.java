@@ -69,12 +69,7 @@ public class FridgeService {
         Fridge fridge = fridgeRepository.findByGroupGroupId(groupId).orElseThrow(() -> new IllegalArgumentException("Fridge does not exist"));
 
         if (product.isPresent()) {
-            Product productToAdd = product.get();
-            FridgeProductAsso temp = FridgeProductAsso.builder().fridgeId(fridge).ean(productToAdd).amount(amount).daysToExpiration(days).build();
-            if (fridge.getProducts().contains(temp)) {
-                return Optional.empty();
-            }
-            return Optional.of(fridgeProductAssoService.createFridgeProductAsso(fridge, productToAdd,amount,days));
+            return Optional.of(fridgeProductAssoService.createFridgeProductAsso(fridge, product.get(),amount,days));
         } else {
             return Optional.empty();
         }

@@ -68,7 +68,7 @@ public class FridgeController {
         }
 
         try {
-            if (fridgeService.addProductToFridge(groupId, productId, request.amount(), request.days()).isPresent()) {
+            if (fridgeService.addProductToFridge(groupId,productId, request.amount(), request.days()).isPresent()) {
                 return ResponseEntity.ok("Success");
             }
             return ResponseEntity.badRequest().body("Product already exists in the fridge");

@@ -13,26 +13,23 @@ import java.sql.Date;
 @Getter @Setter
 @Entity(name = "fridge_product")
 @Builder
-@IdClass(FridgeProductId.class)
 public class FridgeProductAsso {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "fridge_product_id")
     private long id;
 
     @ManyToOne
-    @MapsId("fridge_id")
     @JoinColumn(name = "fridge_id")
     @JsonIgnoreProperties({"products"})
     private Fridge fridgeId;
 
     @ManyToOne
-    @MapsId("ean")
     @JoinColumn(name = "ean")
     @JsonIgnoreProperties({"fridges"})
     private Product ean;
 
-    @MapsId("purchase_date")
     @Column(name = "purchase_date")
     private Date purchaseDate;
 

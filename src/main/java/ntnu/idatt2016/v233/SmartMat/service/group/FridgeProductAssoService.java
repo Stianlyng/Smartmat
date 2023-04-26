@@ -47,7 +47,6 @@ public class FridgeProductAssoService {
         fridgeProductAsso.getFridgeId().getProducts().remove(fridgeProductAsso);
         fridgeProductAsso.getEan().getFridges().remove(fridgeProductAsso);
         fridgeProductAssoRepository.delete(fridgeProductAsso);
-
         fridgeRepository.save(fridgeProductAsso.getFridgeId());
         productRepository.save(fridgeProductAsso.getEan());
 
