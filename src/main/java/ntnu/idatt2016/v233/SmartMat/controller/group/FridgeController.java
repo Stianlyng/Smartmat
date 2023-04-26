@@ -68,7 +68,7 @@ public class FridgeController {
         }
 
         try {
-            if (fridgeService.addProductToFridge(groupId, productId)) {
+            if (fridgeService.addProductToFridge(groupId, productId, request.amount(), request.days()).isPresent()) {
                 return ResponseEntity.ok("Success");
             }
             return ResponseEntity.badRequest().body("Product already exists in the fridge");
@@ -87,16 +87,13 @@ public class FridgeController {
      * @param productId the id of the product
      * @return success if the product was removed, bad request if the product wasn't in the fridge, or not found if the group or product doesn't exist
      */
-    @DeleteMapping("/group/{groupId}/product/{productId}")
-    public ResponseEntity<String> removeProductFromFridge(@PathVariable("groupId") long groupId, @PathVariable("productId") long productId) {
-        try {
-            fridgeService.getFridgeByGroupId(groupId).orElseThrow();
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+
+    /*
+    @DeleteMapping("/delete/{fridgeProductId}")
+    public ResponseEntity<String> removeProductFromFridge(@PathVariable("fridgeProductId") long FPId) {
 
         try {
-            if (fridgeService.removeProductFromFridge(groupId, productId, Date.valueOf("2023-04-24"))) {
+            if (fridgeService.removeProductFromFridge(FPId)){
                 return ResponseEntity.ok("Success");
             }
             return ResponseEntity.badRequest().body("Product not found in the fridge");
@@ -104,5 +101,6 @@ public class FridgeController {
             return ResponseEntity.status(500).body("Internal server error");
         }
     }
+    */
 
 }
