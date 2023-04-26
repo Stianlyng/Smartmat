@@ -65,6 +65,57 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Returns all products in the database.
+     * @return All products in the database.
+     */
+    @GetMapping("/")
+    public ResponseEntity<List<Product>> getAllProducts() {
+        return ResponseEntity.ok(productService.getAllProducts());
+    }
+
+    /**
+     * Deletes a product with the given ean.
+     * @param ean The ean of the product to be deleted.
+     * @return The product that was deleted.
+     */
+    @DeleteMapping("ean/{ean}")
+    public ResponseEntity<Product> deleteProduct(@PathVariable long ean) {
+        Optional<Product> product = productService.getProductById(ean);
+        if(product.isPresent()) {
+            productService.deleteProductById(product.get().getEan());
+            return ResponseEntity.ok(product.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+
+    /**
+     * Updates a product with the given ean.
+     * @param ean The ean of the product to be updated.
+     * @param productRequest The product to be updated.
+     * @return The product that was updated.
+     */
+    @PutMapping("ean/{ean}")
+    public ResponseEntity<Product> updateProduct(@PathVariable long ean, @RequestBody ProductRequest productRequest) {
+        Optional<Product> product = productService.getProductById(ean);
+        if(product.isPresent()) {
+            product.get().setName(productRequest.name());
+            product.get().setDescription(productRequest.description());
+            product.get().setUrl(productRequest.image());
+            Optional<List<String>> volumeUnit = productService.getProductVolume(productRequest.ean());
+
+            if(volumeUnit.isPresent()){
+                product.get().setUnit(volumeUnit.get().get(1));
+                product.get().setAmount(Double.parseDouble(volumeUnit.get().get(0)));
+            }
+
+
+            productService.updateProduct(product.get());
+            return ResponseEntity.ok(product.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
 
 
 }
