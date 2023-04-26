@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.service.group;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.Waste;
 import ntnu.idatt2016.v233.SmartMat.repository.group.WasteRepository;
@@ -37,7 +38,7 @@ public class WasteService {
      * @param groupId the id of the group
      * @return an optional containing the waste if it exists
      */
-    public Optional<Waste> getWasteByGroupId(long groupId) {
+    public Optional<List<Waste>> getWasteByGroupId(long groupId) {
         return wasteRepository.findByGroupId(groupId);
     }
 }
