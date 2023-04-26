@@ -31,5 +31,23 @@ public interface UserGroupAssoRepository extends JpaRepository<UserGroupAsso, Us
      */
     List<UserGroupAsso> findAllByGroup(Group group);
 
+    /**
+     * Finds all UserGroupAsso objects associated with the specified group and user.
+     *
+     * @param group the group for which to find the user-group associations
+     * @param user the user for which to find the user-group associations
+     * @return an optional object containing a list of UserGroupAsso objects associated with the specified group and user,
+     *         or an empty optional if no such user-group associations exist in the database
+     */
     Optional<UserGroupAsso> findAllByGroupAndUser(Group group, User user);
+
+    /**
+     * Finds the first UserGroupAsso object associated with the specified user and primary group status.
+     *
+     * @param user the user for which to find the user-group association
+     * @param primaryGroup the primary group status for which to find the user-group association
+     * @return an optional object containing the first UserGroupAsso object associated with the specified user and primary group status,
+     *         or an empty optional if no such user-group associations exist in the database
+     */
+    Optional<UserGroupAsso> findFirstByUserAndPrimaryGroup(User user, boolean primaryGroup);
 }
