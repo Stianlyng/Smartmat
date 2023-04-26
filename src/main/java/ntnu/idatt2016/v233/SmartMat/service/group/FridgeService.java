@@ -3,8 +3,10 @@ package ntnu.idatt2016.v233.SmartMat.service.group;
 import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeRepository;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
+import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +17,9 @@ import java.util.Optional;
 /**
  * Service for management of a group fridge
  *
- * @author Anders Austlid
- * @version 1.0.1
- * @since 25.04.2023
+ * @author Anders Austlid & Birk
+ * @version 1.2
+ * @since 26.04.2023
  */
 @AllArgsConstructor
 @Service
@@ -27,6 +29,8 @@ public class FridgeService {
     private final ProductService productService;
 
     private final FridgeProductAssoService fridgeProductAssoService;
+
+    private final GroupRepository groupRepository;
 
     /**
      * Gets the fridge of a group
@@ -111,5 +115,21 @@ public class FridgeService {
         if (fridgeRepository.findById(fridge.getFridgeId()).isEmpty())
             return;
         fridgeRepository.save(fridge);
+    }
+
+    /**
+     * Adds a group to a fridge
+     * @param fridgeId the id of the fridge
+     * @param groupId the id of the group
+     */
+    public void addGroupToFridge(long fridgeId, long groupId) {
+        Optional<Fridge> fridge = fridgeRepository.findById(fridgeId);
+        Optional<Group> group = groupRepository.findByGroupId(groupId);
+        if (fridge.isPresent() && group.isPresent()) {
+            fridge.get().setGroup(group.get());
+            group.get().setFridge(fridge.get());
+            groupRepository.save(group.get());
+            fridgeRepository.save(fridge.get());
+        }
     }
 }
