@@ -7,6 +7,9 @@ import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 /**
  * The product controller is responsible for handling requests related to products.
  * It uses the product service to handle the requests.
@@ -27,7 +30,7 @@ public class ProductController {
      * @return The product that was registered.
      */
     @PostMapping("/")
-    public ResponseEntity<ProductRequest> createProduct(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Product> createProduct(@RequestBody ProductRequest productRequest) {
         Product product = Product.builder()
                 .ean(productRequest.ean())
                 .name(productRequest.name())
@@ -38,10 +41,16 @@ public class ProductController {
         if(productService.getProductById(productRequest.ean()).isPresent())
             return ResponseEntity.status(409).build();
 
+
+        Optional<List<String>> volumeUnit = productService.getProductVolume(productRequest.ean());
+
+        if(volumeUnit.isPresent()){
+            product.setUnit(volumeUnit.get().get(1));
+            product.setAmount(Double.parseDouble(volumeUnit.get().get(0)));
+        }
+
         productService.saveProduct(product);
-
-        return ResponseEntity.ok(productRequest);
-
+        return ResponseEntity.ok(product);
     }
 
     /**
