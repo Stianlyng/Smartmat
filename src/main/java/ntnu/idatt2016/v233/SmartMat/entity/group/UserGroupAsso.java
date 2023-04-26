@@ -38,4 +38,7 @@ public class UserGroupAsso {
 
     @Column(name = "primary_group")
     private Boolean primaryGroup;
+
+    @Column(name ="group_authority")
+    private String groupAuthority;
 }
