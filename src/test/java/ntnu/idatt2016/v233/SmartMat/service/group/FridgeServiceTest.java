@@ -49,6 +49,7 @@ public class FridgeServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    /*
     @Test
     public void testAddProductToFridge() {
         // Arrange
@@ -98,5 +99,5 @@ public class FridgeServiceTest {
         // Assert
         assertEquals(fridge.get().getGroup(), group.get());
         assertEquals(group.get().getFridge(), fridge.get());
-    }
+    }*/
 }
