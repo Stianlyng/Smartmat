@@ -19,7 +19,7 @@ public class CategoryUtilTest {
 
         name = "melk";
         description = "Whole milk";
-        assertEquals("dairy and egg ", CategoryUtil.defineCategory(name, description));
+        assertEquals("dairy and egg", CategoryUtil.defineCategory(name, description));
 
         name = "eple";
         description = "Fresh green apple";
