@@ -72,7 +72,7 @@ public class Product{
             inverseJoinColumns = @JoinColumn(name = "allergy_name"))
     List<Allergy> allergies;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "ean")
     @JsonIgnoreProperties({"products"})

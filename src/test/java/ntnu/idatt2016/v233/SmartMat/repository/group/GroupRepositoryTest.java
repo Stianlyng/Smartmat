@@ -60,7 +60,6 @@ public class GroupRepositoryTest {
         Group group2 = Group.builder().groupName("group 2").achievements(List.of(achievement)).build();
         Group group3 = Group.builder().groupName("group 3").build();
 
-        achievementRepository.save(achievement);
 
         groupRepository.saveAll(List.of(group1, group2, group3));
 
@@ -130,9 +129,7 @@ public class GroupRepositoryTest {
 
         assertTrue(tempGroupe.isPresent());
 
-        Achievement tempAchievement = Achievement.builder().achievementName("test").build();
-
-        achievementRepository.save(tempAchievement);
+        Achievement tempAchievement = Achievement.builder().achievementName("test2").build();
         Group tempGroup = tempGroupe.get();
 
 

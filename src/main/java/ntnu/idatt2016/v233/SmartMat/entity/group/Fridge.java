@@ -38,7 +38,7 @@ public class Fridge{
     @JsonIgnoreProperties("fridge")
     Group group;
     
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "fridge_id")
     @JsonIgnoreProperties("fridge")

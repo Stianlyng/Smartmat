@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
 import ntnu.idatt2016.v233.SmartMat.service.group.GroupService;
-import ntnu.idatt2016.v233.SmartMat.service.group.UserGroupAssoService;
 import ntnu.idatt2016.v233.SmartMat.service.user.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Controller for groups API, providing endpoints for group management
@@ -23,7 +23,8 @@ import java.util.List;
 @RequestMapping("/api/groups")
 public class GroupController {
     private final GroupService groupService;
-    private final UserGroupAssoService userGroupAssoService;
+
+    private final UserService userService;
 
     /**
      * Gets a group by its name
@@ -58,15 +59,23 @@ public class GroupController {
     @PostMapping("/{username}")
     public ResponseEntity<Group> createGroup(@RequestBody Group group,
                                              @PathVariable("username") String username) {
-        if(groupService.getGroupById(group.getGroupId()).isPresent()) {
+
+        if(group.getGroupName().equals("") ||
+                userService.getUserFromUsername(username).isEmpty() ||
+                groupService.getGroupById(group.getGroupId()).isPresent()) {
             return ResponseEntity.badRequest().build();
         }
-        if(group.getGroupName().equals("")) {
-            return ResponseEntity.badRequest().build();
-        }
+
+
         Group group1 = groupService.createGroup(group);
-        userGroupAssoService.addPersonToGroup(username,group1.getLinkCode(), "ADMIN");
-        return ResponseEntity.ok(group1);
+        group1.addUser(UserGroupAsso.builder()
+                        .groupAuthority("ADMIN")
+                        .group(group1)
+                        .user(userService.getUserFromUsername(username).get())
+                .build());
+
+        return groupService.updateGroup(group1).map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     /**
@@ -132,23 +141,37 @@ public class GroupController {
      */
     @GetMapping("/information/{groupId}")
     public ResponseEntity<List<UserGroupAsso>> getInformationByGroupId(@PathVariable("groupId") long groupId){
-        return userGroupAssoService.getInformationByGroupId(groupId).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return groupService.getGroupById(groupId)
+                .map(group -> ResponseEntity.ok(group.getUser()))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     /**
      * Handles the HTTP PUT request to change the primary group of a user.
      *
      * @param username the username of the user whose primary group is to be changed
-     * @param newId the ID of the new primary group
-     * @param oldId the ID of the old primary group
+     * @param groupId the ID of the group
      * @return a ResponseEntity object containing an HTTP status code and the updated UserGroupAsso object,
      *         or a ResponseEntity object with an HTTP status code indicating that the request was not successful
      */
-    @PutMapping("/markNewPrimary/{username}/{oldId}/{newId}")
+    @PutMapping("/markNewPrimary/{username}/{groupId}/{newId}")
     public ResponseEntity<?> markNewPrimaryGroup(@PathVariable("username") String username,
-                                                 @PathVariable("newId") long newId,
-                                                 @PathVariable("oldId") long oldId){
-        return userGroupAssoService.changePrimaryGroup(oldId,newId,username).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+                                                 @PathVariable("groupId") long groupId){
+        return userService.getUserFromUsername(username)
+                .flatMap(user ->{
+                            user.getGroup().forEach(userGroupAsso -> {
+                                if(userGroupAsso.getGroup().getGroupId() != groupId){
+                                    userGroupAsso.setPrimaryGroup(false);
+                                }
+                                if(userGroupAsso.getGroup().getGroupId() == groupId){
+                                    userGroupAsso.setPrimaryGroup(true);
+                                }
+                            });
+                            return Optional.of(userService.updateUser(user));
+                        }
+                )
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     /**
@@ -162,7 +185,19 @@ public class GroupController {
     @PostMapping("/connection/{username}/{linkCode}")
     public ResponseEntity<?> addConnection(@PathVariable("username") String username,
                                            @PathVariable("linkCode") String linkCode){
-        return userGroupAssoService.addPersonToGroup(username,linkCode,"USER").map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.notFound().build());
+        return groupService.getGroupByLinkCode(linkCode)
+                .flatMap(group -> userService.getUserFromUsername(username)
+                        .flatMap(user -> {
+                            UserGroupAsso userGroupAsso = UserGroupAsso.builder()
+                                    .group(group)
+                                    .user(user)
+                                    .build();
+                            user.addGroup(userGroupAsso);
+                            userService.updateUser(user);
+                            return Optional.of(userGroupAsso);
+                        }))
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     /**
@@ -178,6 +213,21 @@ public class GroupController {
     public ResponseEntity<?> changeAuthority(@PathVariable("groupId") long groupId,
                                              @PathVariable("username") String username,
                                              @PathVariable("authority") String authority){
-        return userGroupAssoService.changeAuthorityOfUser(username,groupId,authority).map(ResponseEntity::ok).orElseGet(() ->ResponseEntity.notFound().build());
+        return groupService.getGroupById(groupId).flatMap(group -> userService.getUserFromUsername(username)
+                .flatMap(user -> {
+                    UserGroupAsso userGroupAsso = user.getGroup().stream()
+                            .filter(asso -> asso.getGroup().getGroupId() == groupId)
+                            .findFirst()
+                            .orElse(null);
+                    if(userGroupAsso != null){
+                        userGroupAsso.setGroupAuthority(authority);
+                        userService.updateUser(user);
+                        return Optional.of(userGroupAsso);
+                    }
+                    return Optional.empty();
+                }))
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 }
