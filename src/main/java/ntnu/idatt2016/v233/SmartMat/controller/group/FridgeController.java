@@ -59,21 +59,16 @@ public class FridgeController {
      */
     @PostMapping("/group/product")
     public ResponseEntity<Object> addProductToFridge(@RequestBody FridgeProductRequest request) {
-        System.out.println(request);
         return fridgeService.addProductToFridge(request).map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.notFound().build());
     }
 
 
-    /**
-     * Removes a product from the fridge of a group
-     * todo: remove the date parameter when the frontend is done
-     *
-     * @param groupId the id of the group
-     *                group must exist
-     *                group must have a fridge
-     * @param productId the id of the product
-     * @return success if the product was removed, bad request if the product wasn't in the fridge, or not found if the group or product doesn't exist
-     */
+    @DeleteMapping("/group/product/delete/{fridgeProductId}/{amount}")
+    public ResponseEntity<?> deleteAmountFridgeProduct(@PathVariable("fridgeProductId") long fridgeProductId,
+                                                       @PathVariable("amount") int amount){
+        return fridgeService.deleteAmountFromFridge(fridgeProductId,amount).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
 
     /*
     @DeleteMapping("/delete/{fridgeProductId}")

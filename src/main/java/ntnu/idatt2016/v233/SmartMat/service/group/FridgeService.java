@@ -120,4 +120,13 @@ public class FridgeService {
             fridgeRepository.save(fridge.get());
         }
     }
+
+    public Optional<Object> deleteAmountFromFridge(long fridgeProductId, int amount) {
+        if(amount < fridgeProductAssoRepository.findAmountById(fridgeProductId)){
+            System.out.println("Given amount " + amount + " < " + " Stored in db");
+        } else {
+            System.out.println("Given amount " + amount + " > " + " Stored in db");
+        }
+        return Optional.empty();
+    }
 }
