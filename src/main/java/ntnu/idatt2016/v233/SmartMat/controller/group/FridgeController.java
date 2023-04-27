@@ -3,13 +3,10 @@ package ntnu.idatt2016.v233.SmartMat.controller.group;
 import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.dto.request.FridgeProductRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
-import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.service.group.FridgeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
-import java.util.Optional;
 
 /**
  * Controller for fridges API, providing endpoints for fridge management

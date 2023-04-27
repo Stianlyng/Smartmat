@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,11 +24,13 @@ public class FridgeProductAsso {
     @ManyToOne
     @JoinColumn(name = "fridge_id")
     @JsonIgnoreProperties({"products"})
+    @JsonIgnore
     private Fridge fridgeId;
 
     @ManyToOne
     @JoinColumn(name = "ean")
     @JsonIgnoreProperties({"fridges"})
+    @JsonIgnore
     private Product ean;
 
     @Column(name = "purchase_date")

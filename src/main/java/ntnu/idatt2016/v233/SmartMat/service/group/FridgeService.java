@@ -60,7 +60,7 @@ public class FridgeService {
 
 
     public Optional<Object> addProductToFridge(FridgeProductRequest fridgeProductRequest) {
-        Optional<Product> product = productService.getProductById(fridgeProductRequest.productId());
+        Optional<Product> product = productService.getProductById(fridgeProductRequest.ean());
         Optional<Fridge> fridge = fridgeRepository.findByGroupGroupId(fridgeProductRequest.groupId());
         if(product.isEmpty() || fridge.isEmpty()) return Optional.empty();
 

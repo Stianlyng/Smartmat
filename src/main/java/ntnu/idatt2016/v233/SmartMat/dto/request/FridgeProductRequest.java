@@ -5,5 +5,5 @@ package ntnu.idatt2016.v233.SmartMat.dto.request;
  * @param groupId the id of the group
  * @param productId the id of the product
  */
-public record FridgeProductRequest(long groupId, long productId, int amount, int days) {
+public record FridgeProductRequest(long groupId, long ean, int amount, int days) {
 }
