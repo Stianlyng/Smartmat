@@ -75,10 +75,9 @@ public class UserController {
                 .lastName(user.lastName())
                 .dateOfBirth(user.birthDate())
                 .enabled(true)
-                .authorities(new ArrayList<>())
+                .authority(Authority.USER)
                 .build();
         userService.saveUser(newUser);
-        userService.addAuthorityToUser(newUser.getUsername(), Authority.USER);
         newUser.setPassword(null);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }

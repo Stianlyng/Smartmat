@@ -79,13 +79,9 @@ public class User implements UserDetails {
     private List<Recipe> recipes;
 
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_authority",
-            joinColumns = @JoinColumn(name = "username"),
-            inverseJoinColumns = @JoinColumn(name = "authority"))
-    @JsonIgnoreProperties({"users"})
-    private List<AuthorityTable> authorities = new ArrayList<>();
+    @Column(name = "authority")
+    private Authority authority;
+
 
 
     /**
@@ -128,9 +124,7 @@ public class User implements UserDetails {
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(this.authorities.stream().map(AuthorityTable::getAuthority)
-                .map(Authority::toString).map(SimpleGrantedAuthority::new)
-                .toArray(GrantedAuthority[]::new));
+        return List.of(new SimpleGrantedAuthority(this.authority.toString()));
     }
 
     /**
@@ -187,11 +181,5 @@ public class User implements UserDetails {
         return this.enabled;
     }
 
-    public void addAuthority(AuthorityTable authority){
-        if (this.authorities == null) {
-            this.authorities = new ArrayList<>();
-        }
-        this.authorities.add(authority);
-    }
 
 }

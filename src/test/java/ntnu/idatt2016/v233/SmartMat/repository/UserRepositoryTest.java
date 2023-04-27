@@ -39,7 +39,7 @@ public class UserRepositoryTest {
                 .email("testuser@example.com")
                 .firstName("Test")
                 .lastName("User")
-                .authorities(new ArrayList<>())
+                .authority(Authority.USER)
                 .dateOfBirth(Date.valueOf("1990-01-01"))
                 .build();
         entityManager.persist(user);
@@ -54,7 +54,7 @@ public class UserRepositoryTest {
                 .email("testuser@example.no")
                 .firstName("TestUSERNAME")
                 .lastName("UserTEST")
-                .authorities(new ArrayList<>())
+                .authority(Authority.USER)
                 .dateOfBirth(Date.valueOf("1989-01-01"))
                 .build();
         userRepository.save(user);
@@ -113,7 +113,7 @@ public class UserRepositoryTest {
                 .email("newemail@example.com")
                 .firstName("New")
                 .lastName("Name")
-                .authorities(new ArrayList<>())
+                .authority(Authority.USER)
                 .dateOfBirth(Date.valueOf("1995-01-01"))
                 .build();
         userRepository.save(modifiedUser);
