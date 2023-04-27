@@ -11,6 +11,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 /**
  * Fridge is an entity class representing a fridge in the system.
@@ -36,7 +38,8 @@ public class Fridge{
     @JsonIgnoreProperties("fridge")
     Group group;
     
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "fridge_id")
     @JsonIgnoreProperties("fridge")
     List<FridgeProductAsso> products;
