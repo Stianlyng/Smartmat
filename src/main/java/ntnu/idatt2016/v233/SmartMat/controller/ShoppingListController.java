@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
+import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 import ntnu.idatt2016.v233.SmartMat.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,7 @@ public class ShoppingListController {
 
     @Autowired
     UserService userService;
+
 
 
     /**
@@ -93,10 +95,10 @@ public class ShoppingListController {
         if(product.isPresent())
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
 
-        Optional<ShoppingList> returnVal = shoppingListService
-                .addProductToShoppingList(shoppingListId, Long.parseLong(ean));
+        Optional<ShoppingList> returnval = shoppingListService.addProductToShoppingList(shoppingList.get().getShoppingListID(),
+                Long.parseLong(ean));
 
-        return returnVal.map(list -> ResponseEntity.status(HttpStatus.OK).body(list))
+        return returnval.map(list -> ResponseEntity.status(HttpStatus.OK).body(list))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
 

@@ -78,8 +78,6 @@ public class ShoppingListService {
         shoppingListRepository.findById(shoppingListId).ifPresent(shoppingList -> {
             productRepository.findById(ean).ifPresent(product -> {
                 shoppingList.addProduct(product);
-                product.addShoppingList(shoppingList);
-                productRepository.save(product);
                 shoppingListRepository.save(shoppingList);
             });
         });
