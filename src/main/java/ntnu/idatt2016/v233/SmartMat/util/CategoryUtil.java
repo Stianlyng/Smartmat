@@ -22,6 +22,12 @@ public class CategoryUtil {
     private static final List<String> BAKED_GOODS_AND_GRAINS = List.of("brød", "rundstykke", "croissant", "bagel", "brioche", "knekkebrød", "havrekjeks", "kjeks", "kanelbolle", "skillingsbolle", "sjokoladebolle", "muffins", "cupcakes", "kaker", "småkaker", "kransekake", "kokosmakroner", "sukkerkake", "sjokoladekake", "gulrotkake", "brownies", "eplekake", "bærpai", "eplepai", "sjokoladepai", "quiche", "pizza", "pizzasnurrer", "focaccia", "ciabatta", "baguette", "surdeigsbrød", "hvitløksbrød", "fylt brød", "grissini", "lefser", "rugbrød", "speltbrød", "havrebrød", "byggbrød", "vollkornbrød", "knäckebröd", "smörgås", "taco-skjell", "tortilla", "naan-brød", "pita-brød", "falafel", "humus", "baba ghanoush", "tabbouleh", "couscous", "ris", "pasta", "nudler", "risotto", "quinoa", "couscous-salat", "potetsalat", "brødstapper", "krutonger", "popcorn", "risboller", "havregrøt", "risgrøt", "bokhvetegrøt", "knekkebrød med ost", "scones", "syltetøy", "honning", "peanøttsmør", "nutella", "pålegg", "fruktsalat", "fruktkake", "fruktbarer", "nøtteblanding", "kornblanding", "granola", "müsli", "havremel", "hvetemel", "rugmel", "byggmel", "maismel", "potetmel", "bokhvetemel", "hirse", "bulgur", "linser", "kikerter", "erter", "solsikkefrø", "gresskarfrø", "sesamfrø", "chiafrø", "havrekli", "kruskakli");
     private static final List<String> DAIRY_AND_EGG = List.of("melk", "fløte", "rømme", "yoghurt", "kefir", "krem", "ost", "smør", "margarin", "egg", "eggehvite", "eggeplomme", "majones", "aioli", "hollandaisesaus", "bernaisesaus", "hvit saus", "béchamelsaus", "pudding", "vaniljesaus", "risgrøt", "lefse", "smørbrød", "frokostblanding", "havregrøt", "knekkebrød", "surdeigsbrød", "baguette", "croissant", "bolle", "kanelbolle", "skillingsbolle", "kringle", "kake", "muffins", "brownies", "sjokolade", "sjokoladekake", "sjokolademousse", "ostekake", "eplekake", "bringebærkake", "blåbærkake", "jordbærkake", "gulrotkake", "sjokoladetrøfler", "iskrem", "sorbet", "frozen yogurt", "karamellpudding", "flan", "cheesecake", "milkshake", "smoothie", "karbonadesmørbrød", "roastbeefsandwich", "skinke- og ostesandwich", "panert kyllingsandwich", "focaccia", "grilled cheese sandwich", "omelett", "eggerøre", "eggs benedict", "french toast", "pannekaker", "vafler", "eggerull", "quiche", "frittata", "scrambled eggs", "egg og bacon", "egg og pølse", "egg og skinke", "egg og avokado", "egg og tomat", "egg og sopp", "egg og løk", "egg og ost", "egg og spinat");
     private static final List<String> FRUIT_AND_VEGETABLES = List.of("augur", "ananas", "appelsin", "aprikos", "artisjokk", "asparges", "aubergine", "avocado", "banan", "blåbær", "brokkoli", "bønner", "cherrytomater", "chilipepper", "clementin", "drue", "eple", "fennikel", "fiken", "frukt", "grapefrukt", "granateple", "gresskar", "gulrot", "hodekål", "hvitløk", "ingefær", "jordbær", "kirsebær", "klementin", "kokosnøtt", "krutonger", "kål", "kålrot", "kantareller", "lime", "løk", "mais", "mandarin", "mango", "melk", "melon", "morchel", "nektarin", "nøtter", "oliven", "papaya", "paprika", "pære", "persille", "plomme", "poteter", "purre", "reddik", "rips", "rosenkål", "rødbeter", "rød paprika", "salat", "selleri", "sjampinjong", "solsikkefrø", "sopp", "soyabønner", "spinat", "squash", "stangselleri", "stikkelsbær", "sukkererter", "søtpotet", "tomat", "tyttebær", "valnøtter", "vannmelon", "vårløk", "yams", "østerssopp", "aronia", "blomkål", "bringebær", "bær", "bønnespirer", "champignon", "cranberry", "druer", "fikenkaktus", "friske urter", "gressløk", "gul paprika", "hvit asparges", "hvit paprika", "jordbærsaus", "kålpre", "kålrotstappe", "kirsebærtomat", "kjerner", "klementiner", "kålrotkrem", "limeblader", "løpstikke", "mangosaus", "mandelpoteter", "marengs", "mikrogreens", "mint", "multebær", "nektar", "nypoteter", "paprikapulver", "pecannøtter", "pitasalat", "rabarbra", "rødkål", "rød grapefrukt", "rød løk", "rødkålpuré", "rømme", "savoykål", "sikori", "sjalottløk", "soyamelk", "squashsalat", "stjernefrukt", "sukkerertpuré", "syltede grønnsaker", "syrnet melk", "tørkede tranebær", "urte");
+    private static final List<String> HARAM = List.of(
+            "pork", "bacon", "ham", "sausage", "lard", "gelatin", "beef gelatin", "animal fat",
+            "alcohol", "beer", "wine", "spirits", "liquor", "whiskey", "rum", "vodka", "gin", "tequila",
+            "brandy", "cognac", "aperitifs", "port wine", "vermouth", "sake", "malt", "fermented", "distilled",
+            "grappa", "kirsch", "sherry", "cider", "mead"
+    );
 
     private static List<String> getCategoryKeywords(String category) {
         return switch (category) {
@@ -61,7 +67,7 @@ public class CategoryUtil {
             }
         }
 
-        if (totalWeight == 0) {
+        if (totalWeight == 0 || totalWeight > 20) {
             weights.put("other", 1);
         }
 
@@ -79,6 +85,64 @@ public class CategoryUtil {
         }
 
         return highestWeightCategory;
+    }
+
+    /**
+     * Determines whether a food product is vegan, based on its name and description.
+     * A product is not vegan if it contains any meat or dairy/egg-related keywords.
+     *
+     * @param name the name of the food product
+     * @param description the description of the food product
+     * @return true if the food product is vegan, false otherwise
+     */
+    public static boolean isVegan(String name, String description) {
+        for(String keywords: MEAT){
+            if(name.toLowerCase().contains(keywords)) return false;
+            if(description.toLowerCase().contains(keywords)) return false;
+        }
+        for(String keywords: DAIRY_AND_EGG){
+            if(name.toLowerCase().contains(keywords)) return false;
+            if(description.toLowerCase().contains(keywords)) return false;
+        }
+        return true;
+    }
+
+    /**
+     * Determines whether a food product is vegetarian, based on its name and description,
+     * and whether it is already determined to be vegan or not.
+     * A product is not vegetarian if it contains any dairy/egg-related keywords.
+     *
+     * @param name the name of the food product
+     * @param description the description of the food product
+     * @param isVegan true if the product is already determined to be vegan, false otherwise
+     * @return true if the food product is vegetarian, false otherwise
+     */
+    public static boolean isVegetarian(String name, String description, boolean isVegan) {
+        if(isVegan) return true;
+        for(String keywords: DAIRY_AND_EGG){
+            if(name.toLowerCase().contains(keywords)) return false;
+            if(description.toLowerCase().contains(keywords)) return false;
+        }
+        return true;
+    }
+
+    /**
+     * Determines whether a food product is halal, based on its name and description,
+     * and whether it is already determined to be vegetarian or vegan.
+     * A product is not halal if it contains any haram-related keywords.
+     *
+     * @param name the name of the food product
+     * @param description the description of the food product
+     * @param isVegetarian true if the product is already determined to be vegetarian, false otherwise
+     * @return true if the food product is halal, false otherwise
+     */
+    public static boolean isHalal(String name, String description, boolean isVegetarian) {
+        if(isVegetarian) return true;
+        for (String keywords: HARAM){
+            if(name.toLowerCase().contains(keywords)) return false;
+            if(description.toLowerCase().contains(keywords)) return false;
+        }
+        return true;
     }
 
 
