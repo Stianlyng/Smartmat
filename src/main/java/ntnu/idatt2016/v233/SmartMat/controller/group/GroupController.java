@@ -1,6 +1,9 @@
 package ntnu.idatt2016.v233.SmartMat.controller.group;
 
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.dto.request.group.GroupConnectionRequest;
+import ntnu.idatt2016.v233.SmartMat.dto.request.group.GroupRequest;
+import ntnu.idatt2016.v233.SmartMat.dto.response.group.GroupResponse;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
 import ntnu.idatt2016.v233.SmartMat.service.group.GroupService;
@@ -53,7 +56,7 @@ public class GroupController {
     /**
      * Creates a new group
      *
-     * @param group the group to create
+     * @param groupRequest the group to create
      * @return a ResponseEntity containing the created group if it was created successfully, or a 400 if it wasn't
      */
     @PostMapping("/{username}")
@@ -177,8 +180,7 @@ public class GroupController {
     /**
      * Handles the HTTP POST request to add a new connection between a user and a group.
      *
-     * @param username the username of the user to add to the group
-     * @param linkCode the code of the group to which the user is to be added
+     * @param groupConnectionRequest the request object containing the username and link code of the user and group to be connected
      * @return a ResponseEntity object containing an HTTP status code and the newly created UserGroupAsso object,
      *         or a ResponseEntity object with an HTTP status code indicating that the request was not successful
      */
