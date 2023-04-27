@@ -59,26 +59,30 @@ public class GroupController {
      * @param groupRequest the group to create
      * @return a ResponseEntity containing the created group if it was created successfully, or a 400 if it wasn't
      */
-    @PostMapping("/{username}")
-    public ResponseEntity<Group> createGroup(@RequestBody Group group,
-                                             @PathVariable("username") String username) {
+    @PostMapping("/group")
+    public ResponseEntity<GroupResponse> createGroup(@RequestBody GroupRequest groupRequest) {
 
-        if(group.getGroupName().equals("") ||
-                userService.getUserFromUsername(username).isEmpty() ||
-                groupService.getGroupById(group.getGroupId()).isPresent()) {
+        if(groupRequest.groupName().equals("") ||
+                userService.getUserFromUsername(groupRequest.username()).isEmpty() ||
+                groupService.getGroupByName(groupRequest.groupName()).isPresent()) {
             return ResponseEntity.badRequest().build();
         }
 
+        Group group = new Group();
+        group.setGroupName(groupRequest.groupName());
 
-        Group group1 = groupService.createGroup(group);
-        group1.addUser(UserGroupAsso.builder()
+        Group createdGroup = groupService.createGroup(group);
+        createdGroup.addUser(UserGroupAsso.builder()
                         .groupAuthority("ADMIN")
-                        .group(group1)
-                        .user(userService.getUserFromUsername(username).get())
+                        .group(createdGroup)
+                        .user(userService.getUserFromUsername(groupRequest.username()).get())
                 .build());
 
-        return groupService.updateGroup(group1).map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.badRequest().build());
+        GroupResponse groupResponse = new GroupResponse(createdGroup.getGroupId(), createdGroup.getLinkCode());
+
+        groupService.updateGroup(createdGroup);
+
+        return ResponseEntity.ok(groupResponse);
     }
 
     /**
@@ -184,11 +188,10 @@ public class GroupController {
      * @return a ResponseEntity object containing an HTTP status code and the newly created UserGroupAsso object,
      *         or a ResponseEntity object with an HTTP status code indicating that the request was not successful
      */
-    @PostMapping("/connection/{username}/{linkCode}")
-    public ResponseEntity<?> addConnection(@PathVariable("username") String username,
-                                           @PathVariable("linkCode") String linkCode){
-        return groupService.getGroupByLinkCode(linkCode)
-                .flatMap(group -> userService.getUserFromUsername(username)
+    @PostMapping("/connection")
+    public ResponseEntity<?> addConnection(@RequestBody GroupConnectionRequest groupConnectionRequest){
+        return groupService.getGroupByLinkCode(groupConnectionRequest.linkCode())
+                .flatMap(group -> userService.getUserFromUsername(groupConnectionRequest.username())
                         .flatMap(user -> {
                             UserGroupAsso userGroupAsso = UserGroupAsso.builder()
                                     .group(group)
