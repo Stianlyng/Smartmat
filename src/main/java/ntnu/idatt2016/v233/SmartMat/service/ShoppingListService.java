@@ -3,12 +3,10 @@ package ntnu.idatt2016.v233.SmartMat.service;
 import java.util.List;
 import java.util.Optional;
 
-import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.repository.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ntnu.idatt2016.v233.SmartMat.dto.request.ShoppingListRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.ShoppingList;
 import ntnu.idatt2016.v233.SmartMat.repository.ShoppingListRepository;
 
@@ -26,17 +24,7 @@ public class ShoppingListService {
 
     @Autowired
     ProductRepository productRepository;
-    
-    /**
-     * Create and save a shopping list to the database
-     * @param shoppingListRequest the shopping list to save
-     * @return the saved shopping list
-     */
-    public ShoppingList createShoppingList(ShoppingListRequest shoppingListRequest) {
-        ShoppingList shoppingList = new ShoppingList();
-        shoppingList.setGroupID(shoppingListRequest.getGroupID());
-        return shoppingListRepository.save(shoppingList);
-    }
+
 
     /**
      * Gets a shopping list by its ID
@@ -55,7 +43,7 @@ public class ShoppingListService {
      * @return an optional containing the shopping list if it exists
      */
     public Optional<ShoppingList> getShoppingListByGroupId(long id) {
-        return shoppingListRepository.getByGroupID(id);
+        return shoppingListRepository.getByGroupGroupId(id);
     }
     
     /**

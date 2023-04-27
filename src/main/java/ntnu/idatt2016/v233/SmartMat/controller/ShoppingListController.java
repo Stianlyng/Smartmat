@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 import lombok.AllArgsConstructor;
-import ntnu.idatt2016.v233.SmartMat.dto.request.ShoppingListRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.ShoppingList;
 import ntnu.idatt2016.v233.SmartMat.service.ShoppingListService;
 
@@ -33,17 +32,7 @@ public class ShoppingListController {
 
     @Autowired
     UserService userService;
-    
-    /**
-     * Creates a shopping list
-     *
-     * @param request the request containing the group ID
-     * @return the created shopping list, or an error if the group ID is invalid
-     */
-    @PostMapping("/add")
-    public ResponseEntity<ShoppingList> createShoppingList(@RequestBody ShoppingListRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(shoppingListService.createShoppingList(request));
-    }
+
 
     /**
      * Gets a shopping list by its ID
@@ -94,7 +83,7 @@ public class ShoppingListController {
 
 
         if(user.get().getGroup().stream().anyMatch(userGroupAsso ->
-                userGroupAsso.getGroup().getGroupId() == shoppingList.get().getGroupID()))
+                userGroupAsso.getGroup().getGroupId() == shoppingList.get().getGroup().getGroupId()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
 
