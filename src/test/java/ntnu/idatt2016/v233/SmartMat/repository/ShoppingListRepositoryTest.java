@@ -5,37 +5,53 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.Optional;
 
+import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import ntnu.idatt2016.v233.SmartMat.entity.ShoppingList;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 @DataJpaTest
 public class ShoppingListRepositoryTest {
     @Autowired
     private ShoppingListRepository shoppingListRepository;
 
+    @Autowired
+    TestEntityManager entityManager;
+
     @Test
     public void testGetByGroupID() {
+        Group group = Group.builder()
+                .build();
+        System.out.println(group.getGroupId());
+        group = entityManager.persistFlushFind(group);
+
         ShoppingList shoppingList = ShoppingList.builder()
-                .groupID(1L)
+                .group(group)
                 .build();
 
         shoppingListRepository.save(shoppingList);
 
-        Optional<ShoppingList> shoppingListOptional = shoppingListRepository.getByGroupID(1L);
+        System.out.println(shoppingListRepository.findById(shoppingList.getShoppingListID()));
+        System.out.println(group.getGroupId());
+
+        Optional<ShoppingList> shoppingListOptional = shoppingListRepository
+                .getByGroupGroupId(group.getGroupId());
 
         assertTrue(shoppingListOptional.isPresent());
 
         ShoppingList tempshoppingList = shoppingListOptional.get();
-        assertEquals(1L, tempshoppingList.getGroupID());
+        assertEquals(group.getGroupId(), tempshoppingList.getGroup().getGroupId());
     }
 
     @Test
     public void testSaveShoppingList() {
+        Group group = Group.builder()
+                .build();
         ShoppingList shoppingList = ShoppingList.builder()
-                .groupID(1L)
+                .group(group)
                 .build();
 
         shoppingListRepository.save(shoppingList);
@@ -46,8 +62,10 @@ public class ShoppingListRepositoryTest {
 
     @Test
     public void testDeleteShoppingList() {
+        Group group = Group.builder()
+                .build();
         ShoppingList shoppingList = ShoppingList.builder()
-                .groupID(1L)
+                .group(group)
                 .build();
 
         shoppingListRepository.save(shoppingList);
@@ -60,12 +78,16 @@ public class ShoppingListRepositoryTest {
 
     @Test
     public void testFindAll() {
+        Group group = Group.builder()
+                .build();
         ShoppingList shoppingList1 = ShoppingList.builder()
-                .groupID(1L)
+                .group(group)
                 .build();
 
+        Group group2 = Group.builder()
+                .build();
         ShoppingList shoppingList2 = ShoppingList.builder()
-                .groupID(2L)
+                .group(group2)
                 .build();
 
         shoppingListRepository.save(shoppingList1);

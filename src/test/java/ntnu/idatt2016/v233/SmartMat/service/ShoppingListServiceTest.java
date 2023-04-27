@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.service;
 
+import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -10,7 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import ntnu.idatt2016.v233.SmartMat.dto.request.ShoppingListRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.ShoppingList;
 import ntnu.idatt2016.v233.SmartMat.repository.ShoppingListRepository;
 
@@ -31,19 +31,6 @@ class ShoppingListServiceTest {
     }
 
     @Test
-    void testCreateShoppingList() {
-        ShoppingListRequest shoppingListRequest = new ShoppingListRequest(1L);
-        ShoppingList shoppingList = new ShoppingList();
-        shoppingList.setGroupID(1L);
-
-        when(shoppingListRepository.save(any(ShoppingList.class))).thenReturn(shoppingList);
-
-        ShoppingList result = shoppingListService.createShoppingList(shoppingListRequest);
-
-        assertEquals(1L, result.getGroupID());
-    }
-
-    @Test
     void testGetShoppingListById() {
         ShoppingList shoppingList = new ShoppingList();
         shoppingList.setShoppingListID(1L);
@@ -59,14 +46,14 @@ class ShoppingListServiceTest {
     @Test
     void testGetShoppingListByGroupId() {
         ShoppingList shoppingList = new ShoppingList();
-        shoppingList.setGroupID(1L);
+        Group group = new Group();
+        shoppingList.setGroup(group);
 
-        when(shoppingListRepository.getByGroupID(1L)).thenReturn(Optional.of(shoppingList));
+        when(shoppingListRepository.getByGroupGroupId(group.getGroupId())).thenReturn(Optional.of(shoppingList));
 
-        Optional<ShoppingList> result = shoppingListService.getShoppingListByGroupId(1L);
+        Optional<ShoppingList> result = shoppingListService.getShoppingListByGroupId(group.getGroupId());
 
         assertTrue(result.isPresent());
-        assertEquals(1L, result.get().getGroupID());
     }
 
     @Test

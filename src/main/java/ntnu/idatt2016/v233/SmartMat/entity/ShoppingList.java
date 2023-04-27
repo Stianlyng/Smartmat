@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 
 import java.util.ArrayList;
@@ -32,8 +33,9 @@ public class ShoppingList {
     @Column(name = "shopping_list_id")
     long shoppingListID;
 
-    @Column(name = "group_id")
-    long groupID;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Group group;
 
     @ManyToMany
     @JoinTable(

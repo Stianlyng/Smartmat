@@ -34,18 +34,6 @@ public class ShoppingListControllerTest {
         // Set properties for the shoppingList object
     }
 
-    @Test
-    public void createShoppingList() {
-        ShoppingListRequest request = new ShoppingListRequest(1L);
-        // Set properties for the request object
-
-        when(shoppingListService.createShoppingList(request)).thenReturn(shoppingList);
-
-        ResponseEntity<ShoppingList> response = shoppingListController.createShoppingList(request);
-
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(shoppingList, response.getBody());
-    }
 
     @Test
     public void getShoppingListById_found() {

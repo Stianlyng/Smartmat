@@ -21,7 +21,7 @@ public interface ShoppingListRepository extends JpaRepository<ShoppingList, Long
      * @param id the ID of the group
      * @return an optional containing the shopping list if it exists
      */
-    Optional<ShoppingList> getByGroupID(long id);
+    Optional<ShoppingList> getByGroupGroupId(long id);
 
    
 }

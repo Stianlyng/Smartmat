@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
+import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 import ntnu.idatt2016.v233.SmartMat.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 import lombok.AllArgsConstructor;
-import ntnu.idatt2016.v233.SmartMat.dto.request.ShoppingListRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.ShoppingList;
 import ntnu.idatt2016.v233.SmartMat.service.ShoppingListService;
 
@@ -33,17 +33,8 @@ public class ShoppingListController {
 
     @Autowired
     UserService userService;
-    
-    /**
-     * Creates a shopping list
-     *
-     * @param request the request containing the group ID
-     * @return the created shopping list, or an error if the group ID is invalid
-     */
-    @PostMapping("/add")
-    public ResponseEntity<ShoppingList> createShoppingList(@RequestBody ShoppingListRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(shoppingListService.createShoppingList(request));
-    }
+
+
 
     /**
      * Gets a shopping list by its ID
@@ -94,7 +85,7 @@ public class ShoppingListController {
 
 
         if(user.get().getGroup().stream().anyMatch(userGroupAsso ->
-                userGroupAsso.getGroup().getGroupId() == shoppingList.get().getGroupID()))
+                userGroupAsso.getGroup().getGroupId() == shoppingList.get().getGroup().getGroupId()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
 
@@ -104,10 +95,10 @@ public class ShoppingListController {
         if(product.isPresent())
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
 
-        Optional<ShoppingList> returnVal = shoppingListService
-                .addProductToShoppingList(shoppingListId, Long.parseLong(ean));
+        Optional<ShoppingList> returnval = shoppingListService.addProductToShoppingList(shoppingList.get().getShoppingListID(),
+                Long.parseLong(ean));
 
-        return returnVal.map(list -> ResponseEntity.status(HttpStatus.OK).body(list))
+        return returnval.map(list -> ResponseEntity.status(HttpStatus.OK).body(list))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
 

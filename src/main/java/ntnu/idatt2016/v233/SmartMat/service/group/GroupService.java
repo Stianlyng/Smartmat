@@ -66,10 +66,10 @@ public class GroupService {
             code = GroupUtil.generateUniqueCode();
         }
         group.setLinkCode(code);
-        Group newGroup = groupRepository.save(group);
-        group.setFridge(fridgeRepository.save(Fridge.builder().fridgeId(newGroup.getGroupId()).group(group).build()));
-        shoppingListRepository.save(ShoppingList.builder().shoppingListID(newGroup.getGroupId()).groupID(group.getGroupId()).build());
-        return groupRepository.save(newGroup);
+        group.setFridge(Fridge.builder().group(group).build());
+        group.setShoppingList(ShoppingList.builder().group(group).build());
+
+        return groupRepository.save(group);
     }
 
     /**
