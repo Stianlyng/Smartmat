@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +49,10 @@ public class Group {
     @Column(name = "is_open")
     Boolean open;
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     @JsonIgnoreProperties("group")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<UserGroupAsso> user = new ArrayList<>();
 
 
@@ -64,9 +67,10 @@ public class Group {
     @OneToOne
     @JoinColumn(name = "group_id")
     @JsonIgnoreProperties("group")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Fridge fridge;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinTable(name = "group_achievement",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "achievement_name"))

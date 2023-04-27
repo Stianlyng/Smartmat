@@ -60,19 +60,23 @@ public class FridgeController {
     }
 
 
-    @DeleteMapping("/group/product/delete/{fridgeProductId}/{amount}")
+    @DeleteMapping("/group/delete/product/{fridgeProductId}/{amount}")
     public ResponseEntity<?> deleteAmountFridgeProduct(@PathVariable("fridgeProductId") long fridgeProductId,
                                                        @PathVariable("amount") int amount){
         return fridgeService.deleteAmountFromFridge(fridgeProductId,amount).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 
-    /*
-    @DeleteMapping("/delete/{fridgeProductId}")
-    public ResponseEntity<String> removeProductFromFridge(@PathVariable("fridgeProductId") long FPId) {
-
+    /**
+     * Deletes a product from the fridge
+     * @param fridgeProductId the id of the fridge product association
+     * @return success if the product was deleted, bad request if the product wasn't found
+     */
+    @DeleteMapping("/delete/product/{fridgeProductId}")
+    public ResponseEntity<String> removeProductFromFridge(@PathVariable("fridgeProductId") long fridgeProductId) {
         try {
-            if (fridgeService.removeProductFromFridge(FPId)){
+            boolean success = fridgeService.removeProductFromFridge(fridgeProductId);
+            if (success){
                 return ResponseEntity.ok("Success");
             }
             return ResponseEntity.badRequest().body("Product not found in the fridge");
@@ -80,6 +84,25 @@ public class FridgeController {
             return ResponseEntity.status(500).body("Internal server error");
         }
     }
+
+    /**
+     * Deletes all products in a fridge
+     * @param fridgeId the id of the fridge
+     * @return success if the products were deleted, bad request if the fridge doesn't exist
+     *
+    @DeleteMapping("/delete/all/{fridgeId}")
+    public ResponseEntity<String> deleteAllProductsInFridge(@PathVariable("fridgeId") long fridgeId) {
+        try {
+            boolean success = fridgeService.deleteAllProductsInFridge(fridgeId);
+            if (success){
+                return ResponseEntity.ok("Success");
+            }
+            return ResponseEntity.badRequest().body("Fridge not found");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Internal server error");
+        }
+    }
+
     */
 
 }

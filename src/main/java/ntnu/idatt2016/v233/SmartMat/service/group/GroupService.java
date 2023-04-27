@@ -149,12 +149,14 @@ public class GroupService {
     }
 
     /**
-     * Gets a group by link code
-     *
-     * @param linkCode the link code of the group
-     *                 the group must exist
-     * @return the group with the given link code
+     * Updates a group
+     * @param group the group to update
+     * @return an optional containing the updated group
      */
+    public Optional<Group> updateGroup(Group group){
+        return Optional.of(groupRepository.save(group));
+    }
+
     public Optional<Group> getGroupByLinkCode(String linkCode) {
         return groupRepository.findByLinkCode(linkCode);
     }

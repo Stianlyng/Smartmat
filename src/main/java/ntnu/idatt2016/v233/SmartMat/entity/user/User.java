@@ -55,7 +55,7 @@ public class User implements UserDetails {
     private Date dateOfBirth;
 
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "username")
     @JsonIgnoreProperties("user")
     private List<UserGroupAsso> group;

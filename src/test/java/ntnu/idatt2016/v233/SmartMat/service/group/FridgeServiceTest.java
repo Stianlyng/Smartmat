@@ -1,28 +1,14 @@
 package ntnu.idatt2016.v233.SmartMat.service.group;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Optional;
-
-import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
-import ntnu.idatt2016.v233.SmartMat.service.group.FridgeProductAssoService;
-import ntnu.idatt2016.v233.SmartMat.service.group.FridgeService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
-import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
-import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeRepository;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 
@@ -35,8 +21,6 @@ public class FridgeServiceTest {
     @Mock
     private ProductService productService;
 
-    @Mock
-    private FridgeProductAssoService fridgeProductAssoService;
 
     @Mock
     private GroupRepository groupRepository;
