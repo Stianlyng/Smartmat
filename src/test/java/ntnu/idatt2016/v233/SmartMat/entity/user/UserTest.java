@@ -17,7 +17,7 @@ class UserTest {
     void testGetAuthorities() {
         User user = User.builder()
                 .username("johndoe")
-                .authorities(List.of(new AuthorityTable(Authority.USER)))
+                .authority(Authority.USER)
                 .build();
 
 
