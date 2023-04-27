@@ -16,6 +16,7 @@ import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
+@Builder
 @Table(name = "user_group")
 public class UserGroupAsso {
 

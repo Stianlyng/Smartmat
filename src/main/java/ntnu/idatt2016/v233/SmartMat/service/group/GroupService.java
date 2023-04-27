@@ -147,4 +147,17 @@ public class GroupService {
             fridgeRepository.save(fridge.get());
         }
     }
+
+    /**
+     * Updates a group
+     * @param group the group to update
+     * @return an optional containing the updated group
+     */
+    public Optional<Group> updateGroup(Group group){
+        return Optional.of(groupRepository.save(group));
+    }
+
+    public Optional<Group> getGroupByLinkCode(String linkCode) {
+        return groupRepository.findByLinkCode(linkCode);
+    }
 }

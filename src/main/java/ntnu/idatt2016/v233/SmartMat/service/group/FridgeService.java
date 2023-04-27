@@ -5,16 +5,15 @@ import ntnu.idatt2016.v233.SmartMat.dto.request.FridgeProductRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
-import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeProductAssoRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeRepository;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.product.FridgeProductAssoRepo;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 import org.springframework.stereotype.Service;
 
-import java.nio.channels.FileChannel;
-import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -31,11 +30,9 @@ public class FridgeService {
     private final FridgeRepository fridgeRepository;
     private final ProductService productService;
 
-    private final FridgeProductAssoRepository fridgeProductAssoRepository;
-
-    private final FridgeProductAssoService fridgeProductAssoService;
-
     private final GroupRepository groupRepository;
+
+    private final FridgeProductAssoRepo fridgeProductAssoRepo;
 
     /**
      * Gets the fridge of a group
@@ -58,42 +55,48 @@ public class FridgeService {
     }
 
 
-
+    /**
+     * Adds a product to the fridge of a group
+     * @param fridgeProductRequest the fridge product request
+     * @return the product that was added to the fridge
+     */
     public Optional<Object> addProductToFridge(FridgeProductRequest fridgeProductRequest) {
         Optional<Product> product = productService.getProductById(fridgeProductRequest.ean());
         Optional<Fridge> fridge = fridgeRepository.findByGroupGroupId(fridgeProductRequest.groupId());
+
         if(product.isEmpty() || fridge.isEmpty()) return Optional.empty();
 
-        return Optional.of(fridgeProductAssoService.createFridgeProductAsso(fridge.get(), product.get(), fridgeProductRequest.amount(), fridgeProductRequest.days()));
+        fridge.get().addProduct(FridgeProductAsso.builder()
+                        .fridgeId(fridge.get())
+                        .ean(product.get())
+                        .amount(fridgeProductRequest.amount())
+                        .purchaseDate(java.sql.Date.valueOf(LocalDate.now()))
+                .build());
+
+        fridgeRepository.save(fridge.get());
+        return Optional.of(product);
 
     }
 
     /**
      * Remove a product from the fridge of a group
      *
-     * @param groupId the id of the group
-     *                group must exist
+     * @param FPId the id of the fridge product association
      * @return true if the product was removed
      */
-    /*public boolean removeProductFromFridge( long FPId) {
-        FridgeProductAsso fridgeProductAsso = fridgeProductAssoRepository.findById(FPId).get();
-        Optional<Product> product = productService.getProductById(fridgeProductAsso.getEan().getEan());
-        Fridge fridge = fridgeRepository.findByGroupGroupId(fridgeProductAsso.getFridgeId().getFridgeId()).orElseThrow(() -> new IllegalArgumentException("Fridge does not exist"));
-        if (product.isPresent()) {
-            Product productToRemove = product.get();
-            if (!fridge.getProducts().contains(
-                    new FridgeProductAsso(fridge, productToRemove,))) {
-                return false;
-            }
-            FridgeProductAsso fridgeProductAsso1 = FridgeProductAsso.builder().id(FPId)..build()
-            fridgeProductAssoService.deleteFridgeProductAsso(new FridgeProductAsso(fridge,
-                    productToRemove, purchaseDate));
+    public boolean removeProductFromFridge(long FPId) {
+        Optional<FridgeProductAsso> fridgeProductAsso = fridgeProductAssoRepo.findById(FPId);
 
-            return true;
-        } else {
-            return false;
-        }
-    }*/
+        if (fridgeProductAsso.isEmpty()) return false;
+
+        Fridge fridge = fridgeRepository.findById(fridgeProductAsso.get().getFridgeId().getFridgeId())
+                .get();
+
+
+        fridgeProductAssoRepo.delete(fridgeProductAsso.get());
+
+        return true;
+    }
 
     /**
      * Updates a fridge
@@ -121,12 +124,31 @@ public class FridgeService {
         }
     }
 
+    /**
+     * Delete an amount from a fridge product
+     * @param fridgeProductId the id of the fridge product
+     * @param amount the amount to delete
+     * @return an optional containing the fridge product if it exists
+     */
     public Optional<Object> deleteAmountFromFridge(long fridgeProductId, int amount) {
-        if(amount < fridgeProductAssoRepository.findAmountById(fridgeProductId)){
+        if(amount < 0 ){
             System.out.println("Given amount " + amount + " < " + " Stored in db");
         } else {
             System.out.println("Given amount " + amount + " > " + " Stored in db");
         }
         return Optional.empty();
     }
+
+    /**
+     * Delete all products in a fridge
+     * @param fridgeId the id of the fridge
+     * @return true if the fridge was deleted
+     *
+    public boolean deleteAllProductsInFridge(long fridgeId) {
+        Optional<Fridge> fridge = fridgeRepository.findById(fridgeId);
+        if(fridge.isEmpty()) return false;
+        fridgeProductAssoService.deleteAllFridgeProducts(fridgeId);
+        return true;
+    }
+    */
 }
