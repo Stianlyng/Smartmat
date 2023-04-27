@@ -1,8 +1,10 @@
 package ntnu.idatt2016.v233.SmartMat.service.group;
 
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.entity.ShoppingList;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
+import ntnu.idatt2016.v233.SmartMat.repository.ShoppingListRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
 import ntnu.idatt2016.v233.SmartMat.util.GroupUtil;
@@ -25,6 +27,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
 
     private final FridgeRepository fridgeRepository;
+    private ShoppingListRepository shoppingListRepository;
 
     /**
      * Gets a group by its name
@@ -63,7 +66,10 @@ public class GroupService {
             code = GroupUtil.generateUniqueCode();
         }
         group.setLinkCode(code);
-        return groupRepository.save(group);
+        Group newGroup = groupRepository.save(group);
+        group.setFridge(fridgeRepository.save(Fridge.builder().fridgeId(newGroup.getGroupId()).group(group).build()));
+        shoppingListRepository.save(ShoppingList.builder().shoppingListID(newGroup.getGroupId()).groupID(group.getGroupId()).build());
+        return groupRepository.save(newGroup);
     }
 
     /**
