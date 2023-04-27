@@ -80,6 +80,7 @@ public class User implements UserDetails {
 
 
     @Column(name = "authority")
+    @Enumerated(EnumType.STRING)
     private Authority authority;
 
 
