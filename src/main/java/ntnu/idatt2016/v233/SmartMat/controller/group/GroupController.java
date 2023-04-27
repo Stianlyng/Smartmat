@@ -1,11 +1,12 @@
 package ntnu.idatt2016.v233.SmartMat.controller.group;
 
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.dto.request.group.GroupRequest;
+import ntnu.idatt2016.v233.SmartMat.dto.response.group.GroupResponse;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
 import ntnu.idatt2016.v233.SmartMat.service.group.GroupService;
 import ntnu.idatt2016.v233.SmartMat.service.group.UserGroupAssoService;
-import ntnu.idatt2016.v233.SmartMat.service.user.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,21 +53,25 @@ public class GroupController {
     /**
      * Creates a new group
      *
-     * @param group the group to create
+     * @param groupRequest the group to create
      * @return a ResponseEntity containing the created group if it was created successfully, or a 400 if it wasn't
      */
-    @PostMapping("/{username}")
-    public ResponseEntity<Group> createGroup(@RequestBody Group group,
-                                             @PathVariable("username") String username) {
-        if(groupService.getGroupById(group.getGroupId()).isPresent()) {
-            return ResponseEntity.badRequest().build();
+    @PostMapping("/group")
+    public ResponseEntity<?> createGroup(@RequestBody GroupRequest groupRequest) {
+        if(groupService.getGroupByName(groupRequest.groupName()).isPresent()) {
+            return ResponseEntity.badRequest().body("Group name already exists");
         }
-        if(group.getGroupName().equals("")) {
-            return ResponseEntity.badRequest().build();
+        if(groupRequest.groupName().equals("")) {
+            return ResponseEntity.badRequest().body("Group name cannot be empty");
         }
-        Group group1 = groupService.createGroup(group);
-        userGroupAssoService.addPersonToGroup(username,group1.getLinkCode(), "ADMIN");
-        return ResponseEntity.ok(group1);
+        Group group = new Group();
+        group.setGroupName(groupRequest.groupName());
+
+        Group createdGroup = groupService.createGroup(group);
+        userGroupAssoService.addPersonToGroup(groupRequest.username(),createdGroup.getLinkCode(), "ADMIN");
+
+        GroupResponse groupResponse = new GroupResponse(createdGroup.getGroupId(), createdGroup.getLinkCode());
+        return ResponseEntity.ok(groupResponse);
     }
 
     /**
