@@ -58,14 +58,7 @@ public class FridgeService {
     }
 
 
-    /**
-     * Add a product to the fridge of a group
-     *
-     * @param groupId the id of the group
-     *                group must exist
-     * @param ean the ean of the product
-     * @return true if the product was added
-     */
+
     public Optional<Object> addProductToFridge(FridgeProductRequest fridgeProductRequest) {
         Optional<Product> product = productService.getProductById(fridgeProductRequest.productId());
         Optional<Fridge> fridge = fridgeRepository.findByGroupGroupId(fridgeProductRequest.groupId());
