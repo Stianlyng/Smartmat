@@ -1,6 +1,9 @@
 package ntnu.idatt2016.v233.SmartMat.controller.group;
 
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.dto.request.group.GroupConnectionRequest;
+import ntnu.idatt2016.v233.SmartMat.dto.request.group.GroupRequest;
+import ntnu.idatt2016.v233.SmartMat.dto.response.group.GroupResponse;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
 import ntnu.idatt2016.v233.SmartMat.service.group.GroupService;
@@ -23,6 +26,7 @@ import java.util.List;
 @RequestMapping("/api/groups")
 public class GroupController {
     private final GroupService groupService;
+    private final UserService userService;
     private final UserGroupAssoService userGroupAssoService;
 
     /**
@@ -52,21 +56,30 @@ public class GroupController {
     /**
      * Creates a new group
      *
-     * @param group the group to create
+     * @param groupRequest the group to create
      * @return a ResponseEntity containing the created group if it was created successfully, or a 400 if it wasn't
      */
-    @PostMapping("/{username}")
-    public ResponseEntity<Group> createGroup(@RequestBody Group group,
-                                             @PathVariable("username") String username) {
-        if(groupService.getGroupById(group.getGroupId()).isPresent()) {
-            return ResponseEntity.badRequest().build();
+    @PostMapping("/group")
+    public ResponseEntity<?> createGroup(@RequestBody GroupRequest groupRequest) {
+        if(groupService.getGroupByName(groupRequest.groupName()).isPresent()) {
+            return ResponseEntity.badRequest().body("Group name already exists");
         }
-        if(group.getGroupName().equals("")) {
-            return ResponseEntity.badRequest().build();
+        if(groupRequest.groupName().equals("")) {
+            return ResponseEntity.badRequest().body("Group name cannot be empty");
         }
-        Group group1 = groupService.createGroup(group);
-        userGroupAssoService.addPersonToGroup(username,group1.getLinkCode(), "ADMIN");
-        return ResponseEntity.ok(group1);
+
+        if(userService.getUserFromUsername(groupRequest.username()).isEmpty()) {
+            return ResponseEntity.badRequest().body("User does not exist");
+        }
+
+        Group group = new Group();
+        group.setGroupName(groupRequest.groupName());
+
+        Group createdGroup = groupService.createGroup(group);
+        userGroupAssoService.addPersonToGroup(groupRequest.username(),createdGroup.getLinkCode(), "ADMIN");
+
+        GroupResponse groupResponse = new GroupResponse(createdGroup.getGroupId(), createdGroup.getLinkCode());
+        return ResponseEntity.ok(groupResponse);
     }
 
     /**
@@ -154,15 +167,24 @@ public class GroupController {
     /**
      * Handles the HTTP POST request to add a new connection between a user and a group.
      *
-     * @param username the username of the user to add to the group
-     * @param linkCode the code of the group to which the user is to be added
+     * @param groupConnectionRequest the request object containing the username and link code of the user and group to be connected
      * @return a ResponseEntity object containing an HTTP status code and the newly created UserGroupAsso object,
      *         or a ResponseEntity object with an HTTP status code indicating that the request was not successful
      */
-    @PostMapping("/connection/{username}/{linkCode}")
-    public ResponseEntity<?> addConnection(@PathVariable("username") String username,
-                                           @PathVariable("linkCode") String linkCode){
-        return userGroupAssoService.addPersonToGroup(username,linkCode,"USER").map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.notFound().build());
+    @PostMapping("/connection")
+    public ResponseEntity<?> addConnection(@RequestBody GroupConnectionRequest groupConnectionRequest){
+        if(groupConnectionRequest.username().isEmpty() || groupConnectionRequest.linkCode().isEmpty()){
+            return ResponseEntity.badRequest().body("Username or link code cannot be empty");
+        }
+        if(groupService.getGroupByLinkCode(groupConnectionRequest.linkCode()).isEmpty()){
+            return ResponseEntity.badRequest().body("Invalid link code");
+        }
+        if(userService.getUserFromUsername(groupConnectionRequest.username()).isEmpty()){
+            return ResponseEntity.badRequest().body("Invalid username");
+        }
+
+        userGroupAssoService.addPersonToGroup(groupConnectionRequest.username(), groupConnectionRequest.linkCode(), "USER");
+        return ResponseEntity.ok().body(groupConnectionRequest.username());
     }
 
     /**

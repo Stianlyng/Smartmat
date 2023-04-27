@@ -147,4 +147,15 @@ public class GroupService {
             fridgeRepository.save(fridge.get());
         }
     }
+
+    /**
+     * Gets a group by link code
+     *
+     * @param linkCode the link code of the group
+     *                 the group must exist
+     * @return the group with the given link code
+     */
+    public Optional<Group> getGroupByLinkCode(String linkCode) {
+        return groupRepository.findByLinkCode(linkCode);
+    }
 }
