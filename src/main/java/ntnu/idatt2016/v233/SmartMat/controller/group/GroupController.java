@@ -1,12 +1,14 @@
 package ntnu.idatt2016.v233.SmartMat.controller.group;
 
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.dto.request.group.GroupConnectionRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.request.group.GroupRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.response.group.GroupResponse;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
 import ntnu.idatt2016.v233.SmartMat.service.group.GroupService;
 import ntnu.idatt2016.v233.SmartMat.service.group.UserGroupAssoService;
+import ntnu.idatt2016.v233.SmartMat.service.user.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,7 @@ import java.util.List;
 @RequestMapping("/api/groups")
 public class GroupController {
     private final GroupService groupService;
+    private final UserService userService;
     private final UserGroupAssoService userGroupAssoService;
 
     /**
@@ -64,6 +67,11 @@ public class GroupController {
         if(groupRequest.groupName().equals("")) {
             return ResponseEntity.badRequest().body("Group name cannot be empty");
         }
+
+        if(userService.getUserFromUsername(groupRequest.username()).isEmpty()) {
+            return ResponseEntity.badRequest().body("User does not exist");
+        }
+
         Group group = new Group();
         group.setGroupName(groupRequest.groupName());
 
@@ -159,15 +167,24 @@ public class GroupController {
     /**
      * Handles the HTTP POST request to add a new connection between a user and a group.
      *
-     * @param username the username of the user to add to the group
-     * @param linkCode the code of the group to which the user is to be added
+     * @param groupConnectionRequest the request object containing the username and link code of the user and group to be connected
      * @return a ResponseEntity object containing an HTTP status code and the newly created UserGroupAsso object,
      *         or a ResponseEntity object with an HTTP status code indicating that the request was not successful
      */
-    @PostMapping("/connection/{username}/{linkCode}")
-    public ResponseEntity<?> addConnection(@PathVariable("username") String username,
-                                           @PathVariable("linkCode") String linkCode){
-        return userGroupAssoService.addPersonToGroup(username,linkCode,"USER").map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.notFound().build());
+    @PostMapping("/connection")
+    public ResponseEntity<?> addConnection(@RequestBody GroupConnectionRequest groupConnectionRequest){
+        if(groupConnectionRequest.username().isEmpty() || groupConnectionRequest.linkCode().isEmpty()){
+            return ResponseEntity.badRequest().body("Username or link code cannot be empty");
+        }
+        if(groupService.getGroupByLinkCode(groupConnectionRequest.linkCode()).isEmpty()){
+            return ResponseEntity.badRequest().body("Invalid link code");
+        }
+        if(userService.getUserFromUsername(groupConnectionRequest.username()).isEmpty()){
+            return ResponseEntity.badRequest().body("Invalid username");
+        }
+
+        userGroupAssoService.addPersonToGroup(groupConnectionRequest.username(), groupConnectionRequest.linkCode(), "USER");
+        return ResponseEntity.ok().body(groupConnectionRequest.username());
     }
 
     /**
