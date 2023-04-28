@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.ShoppingList;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
+import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupId;
 import ntnu.idatt2016.v233.SmartMat.repository.ShoppingListRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeRepository;
@@ -178,5 +179,28 @@ public class GroupService {
                 .build();
 
         return userGroupAssoRepository.findById(userGroupId).isPresent();
+    }
+
+    /**
+     * Updates a user group association
+     *
+     * @param userGroupAsso the user group association to update
+     * @return the updated user group association
+     */
+    public UserGroupAsso updateUserGroupAsso(UserGroupAsso userGroupAsso) {
+        return userGroupAssoRepository.save(userGroupAsso);
+    }
+
+    public Optional<UserGroupAsso> findPrimaryUserGroupAssoForUser(String username) {
+        return userGroupAssoRepository.findByUser_UsernameAndPrimaryGroupTrue(username);
+    }
+
+    public Optional<UserGroupAsso> getUserGroupAsso(String username, Long groupId) {
+        UserGroupId userGroupId = UserGroupId.builder()
+                .username(username)
+                .groupId(groupId)
+                .build();
+
+        return userGroupAssoRepository.findById(userGroupId);
     }
 }

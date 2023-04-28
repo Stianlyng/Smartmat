@@ -53,6 +53,16 @@ public interface UserGroupAssoRepository extends JpaRepository<UserGroupAsso, Us
 
     /**
      * Finds UserGroupAsso by UserGroupId
+     *
+     * @param userGroupId the UserGroupId to find by
+     * @return an optional containing the UserGroupAsso if it exists
      */
     Optional<UserGroupAsso> findByUserGroupId(UserGroupId userGroupId);
+
+    /**
+     * Finds primary group for given user
+     * @param username the username of the user
+     * @return an optional containing the UserGroupAsso if it exists
+     */
+    Optional<UserGroupAsso> findByUser_UsernameAndPrimaryGroupTrue(String username);
 }
