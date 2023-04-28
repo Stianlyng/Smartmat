@@ -35,6 +35,7 @@ public class FridgeController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+
     /**
      * Gets the fridge by its fridge id
      * @param fridgeId the id of the fridge
@@ -59,6 +60,10 @@ public class FridgeController {
         return fridgeService.addProductToFridge(request).map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/group/product")
+    public ResponseEntity<Object> updateProductInFridge(@RequestBody FridgeProductRequest request) {
+        return fridgeService.updateProductInFridge(request).map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.notFound().build());
+    }
 
     @DeleteMapping("/group/delete/product/{fridgeProductId}/{amount}")
     public ResponseEntity<?> deleteAmountFridgeProduct(@PathVariable("fridgeProductId") long fridgeProductId,

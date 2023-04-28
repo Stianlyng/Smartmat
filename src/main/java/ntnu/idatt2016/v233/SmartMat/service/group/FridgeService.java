@@ -10,6 +10,8 @@ import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.product.FridgeProductAssoRepo;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
+
+import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -77,6 +79,25 @@ public class FridgeService {
         return Optional.of(product);
 
     }
+    
+    public Optional<Object> updateProductInFridge(FridgeProductRequest request) {
+        Optional<FridgeProductAsso> fridgeProductAsso = fridgeProductAssoRepo.findById(request.fridgeProductId());
+        if (fridgeProductAsso.isEmpty()) return Optional.empty();
+        
+        Integer amount = request.amount();
+        Integer days = request.days();
+
+        if (amount != null) fridgeProductAsso.get()
+                                .setAmount(request.amount());
+
+        if (days != null) fridgeProductAsso.get()
+                                .setDaysToExpiration(request.days());
+        
+        fridgeProductAssoRepo.save(fridgeProductAsso.get());
+
+        return Optional.of(fridgeProductAsso);
+    }
+
 
     /**
      * Remove a product from the fridge of a group
