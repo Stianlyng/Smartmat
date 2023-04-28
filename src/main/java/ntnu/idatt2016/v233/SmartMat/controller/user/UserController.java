@@ -98,6 +98,12 @@ public class UserController {
     }
 
 
+    /**
+     * Adds the specified allergy to the user with the given username.
+     *
+     * @param allergyRequest the request object containing the username and allergy name
+     * @return a ResponseEntity with a boolean indicating whether the operation was successful
+     */
     @PostMapping("/addAllergy")
     public ResponseEntity<Boolean> addAllergyToUser(@RequestBody AllergyRequest allergyRequest) {
         try {
@@ -108,6 +114,24 @@ public class UserController {
             return ResponseEntity.status(409).body(false);
         }
     }
+
+    /**
+     * Deletes the specified allergy from the user with the given username.
+     *
+     * @param allergyRequest the request object containing the username and allergy name
+     * @return a ResponseEntity with a boolean indicating whether the operation was successful
+     */
+    @DeleteMapping("/deleteAllergy")
+    public ResponseEntity<Boolean> deleteAllergyFromUser(@RequestBody AllergyRequest allergyRequest) {
+        try {
+            return userService.deleteAllergy(allergyRequest.getUsername(), allergyRequest.getAllergyName())
+                    .map(user -> ResponseEntity.ok(true))
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        }catch (Exception e){
+            return ResponseEntity.status(409).body(false);
+        }
+    }
+
 
     /**
      * Update a user in the database.

@@ -96,6 +96,24 @@ public class User implements UserDetails {
         this.allergies.add(allergy);
     }
 
+
+    /**
+     * Deletes the specified allergy from this user's list of allergies.
+     *
+     * @param allergy the allergy to delete
+     * @return true if the allergy was successfully deleted, false otherwise
+     */
+    public boolean deleteAllergy(Allergy allergy){
+        if(this.allergies == null){
+            this.allergies = new ArrayList<>();
+        }
+        if(this.allergies.contains(allergy)){
+            allergies.remove(allergy);
+            return true;
+        }
+        return false;
+    }
+
     /**
      * adds a recipe to the user
      * @param recipe the recipe to add to the user
