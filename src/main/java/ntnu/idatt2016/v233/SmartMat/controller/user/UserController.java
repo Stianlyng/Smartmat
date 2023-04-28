@@ -100,9 +100,13 @@ public class UserController {
 
     @PostMapping("/addAllergy")
     public ResponseEntity<Boolean> addAllergyToUser(@RequestBody AllergyRequest allergyRequest) {
-        return userService.addAllergyToUser(allergyRequest.getUsername(), allergyRequest.getAllergyName())
-                .map(user -> ResponseEntity.ok(user.getAllergies().size() > 0))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        try {
+            return userService.addAllergyToUser(allergyRequest.getUsername(), allergyRequest.getAllergyName())
+                    .map(user -> ResponseEntity.ok(user.getAllergies().size() > 0))
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        }catch (Exception e){
+            return ResponseEntity.unprocessableEntity().body(false);
+        }
     }
 
     /**
