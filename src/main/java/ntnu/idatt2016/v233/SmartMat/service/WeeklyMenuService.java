@@ -21,18 +21,6 @@ public class WeeklyMenuService {
     @Autowired
     RecipeRepository recipeRepository;
 
-     /**
-     * Retrieves the top 5 recipes with products that have a match with items in the given fridge.
-     * Returns a list of Object arrays, where each array contains the recipe details and product information.
-     *
-     * @param groupId the ID of the fridge to use for matching products
-     * @return a list of Object arrays with recipe and product details
-     */    
-    /*
-    public List<Object[]> getTop5RecipesWithProducts(long groupId) {
-        return recipeRepository.findTop5RecipesWithProducts(groupId);
-    }
-    */
 
      /**
      * Retrieves the top 5 recipes with products that have a match with items in the given fridge.
@@ -41,21 +29,20 @@ public class WeeklyMenuService {
      * @param groupId the ID of the fridge to use for matching products
      * @return a list of RecipeWithProductsDTO objects with recipe and product details
      */    
-    public List<WeeklyMenuResponse> getTop5RecipesWithProducts(long groupId) {
-
-        List<Object[]> rawData = recipeRepository.findTop5RecipesWithProductsRaw(groupId);
+    public List<WeeklyMenuResponse> getWeeklyMenu(long fridgeId) {
+    
+        List<Object[]> rawData = recipeRepository.findWeeklyMenu(fridgeId);
 
         List<WeeklyMenuResponse> result = rawData.stream()
             .map(row -> new WeeklyMenuResponse(
                 (Integer) row[0],
                 (String) row[1],
-                (Long) row[2],
-                (String) row[3],
-                (String) row[4],
-                (Boolean) row[5]
+                (String) row[2],
+                (long) row[3]
             ))
             .collect(Collectors.toList());
             
                 return result;
             }
+    
 }

@@ -16,9 +16,7 @@ public class WeeklyMenuResponse {
 
     private Integer recipeId;
     private String recipeName;
-    private Long ean;
-    private String itemName;
-    private String itemDescription;
-    private boolean inFridge;
+    private String recipeDescription;
+    private long matchingProducts;
     
 } 
