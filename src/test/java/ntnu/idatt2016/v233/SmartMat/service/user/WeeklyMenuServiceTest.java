@@ -30,23 +30,23 @@ class WeeklyMenuServiceTest {
     }
 
     @Test
-    void testGetTop5RecipesWithProducts() {
-        long groupId = 1L;
+    void testGetWeeklyMenu() {
+        long fridgeId = 1L;
 
-        Object[] row1 = new Object[] {1, "Recipe 1", 10L, "Product 1", "Description 1", true};
-        Object[] row2 = new Object[] {2, "Recipe 2", 15L, "Product 2", "Description 2", false};
+        Object[] row1 = new Object[] {1, "Recipe 1", "Description 1", 10L};
+        Object[] row2 = new Object[] {2, "Recipe 2", "Description 2", 15L};
         List<Object[]> rawData = Arrays.asList(row1, row2);
 
-        when(recipeRepository.findTop5RecipesWithProductsRaw(groupId)).thenReturn(rawData);
+        when(recipeRepository.findWeeklyMenu(fridgeId)).thenReturn(rawData);
 
-        List<WeeklyMenuResponse> result = weeklyMenuService.getTop5RecipesWithProducts(groupId);
+        List<WeeklyMenuResponse> result = weeklyMenuService.getWeeklyMenu(fridgeId);
 
         assertEquals(2, result.size());
         assertEquals("Recipe 1", result.get(0).getRecipeName());
-        assertEquals(10L, result.get(0).getEan());
-        assertEquals("Product 1", result.get(0).getItemName());
+        assertEquals("Description 1", result.get(0).getRecipeDescription());
+        assertEquals(10L, result.get(0).getMatchingProducts());
         assertEquals("Recipe 2", result.get(1).getRecipeName());
-        assertEquals(15L, result.get(1).getEan());
-        assertEquals("Product 2", result.get(1).getItemName());
+        assertEquals("Description 2", result.get(1).getRecipeDescription());
+        assertEquals(15L, result.get(1).getMatchingProducts());
     }
 }
