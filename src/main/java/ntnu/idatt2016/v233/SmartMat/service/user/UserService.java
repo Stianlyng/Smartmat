@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 
+import java.nio.channels.FileChannel;
 import java.util.List;
 import java.util.Optional;
 
@@ -166,6 +167,28 @@ public class UserService {
         } else if (user.isEmpty()) {
             throw new EntityNotFoundException("User not found");
         } else if (allergy.isEmpty()) {
+            throw new EntityNotFoundException("Allergy not found");
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Deletes the specified allergy from the user with the given username.
+     *
+     * @param username the username of the user to delete the allergy from
+     * @param allergyName the name of the allergy to delete
+     * @return an Optional containing the updated User object if the operation was successful, or an empty Optional otherwise
+     * @throws EntityNotFoundException if the specified user or allergy cannot be found
+     */
+    public Optional<User> deleteAllergy(String username, String allergyName) {
+        Optional<User> user = userRepository.findByUsername(username);
+        Optional<Allergy> allergy = allergyRepository.findByName(allergyName);
+
+        if (user.isPresent() && allergy.isPresent()) {
+            if(user.get().deleteAllergy(allergy.get())) return Optional.of(userRepository.save(user.get()));
+        } else if (user.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        } else {
             throw new EntityNotFoundException("Allergy not found");
         }
         return Optional.empty();
