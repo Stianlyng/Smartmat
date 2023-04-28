@@ -50,4 +50,9 @@ public interface UserGroupAssoRepository extends JpaRepository<UserGroupAsso, Us
      *         or an empty optional if no such user-group associations exist in the database
      */
     Optional<UserGroupAsso> findFirstByUserAndPrimaryGroup(User user, boolean primaryGroup);
+
+    /**
+     * Finds UserGroupAsso by UserGroupId
+     */
+    Optional<UserGroupAsso> findByUserGroupId(UserGroupId userGroupId);
 }
