@@ -30,7 +30,7 @@ public class FridgeProductAsso {
     @ManyToOne
     @JoinColumn(name = "ean")
     @JsonIgnoreProperties({"fridges"})
-    @JsonIgnore
+    //@JsonIgnore // Til Birk: måtte fjerne denne for å få nødvendig info i fridge. Er det dumt?
     private Product ean;
 
     @Column(name = "purchase_date")
