@@ -18,10 +18,10 @@ import ntnu.idatt2016.v233.SmartMat.service.WeeklyMenuService;
 public class WeeklyMenuController {
     
     private WeeklyMenuService weeklyMenuService;
-
-    @GetMapping("/getWeeklyMenu/{fridgeId}")
+    
+    @GetMapping("/{fridgeId}")
     public ResponseEntity<List<WeeklyMenuResponse>> getWeeklyMenu(@PathVariable("fridgeId") Long fridgeId) {
-        List<WeeklyMenuResponse> weeklyMenu = weeklyMenuService.getTop5RecipesWithProducts(fridgeId);
+        List<WeeklyMenuResponse> weeklyMenu = weeklyMenuService.getWeeklyMenu(fridgeId);
         
         if (weeklyMenu.isEmpty()) {
             return ResponseEntity.notFound().build();
