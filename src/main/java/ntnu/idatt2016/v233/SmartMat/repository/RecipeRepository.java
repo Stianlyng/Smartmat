@@ -88,4 +88,15 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
         """, nativeQuery = true)
     List<Object[]> findWeeklyMenu(@Param("fridgeId") long fridgeId);
     
+    @Query( value = """
+        SELECT r.recipe_id, r.recipe_name, r.recipe_description, p.ean, p.item_name, p.description as product_description,
+            CASE WHEN fp.fridge_id IS NOT NULL THEN TRUE ELSE FALSE END as in_fridge
+        FROM recipe AS r
+        JOIN recipe_product AS rp ON r.recipe_id = rp.recipe_id
+        JOIN product AS p ON rp.ean = p.ean
+        LEFT JOIN fridge_product AS fp ON p.ean = fp.ean AND fp.fridge_id = :fridgeId
+        WHERE r.recipe_id = :recipeId ;
+            """ , nativeQuery = true)
+    List<Object[]> findRecipeWithMatchingProductsInFridge(long fridgeId, long recipeId);
+    
 }

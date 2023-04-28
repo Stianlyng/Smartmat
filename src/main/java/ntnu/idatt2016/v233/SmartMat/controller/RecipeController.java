@@ -3,6 +3,7 @@ package ntnu.idatt2016.v233.SmartMat.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.dto.response.RecipeFridgeMatch;
 import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
 import ntnu.idatt2016.v233.SmartMat.service.RecipeService;
 
@@ -53,4 +54,17 @@ public class RecipeController {
         }
         return ResponseEntity.ok(recipes);
     }
+
+    @GetMapping("/match/{fridgeId}/{recipeId}")
+    public ResponseEntity<List<RecipeFridgeMatch>> getRecipeWithByProductsInFridge(
+        @PathVariable("fridgeId") Long fridgeId, @PathVariable("recipeId") Long recipeId) {
+
+        List<RecipeFridgeMatch> recipe = recipeService.getRecipeWithFridgeProductMatch(fridgeId, recipeId);       
+        if (recipe.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(recipe);
+        }
+    }
+
 }

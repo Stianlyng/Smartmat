@@ -1,11 +1,13 @@
 package ntnu.idatt2016.v233.SmartMat.service;
 
+import ntnu.idatt2016.v233.SmartMat.dto.response.RecipeFridgeMatch;
 import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.repository.RecipeRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -102,4 +104,23 @@ public class RecipeService {
         recipeRepository.save(recipe);
     }
 
+    public List<RecipeFridgeMatch> getRecipeWithFridgeProductMatch(long fridgeId, long recipeId) {
+    
+        List<Object[]> rawData = recipeRepository.findRecipeWithMatchingProductsInFridge(fridgeId, recipeId);
+
+        List<RecipeFridgeMatch> result = rawData.stream()
+            .map(row -> new RecipeFridgeMatch(
+                (Integer) row[0],
+                (String) row[1],
+                (String) row[2],
+                (Long) row[3],
+                (String) row[4],
+                (String) row[5],
+                (Boolean) row[6]
+            ))
+            .collect(Collectors.toList());
+            
+                return result;
+            }
+    
 }
