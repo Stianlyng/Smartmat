@@ -6,12 +6,16 @@ import ntnu.idatt2016.v233.SmartMat.dto.request.group.GroupRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.response.group.GroupResponse;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
+import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupId;
+import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.service.group.GroupService;
 import ntnu.idatt2016.v233.SmartMat.service.user.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -57,29 +61,50 @@ public class GroupController {
      * Creates a new group
      *
      * @param groupRequest the group to create
-     * @return a ResponseEntity containing the created group if it was created successfully, or a 400 if it wasn't
+     * @return a ResponseEntity containing the created group if it was created successfully,
+     * or a 400 if the group name is invalid or already exists, or if the username is invalid
      */
-    @PostMapping("/{username}")
-    public ResponseEntity<Group> createGroup(@RequestBody Group group,
-                                             @PathVariable("username") String username) {
-
-        if(group.getGroupName().equals("") ||
-                userService.getUserFromUsername(username).isEmpty() ||
-                groupService.getGroupById(group.getGroupId()).isPresent()) {
-            return ResponseEntity.badRequest().build();
+    @PostMapping("/group")
+    public ResponseEntity<?> createGroup(@RequestBody GroupRequest groupRequest) {
+        if (groupRequest.groupName() == null || groupRequest.groupName().trim().length() < 3) {
+            return ResponseEntity.badRequest().body("Group name must be at least 3 characters long.");
         }
 
+        if (groupService.getGroupByName(groupRequest.groupName()).isPresent()) {
+            return ResponseEntity.badRequest().body("Group name already exists.");
+        }
 
-        Group group1 = groupService.createGroup(group);
-        group1.addUser(UserGroupAsso.builder()
-                        .groupAuthority("ADMIN")
-                        .group(group1)
-                        .user(userService.getUserFromUsername(username).get())
+        Optional<User> optionalUser = userService.getUserFromUsername(groupRequest.username());
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("Invalid username.");
+        }
+
+        Group group = new Group();
+        group.setGroupName(groupRequest.groupName());
+        Group createdGroup = groupService.createGroup(group);
+
+        User user = optionalUser.get();
+
+        UserGroupId userGroupId = UserGroupId.builder()
+                .username(user.getUsername())
+                .groupId(createdGroup.getGroupId())
+                .build();
+
+        createdGroup.addUser(UserGroupAsso.builder()
+                .id(userGroupId)
+                .primaryGroup(false)
+                .groupAuthority("ADMIN")
+                .group(createdGroup)
+                .user(user)
                 .build());
 
-        return groupService.updateGroup(group1).map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.badRequest().build());
+        GroupResponse groupResponse = new GroupResponse(createdGroup.getGroupId(), createdGroup.getLinkCode());
+
+        groupService.updateGroup(createdGroup);
+
+        return ResponseEntity.ok(groupResponse);
     }
+
 
     /**
      * Gets the level of a group
@@ -184,23 +209,48 @@ public class GroupController {
      * @return a ResponseEntity object containing an HTTP status code and the newly created UserGroupAsso object,
      *         or a ResponseEntity object with an HTTP status code indicating that the request was not successful
      */
-    @PostMapping("/connection/{username}/{linkCode}")
-    public ResponseEntity<?> addConnection(@PathVariable("username") String username,
-                                           @PathVariable("linkCode") String linkCode){
-        return groupService.getGroupByLinkCode(linkCode)
-                .flatMap(group -> userService.getUserFromUsername(username)
-                        .flatMap(user -> {
-                            UserGroupAsso userGroupAsso = UserGroupAsso.builder()
-                                    .group(group)
-                                    .user(user)
-                                    .build();
-                            user.addGroup(userGroupAsso);
-                            userService.updateUser(user);
-                            return Optional.of(userGroupAsso);
-                        }))
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @PostMapping("/connection")
+    public ResponseEntity<?> addConnection(@RequestBody GroupConnectionRequest groupConnectionRequest) {
+        Optional<Group> optionalGroup = groupService.getGroupByLinkCode(groupConnectionRequest.linkCode());
+
+        if (optionalGroup.isEmpty()) {
+            return ResponseEntity.badRequest().body("Invalid link code.");
+        }
+
+        Optional<User> optionalUser = userService.getUserFromUsername(groupConnectionRequest.username());
+
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("Invalid username.");
+        }
+
+        Group group = optionalGroup.get();
+        User user = optionalUser.get();
+
+        if (groupService.isUserAssociatedWithGroup(user.getUsername(), group.getGroupId())) {
+            return ResponseEntity.badRequest().body("User is already associated with the group.");
+        }
+
+        UserGroupId userGroupId = UserGroupId.builder()
+                .username(user.getUsername())
+                .groupId(group.getGroupId())
+                .build();
+
+        UserGroupAsso userGroupAsso = UserGroupAsso.builder()
+                .id(userGroupId)
+                .group(group)
+                .user(user)
+                .build();
+
+        user.addGroup(userGroupAsso);
+        userService.updateUser(user);
+
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("groupId", group.getGroupId());
+        responseBody.put("username", user.getUsername());
+
+        return ResponseEntity.ok(responseBody);
     }
+
 
     /**
      * Changes the authority level of a user in a group.

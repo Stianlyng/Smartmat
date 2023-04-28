@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.ShoppingList;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
+import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupId;
 import ntnu.idatt2016.v233.SmartMat.repository.ShoppingListRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.group.UserGroupAssoRepository;
 import ntnu.idatt2016.v233.SmartMat.util.GroupUtil;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,8 @@ import java.util.Optional;
 public class GroupService {
 
     private final GroupRepository groupRepository;
+
+    private final UserGroupAssoRepository userGroupAssoRepository;
 
     private final FridgeRepository fridgeRepository;
     private ShoppingListRepository shoppingListRepository;
@@ -159,5 +163,20 @@ public class GroupService {
 
     public Optional<Group> getGroupByLinkCode(String linkCode) {
         return groupRepository.findByLinkCode(linkCode);
+    }
+
+    /**
+     * Checks if a user is associated with a group
+     * @param username the username of the user
+     * @param groupId the id of the group
+     * @return true if the user is associated with the group, false otherwise
+     */
+    public boolean isUserAssociatedWithGroup(String username, Long groupId) {
+        UserGroupId userGroupId = UserGroupId.builder()
+                .username(username)
+                .groupId(groupId)
+                .build();
+
+        return userGroupAssoRepository.findById(userGroupId).isPresent();
     }
 }
