@@ -92,7 +92,7 @@ public class GroupController {
 
         createdGroup.addUser(UserGroupAsso.builder()
                 .id(userGroupId)
-                .primaryGroup(false)
+                .primaryGroup(true)
                 .groupAuthority("ADMIN")
                 .group(createdGroup)
                 .user(user)
@@ -178,28 +178,46 @@ public class GroupController {
      * Handles the HTTP PUT request to change the primary group of a user.
      *
      * @param username the username of the user whose primary group is to be changed
-     * @param groupId the ID of the group
+     * @param newPrimaryGroupId the ID of the new primary group
      * @return a ResponseEntity object containing an HTTP status code and the updated UserGroupAsso object,
      *         or a ResponseEntity object with an HTTP status code indicating that the request was not successful
      */
-    @PutMapping("/markNewPrimary/{username}/{groupId}/{newId}")
+    @PutMapping("/markNewPrimary/{username}/{newPrimaryGroupId}")
     public ResponseEntity<?> markNewPrimaryGroup(@PathVariable("username") String username,
-                                                 @PathVariable("groupId") long groupId){
-        return userService.getUserFromUsername(username)
-                .flatMap(user ->{
-                            user.getGroup().forEach(userGroupAsso -> {
-                                if(userGroupAsso.getGroup().getGroupId() != groupId){
-                                    userGroupAsso.setPrimaryGroup(false);
-                                }
-                                if(userGroupAsso.getGroup().getGroupId() == groupId){
-                                    userGroupAsso.setPrimaryGroup(true);
-                                }
-                            });
-                            return Optional.of(userService.updateUser(user));
-                        }
-                )
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                                                 @PathVariable("newPrimaryGroupId") long newPrimaryGroupId) {
+        Optional<User> optionalUser = userService.getUserFromUsername(username);
+
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("Invalid username.");
+        }
+
+        User user = optionalUser.get();
+
+        Optional<UserGroupAsso> oldPrimaryOpt = groupService.findPrimaryUserGroupAssoForUser(username);
+        if (oldPrimaryOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("No primary group found for the user.");
+        }
+
+        UserGroupAsso oldPrimary = oldPrimaryOpt.get();
+        oldPrimary.setPrimaryGroup(false);
+        groupService.updateUserGroupAsso(oldPrimary);
+
+        Optional<UserGroupAsso> newPrimaryOpt = groupService.getUserGroupAsso(username, newPrimaryGroupId);
+        if (newPrimaryOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Invalid new primary group ID.");
+        }
+
+        UserGroupAsso newPrimary = newPrimaryOpt.get();
+        newPrimary.setPrimaryGroup(true);
+        groupService.updateUserGroupAsso(newPrimary);
+
+        userService.updateUser(user);
+
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("username", username);
+        responseBody.put("oldPrimaryGroupId", oldPrimary.getGroup().getGroupId());
+        responseBody.put("newPrimaryGroupId", newPrimary.getGroup().getGroupId());
+        return ResponseEntity.ok(responseBody);
     }
 
     /**
