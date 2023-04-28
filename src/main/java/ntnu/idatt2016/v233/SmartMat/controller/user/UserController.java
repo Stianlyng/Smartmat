@@ -105,7 +105,7 @@ public class UserController {
                     .map(user -> ResponseEntity.ok(user.getAllergies().size() > 0))
                     .orElseGet(() -> ResponseEntity.notFound().build());
         }catch (Exception e){
-            return ResponseEntity.unprocessableEntity().body(false);
+            return ResponseEntity.status(409).body(false);
         }
     }
 
