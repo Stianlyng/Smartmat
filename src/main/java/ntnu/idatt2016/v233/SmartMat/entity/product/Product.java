@@ -110,4 +110,11 @@ public class Product{
             shoppingLists = new ArrayList<>();
         shoppingLists.add(shoppingList);
     }
+
+    public void addAllergy(Allergy allergy){
+        if (allergies == null){
+            allergies = new ArrayList<>();
+        }
+        allergies.add(allergy);
+    }
 }

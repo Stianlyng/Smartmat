@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.dto.request.ProductRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Category;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
+import ntnu.idatt2016.v233.SmartMat.service.AllergyService;
 import ntnu.idatt2016.v233.SmartMat.service.product.CategoryService;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 import ntnu.idatt2016.v233.SmartMat.util.CategoryUtil;
@@ -28,6 +29,8 @@ public class ProductController {
     private final ProductService productService;
 
     private final CategoryService categoryService;
+
+    private final AllergyService allergyService;
 
     /**
      * Creates a product if it does not already exist.
@@ -62,6 +65,10 @@ public class ProductController {
         if(volumeUnit.isPresent()){
             product.setUnit(volumeUnit.get().get(1));
             product.setAmount(Double.parseDouble(volumeUnit.get().get(0)));
+        }
+
+        if(productRequest.allergies() != null){
+            productRequest.allergies().forEach(allergyName-> product.addAllergy(allergyService.getAllergyByName(allergyName).get()));
         }
 
         productService.saveProduct(product);
