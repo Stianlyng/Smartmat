@@ -91,6 +91,17 @@ public class FridgeController {
     }
 
     /**
+     * Deletes a product from the fridge and creates a waste object from it.
+     *
+     * @param fridgeProductId The id of the fridge product association to be deleted
+     * @return A ResponseEntity with status code 200 if successful, or status code 404 if the specified fridge product association was not found.
+     */
+    @DeleteMapping("/waste/product/{fridgeProductId}")
+    public ResponseEntity<?> wasteProductFromFridge(@PathVariable("fridgeProductId") long fridgeProductId){
+        return fridgeService.wasteProductFromFridge(fridgeProductId).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
      * Deletes all products in a fridge
      * @param fridgeId the id of the fridge
      * @return success if the products were deleted, bad request if the fridge doesn't exist

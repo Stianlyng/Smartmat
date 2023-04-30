@@ -2,18 +2,22 @@ package ntnu.idatt2016.v233.SmartMat.service.group;
 
 import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.dto.request.FridgeProductRequest;
+import ntnu.idatt2016.v233.SmartMat.entity.Waste;
 import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeRepository;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.group.WasteRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.product.FridgeProductAssoRepo;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 
+import ntnu.idatt2016.v233.SmartMat.util.ProductUtil;
 import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
@@ -33,6 +37,8 @@ public class FridgeService {
     private final ProductService productService;
 
     private final GroupRepository groupRepository;
+
+    private final WasteRepository wasteRepository;
 
     private final FridgeProductAssoRepo fridgeProductAssoRepo;
 
@@ -164,6 +170,22 @@ public class FridgeService {
             return Optional.of(true);
         }
     }
+
+    /**
+     * Deletes a product from the fridge and saves a waste object representing the discarded product.
+     * @param fridgeProductId the ID of the fridge product association to delete
+     * @return an Optional containing the saved waste object, or an empty Optional if the fridge product association with the given ID is not found
+     */
+    public Optional<Object> wasteProductFromFridge(long fridgeProductId){
+        Optional<FridgeProductAsso> fridgeProductAsso = fridgeProductAssoRepo.findById(fridgeProductId);
+        if(fridgeProductAsso.isEmpty()) return Optional.empty();
+        FridgeProductAsso fridgeProductAsso1 = fridgeProductAsso.get();
+        fridgeProductAssoRepo.delete(fridgeProductAsso1);
+        String unit = ProductUtil.getVolumeFromProduct(fridgeProductAsso1.getEan()).get().get(0);
+
+        return Optional.of(wasteRepository.save(Waste.builder().amount(fridgeProductAsso1.getAmount()).unit(unit).ean(fridgeProductAsso1.getEan()).groupId(fridgeProductAsso1.getFridgeId().getGroup()).timestamp(new Timestamp(System.currentTimeMillis())).build()));
+    }
+
 
     /**
      * Delete all products in a fridge
