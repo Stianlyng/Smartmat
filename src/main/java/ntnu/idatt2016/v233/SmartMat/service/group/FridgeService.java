@@ -153,12 +153,16 @@ public class FridgeService {
      * @return an optional containing the fridge product if it exists
      */
     public Optional<Object> deleteAmountFromFridge(long fridgeProductId, int amount) {
-        if(amount < 0 ){
-            System.out.println("Given amount " + amount + " < " + " Stored in db");
+        Optional<FridgeProductAsso> fridgeProductAsso = fridgeProductAssoRepo.findAllById(fridgeProductId);
+        if(fridgeProductAsso.isEmpty()) return Optional.empty();
+        FridgeProductAsso fridgeProductAsso1 = fridgeProductAsso.get();
+        if(amount < fridgeProductAsso1.getAmount() ){
+            fridgeProductAsso1.setAmount(fridgeProductAsso1.getAmount() -amount);
+            return Optional.of(fridgeProductAssoRepo.save(fridgeProductAsso1));
         } else {
-            System.out.println("Given amount " + amount + " > " + " Stored in db");
+            fridgeProductAssoRepo.delete(fridgeProductAsso.get());
+            return Optional.of(true);
         }
-        return Optional.empty();
     }
 
     /**
