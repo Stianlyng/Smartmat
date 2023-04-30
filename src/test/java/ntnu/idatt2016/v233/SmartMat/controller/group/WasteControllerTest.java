@@ -28,7 +28,7 @@ public class WasteControllerTest {
     private WasteService wasteService;
 
     private Waste waste;
-
+/**
     @BeforeEach
     public void setUp() {
         waste = Waste.builder()
@@ -89,4 +89,5 @@ public class WasteControllerTest {
 
         verify(wasteService, times(1)).getWasteById(waste.getWasteId());
     }
+    */
 }

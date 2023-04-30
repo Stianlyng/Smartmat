@@ -1,10 +1,13 @@
 package ntnu.idatt2016.v233.SmartMat.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 
 import java.sql.Timestamp;
 
@@ -28,11 +31,14 @@ public class Waste {
     @Column(name = "waste_id")
     long wasteId;
 
-    @Column(name = "group_id")
-    long groupId;
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    @JsonIgnoreProperties("group")
+    Group group;
 
-    @Column(name = "ean")
-    long ean;
+    @ManyToOne
+    @JoinColumn (name= "ean")
+    Product product;
 
     @Column(name = "timestamp")
     Timestamp timestamp;
