@@ -34,11 +34,11 @@ public class Waste {
     @ManyToOne
     @JoinColumn(name = "group_id")
     @JsonIgnoreProperties("group")
-    Group group;
+    Group groupId;
 
     @ManyToOne
     @JoinColumn (name= "ean")
-    Product product;
+    Product ean;
 
     @Column(name = "timestamp")
     Timestamp timestamp;

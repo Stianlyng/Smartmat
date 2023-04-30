@@ -24,7 +24,7 @@ public interface WasteRepository extends JpaRepository<Waste, Long> {
     Optional<List<Waste>> findAllWasteOfOneCategoryFromGroup(@Param("groupId") long groupId,
                                                              @Param("categoryName") String categoryName);
 
-    @Query(value = "SELECT waste_id FROM wastes ORDER BY waste_id ASC LIMIT 1;",nativeQuery = true)
-    Optional<Long> findLastID();
+    @Query(value = "SELECT waste_id FROM wastes ORDER BY waste_id ASC",nativeQuery = true)
+    long getLastWaste();
 
 }

@@ -21,20 +21,12 @@ public class WasteService {
     private final GroupRepository groupRepository;
     private final ProductRepository productRepository;
 
-    /**
-     * Creates a new waste
-     *
-     * @param WasteRequest the waste to create
-     * @return the created waste
-     */
+
     public Optional<Waste> createWaste(WasteRequest wasteRequest) {
         Optional<Group> group = groupRepository.findByGroupId(wasteRequest.groupId());
         Optional<Product> product = productRepository.findById(wasteRequest.ean());
-        Optional<Long> wasteId = wasteRepository.findLastID();
-        long id;
-        id = wasteId.orElse(1L);
         if(group.isPresent() && product.isPresent()){
-            return Optional.of(wasteRepository.save(Waste.builder().unit(wasteRequest.unit()).wasteId(id).timestamp(new Timestamp(System.currentTimeMillis())).amount(wasteRequest.amount()).product(product.get()).group(group.get()).build()));
+            return Optional.of(wasteRepository.save(Waste.builder().unit(wasteRequest.unit()).wasteId(100L).timestamp(new Timestamp(System.currentTimeMillis())).amount(wasteRequest.amount()).ean(product.get()).groupId(group.get()).build()));
         }
         return Optional.empty();
     }
