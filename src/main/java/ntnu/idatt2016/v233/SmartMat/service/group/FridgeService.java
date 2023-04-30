@@ -72,6 +72,7 @@ public class FridgeService {
                         .fridgeId(fridge.get())
                         .ean(product.get())
                         .amount(fridgeProductRequest.amount())
+                        .daysToExpiration(fridgeProductRequest.days())
                         .purchaseDate(java.sql.Date.valueOf(LocalDate.now()))
                 .build());
 

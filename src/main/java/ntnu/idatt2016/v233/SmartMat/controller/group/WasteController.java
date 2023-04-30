@@ -2,6 +2,7 @@ package ntnu.idatt2016.v233.SmartMat.controller.group;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.dto.request.WasteRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.Waste;
 import ntnu.idatt2016.v233.SmartMat.service.group.WasteService;
 import ntnu.idatt2016.v233.SmartMat.util.CategoryUtil;
@@ -22,11 +23,8 @@ public class WasteController {
      * @return a ResponseEntity containing the saved waste if it was saved successfully, or a 400 if it wasn't
      */
     @PostMapping("/waste")
-    public ResponseEntity<Waste> createWaste(@RequestBody Waste waste) {
-        if(wasteService.getWasteById(waste.getWasteId()).isPresent()) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(wasteService.createWaste(waste));
+    public ResponseEntity<Waste> createWaste(@RequestBody WasteRequest waste) {
+        return wasteService.createWaste(waste).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.unprocessableEntity().build());
     }
 
     /**

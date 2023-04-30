@@ -20,8 +20,11 @@ public interface WasteRepository extends JpaRepository<Waste, Long> {
      * @return an Optional containing a List of Waste objects if at least one waste item is found,
      *         or an empty Optional if no waste items are found
      */
-    @Query(value = "SELECT * FROM wastes WHERE group_id = :groupId AND ean IN (SELECT ean FROM product WHERE category_name = :categoryName)", nativeQuery = true)
+    @Query(value = "SELECT * FROM wastes WHERE group_id = :groupId AND ean IN (SELECT ean FROM product WHERE category_name = :categoryName);", nativeQuery = true)
     Optional<List<Waste>> findAllWasteOfOneCategoryFromGroup(@Param("groupId") long groupId,
                                                              @Param("categoryName") String categoryName);
+
+    @Query(value = "SELECT waste_id FROM wastes ORDER BY waste_id ASC",nativeQuery = true)
+    long getLastWaste();
 
 }
