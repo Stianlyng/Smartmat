@@ -47,7 +47,9 @@ public class WasteService {
      * @return an optional containing the waste if it exists
      */
     public Optional<List<Waste>> getWasteByGroupId(long groupId) {
-        return wasteRepository.findByGroupId(groupId);
+        Optional<Group> group = groupRepository.findByGroupId(groupId);
+        if(group.isPresent()) return wasteRepository.findByGroupId(group.get());
+        return Optional.empty();
     }
 
     /**
