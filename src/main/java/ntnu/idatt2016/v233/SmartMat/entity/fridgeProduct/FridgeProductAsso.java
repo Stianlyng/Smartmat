@@ -40,7 +40,7 @@ public class FridgeProductAsso {
     private int daysToExpiration;
 
     @Column(name = "amount")
-    private int amount;
+    private double amount;
 
 
 }

@@ -159,7 +159,7 @@ public class FridgeService {
      * @param amount the amount to delete
      * @return an optional containing the fridge product if it exists
      */
-    public Optional<Object> deleteAmountFromFridge(long fridgeProductId, int amount) {
+    public Optional<Object> deleteAmountFromFridge(long fridgeProductId, double amount) {
         Optional<FridgeProductAsso> fridgeProductAsso = fridgeProductAssoRepo.findAllById(fridgeProductId);
         if(fridgeProductAsso.isEmpty()) return Optional.empty();
         FridgeProductAsso fridgeProductAsso1 = fridgeProductAsso.get();
@@ -188,7 +188,7 @@ public class FridgeService {
         fridgeProductAssoRepo.delete(fridgeProductAsso1);
         String unit = ProductUtil.getVolumeFromProduct(fridgeProductAsso1.getEan()).get().get(0);
         Group group = fridgeProductAsso1.getFridgeId().getGroup();
-        if(group.getPoints() > 10){
+        if(group.getPoints() > 10.0){
             group.setPoints(group.getPoints() - 1);
             group.setLevel(GroupUtil.getLevel(group.getPoints()));
         }

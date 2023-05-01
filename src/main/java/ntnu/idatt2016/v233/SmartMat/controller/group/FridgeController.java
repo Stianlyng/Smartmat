@@ -67,7 +67,7 @@ public class FridgeController {
 
     @DeleteMapping("/group/delete/product/{fridgeProductId}/{amount}")
     public ResponseEntity<?> deleteAmountFridgeProduct(@PathVariable("fridgeProductId") long fridgeProductId,
-                                                       @PathVariable("amount") int amount){
+                                                       @PathVariable("amount") double amount){
         return fridgeService.deleteAmountFromFridge(fridgeProductId,amount).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
