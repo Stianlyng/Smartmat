@@ -96,6 +96,7 @@ public class GroupController {
 
         Group group = new Group();
         group.setGroupName(groupRequest.groupName());
+
         Group createdGroup = groupService.createGroup(group);
 
         User user = optionalUser.get();
@@ -104,6 +105,12 @@ public class GroupController {
                 .username(user.getUsername())
                 .groupId(createdGroup.getGroupId())
                 .build();
+
+        Optional<UserGroupAsso> oldPrimaryOptional = groupService.findPrimaryUserGroupAssoForUser(user.getUsername());
+        if(oldPrimaryOptional.isPresent()){
+            oldPrimaryOptional.get().setPrimaryGroup(false);
+            groupService.updateUserGroupAsso(oldPrimaryOptional.get());
+        }
 
         createdGroup.addUser(UserGroupAsso.builder()
                 .id(userGroupId)
