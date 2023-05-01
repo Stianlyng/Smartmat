@@ -67,9 +67,20 @@ public class FridgeController {
 
     @DeleteMapping("/group/delete/product/{fridgeProductId}/{amount}")
     public ResponseEntity<?> deleteAmountFridgeProduct(@PathVariable("fridgeProductId") long fridgeProductId,
-                                                       @PathVariable("amount") double amount){
-        return fridgeService.deleteAmountFromFridge(fridgeProductId,amount).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+                                                       @PathVariable("amount") String amountStr) {
+        try {
+            double amount = Double.parseDouble(amountStr);
+
+            if (amount < 0.0) {
+                return ResponseEntity.badRequest().body("Amount must be greater than or equal to 0.");
+            }
+
+            return fridgeService.deleteAmountFromFridge(fridgeProductId, amount).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body("Invalid amount format. Please provide a valid number.");
+        }
     }
+
 
 
     /**
