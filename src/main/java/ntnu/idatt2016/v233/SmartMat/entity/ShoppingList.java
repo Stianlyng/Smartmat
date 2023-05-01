@@ -36,6 +36,7 @@ public class ShoppingList {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
+    @JsonIgnoreProperties("shoppingList")
     private Group group;
 
     @ManyToMany
