@@ -56,7 +56,7 @@ public class ShoppingListController {
      * @return the shopping list, or an error if the ID is invalid
      */
     @GetMapping("/group/{groupId}")
-    public ResponseEntity<ShoppingList> getAllShoppingListsByGroupId(@PathVariable("id") long id) {
+    public ResponseEntity<ShoppingList> getAllShoppingListsByGroupId(@PathVariable("groupId") long id) {
         Optional<ShoppingList> shoppingList = shoppingListService.getShoppingListByGroupId(id);
         return shoppingList.map(list -> ResponseEntity.status(HttpStatus.OK).body(list))
                            .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
