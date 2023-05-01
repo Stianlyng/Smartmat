@@ -13,6 +13,7 @@ import ntnu.idatt2016.v233.SmartMat.repository.group.WasteRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.product.FridgeProductAssoRepo;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 
+import ntnu.idatt2016.v233.SmartMat.util.GroupUtil;
 import ntnu.idatt2016.v233.SmartMat.util.ProductUtil;
 import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.stereotype.Service;
@@ -166,6 +167,10 @@ public class FridgeService {
             fridgeProductAsso1.setAmount(fridgeProductAsso1.getAmount() -amount);
             return Optional.of(fridgeProductAssoRepo.save(fridgeProductAsso1));
         } else {
+            Group group = fridgeProductAsso1.getFridgeId().getGroup();
+            group.setPoints(group.getPoints() + 1);
+            group.setLevel(GroupUtil.getLevel(group.getPoints()));
+            groupRepository.save(group);
             fridgeProductAssoRepo.delete(fridgeProductAsso.get());
             return Optional.of(true);
         }
@@ -182,7 +187,12 @@ public class FridgeService {
         FridgeProductAsso fridgeProductAsso1 = fridgeProductAsso.get();
         fridgeProductAssoRepo.delete(fridgeProductAsso1);
         String unit = ProductUtil.getVolumeFromProduct(fridgeProductAsso1.getEan()).get().get(0);
-
+        Group group = fridgeProductAsso1.getFridgeId().getGroup();
+        if(group.getPoints() > 10){
+            group.setPoints(group.getPoints() - 1);
+            group.setLevel(GroupUtil.getLevel(group.getPoints()));
+        }
+        groupRepository.save(group);
         return Optional.of(wasteRepository.save(Waste.builder().amount(fridgeProductAsso1.getAmount()).unit(unit).ean(fridgeProductAsso1.getEan()).groupId(fridgeProductAsso1.getFridgeId().getGroup()).timestamp(new Timestamp(System.currentTimeMillis())).build()));
     }
 
