@@ -65,6 +65,9 @@ public class ProductController {
         if(volumeUnit.isPresent()){
             product.setUnit(volumeUnit.get().get(1));
             product.setAmount(Double.parseDouble(volumeUnit.get().get(0)));
+        }else {
+            product.setUnit("STK");
+            product.setAmount(1.0);
         }
 
         if(productRequest.allergies() != null){
