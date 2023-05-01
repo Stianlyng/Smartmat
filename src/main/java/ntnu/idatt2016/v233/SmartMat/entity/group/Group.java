@@ -50,7 +50,7 @@ public class Group {
     @Column(name = "is_open")
     Boolean open;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "group")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnoreProperties("groupId")
     private ShoppingList shoppingList;
@@ -71,8 +71,7 @@ public class Group {
         this.user.add(userGroupTable);
     }
 
-    @OneToOne
-    @JoinColumn(name = "group_id")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "group")
     @JsonIgnoreProperties("group")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Fridge fridge;
