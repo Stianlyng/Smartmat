@@ -36,7 +36,7 @@ public class ShoppingList {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
-    @JsonIgnoreProperties("shoppingList")
+    @JsonIgnoreProperties({"shoppingList", "hibernateLazyInitializer", "handler"})
     private Group group;
 
     @ManyToMany
