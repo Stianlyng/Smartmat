@@ -63,8 +63,13 @@ public class ProductController {
         Optional<List<String>> volumeUnit = productService.getProductVolume(productRequest.ean());
 
         if(volumeUnit.isPresent()){
-            product.setUnit(volumeUnit.get().get(1));
-            product.setAmount(Double.parseDouble(volumeUnit.get().get(0)));
+            if(volumeUnit.get().size() > 1){
+                product.setUnit(volumeUnit.get().get(1));
+                product.setAmount(Double.parseDouble(volumeUnit.get().get(0)));
+            }else {
+                product.setUnit("STK");
+                product.setAmount(1.0);
+            }
         }else {
             product.setUnit("STK");
             product.setAmount(1.0);
