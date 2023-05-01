@@ -3,6 +3,8 @@ package ntnu.idatt2016.v233.SmartMat.controller.group;
 import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.dto.request.group.GroupConnectionRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.request.group.GroupRequest;
+import ntnu.idatt2016.v233.SmartMat.dto.response.group.GroupDetailsResponse;
+import ntnu.idatt2016.v233.SmartMat.dto.response.group.UserAuthorityInfo;
 import ntnu.idatt2016.v233.SmartMat.dto.response.group.GroupResponse;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
@@ -13,10 +15,7 @@ import ntnu.idatt2016.v233.SmartMat.service.user.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Controller for groups API, providing endpoints for group management
@@ -51,24 +50,27 @@ public class GroupController {
      * @return a ResponseEntity containing the group if it exists, or a 404 if it doesn't
      */
     @GetMapping("/{groupId}")
-    public ResponseEntity<?> getGroupById(@PathVariable("groupId") long groupId){
+    public ResponseEntity<?> getGroupById(@PathVariable("groupId") long groupId) {
         Optional<Group> group = groupService.getGroupById(groupId);
-        if(group.isPresent()) {
+        if (group.isPresent()) {
             List<UserGroupAsso> users = group.get().getUser();
-            Map<String, String> usernames = new HashMap<>();
-            for (UserGroupAsso user : users) {
-                String userAuthority = groupService.getUserGroupAsso(user.getUser().getUsername(), groupId)
-                                .get().getGroupAuthority();
+            List<UserAuthorityInfo> userAuthorityInfoList = new ArrayList<>();
 
-                if(groupService.getUserGroupAsso(user.getUser().getUsername(), groupId).isPresent()) {
-                    usernames.put(user.getUser().getUsername(), userAuthority);
+            for (UserGroupAsso user : users) {
+                Optional<UserGroupAsso> userGroupAsso = groupService.getUserGroupAsso(user.getUser().getUsername(), groupId);
+                if (userGroupAsso.isPresent()) {
+                    String userAuthority = userGroupAsso.get().getGroupAuthority();
+                    userAuthorityInfoList.add(new UserAuthorityInfo(user.getUser().getUsername(), userAuthority));
                 }
-                usernames.put(user.getUser().getUsername(), userAuthority);
             }
-            return ResponseEntity.ok(usernames);
+
+            GroupDetailsResponse groupDetailsResponse = new GroupDetailsResponse(group.get(), userAuthorityInfoList);
+
+            return ResponseEntity.ok(groupDetailsResponse);
         }
         return ResponseEntity.badRequest().body("Group not found.");
     }
+
 
     /**
      * Creates a new group
