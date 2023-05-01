@@ -186,14 +186,13 @@ public class FridgeService {
         if(fridgeProductAsso.isEmpty()) return Optional.empty();
         FridgeProductAsso fridgeProductAsso1 = fridgeProductAsso.get();
         fridgeProductAssoRepo.delete(fridgeProductAsso1);
-        String unit = ProductUtil.getVolumeFromProduct(fridgeProductAsso1.getEan()).get().get(0);
         Group group = fridgeProductAsso1.getFridgeId().getGroup();
         if(group.getPoints() > 10.0){
             group.setPoints(group.getPoints() - 1);
             group.setLevel(GroupUtil.getLevel(group.getPoints()));
         }
         groupRepository.save(group);
-        return Optional.of(wasteRepository.save(Waste.builder().amount(fridgeProductAsso1.getAmount()).unit(unit).ean(fridgeProductAsso1.getEan()).groupId(fridgeProductAsso1.getFridgeId().getGroup()).timestamp(new Timestamp(System.currentTimeMillis())).build()));
+        return Optional.of(wasteRepository.save(Waste.builder().amount(fridgeProductAsso1.getAmount()).unit(fridgeProductAsso1.getEan().getUnit()).ean(fridgeProductAsso1.getEan()).groupId(fridgeProductAsso1.getFridgeId().getGroup()).timestamp(new Timestamp(System.currentTimeMillis())).build()));
     }
 
 

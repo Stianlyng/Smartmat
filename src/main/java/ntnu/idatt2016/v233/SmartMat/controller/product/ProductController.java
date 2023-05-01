@@ -139,5 +139,19 @@ public class ProductController {
         return ResponseEntity.notFound().build();
     }
 
+    /**
+     *
+     * Retrieve a product by name using a GET request.
+     *
+     * @param name The name of the product to retrieve.
+     * @return A ResponseEntity containing the product if found, or a 404 Not Found response if not found.
+     */
+    @GetMapping("name/{name}")
+    public ResponseEntity<Product> getProductByName(@PathVariable String name) {
+        return productService.getProductByName(name)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 
 }
