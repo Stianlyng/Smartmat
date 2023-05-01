@@ -26,7 +26,7 @@ public class WasteService {
         Optional<Group> group = groupRepository.findByGroupId(wasteRequest.groupId());
         Optional<Product> product = productRepository.findById(wasteRequest.ean());
         if(group.isPresent() && product.isPresent()){
-            return Optional.of(wasteRepository.save(Waste.builder().unit(wasteRequest.unit()).wasteId(100L).timestamp(new Timestamp(System.currentTimeMillis())).amount(wasteRequest.amount()).ean(product.get()).groupId(group.get()).build()));
+            return Optional.of(wasteRepository.save(Waste.builder().unit(wasteRequest.unit()).timestamp(new Timestamp(System.currentTimeMillis())).amount(wasteRequest.amount()).ean(product.get()).groupId(group.get()).build()));
         }
         return Optional.empty();
     }
