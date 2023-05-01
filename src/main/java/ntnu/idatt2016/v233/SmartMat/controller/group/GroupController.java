@@ -38,23 +38,36 @@ public class GroupController {
      * @param groupName the name of the group
      * @return a ResponseEntity containing the group if it exists, or a 404 if it doesn't
      */
-    @GetMapping("/{groupName}")
+    /*@GetMapping("/{groupName}")
     public ResponseEntity<Group> getGroupByName(@PathVariable("groupName") String groupName){
         return groupService.getGroupByName(groupName)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+    }*/
 
     /**
      * Gets a group by its id
      * @param groupId the id of the group
      * @return a ResponseEntity containing the group if it exists, or a 404 if it doesn't
      */
-    @GetMapping("/id/{groupId}")
-    public ResponseEntity<Group> getGroupById(@PathVariable("groupId") long groupId){
-        return groupService.getGroupById(groupId)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping("/{groupId}")
+    public ResponseEntity<?> getGroupById(@PathVariable("groupId") long groupId){
+        Optional<Group> group = groupService.getGroupById(groupId);
+        if(group.isPresent()) {
+            List<UserGroupAsso> users = group.get().getUser();
+            Map<String, String> usernames = new HashMap<>();
+            for (UserGroupAsso user : users) {
+                String userAuthority = groupService.getUserGroupAsso(user.getUser().getUsername(), groupId)
+                                .get().getGroupAuthority();
+
+                if(groupService.getUserGroupAsso(user.getUser().getUsername(), groupId).isPresent()) {
+                    usernames.put(user.getUser().getUsername(), userAuthority);
+                }
+                usernames.put(user.getUser().getUsername(), userAuthority);
+            }
+            return ResponseEntity.ok(usernames);
+        }
+        return ResponseEntity.badRequest().body("Group not found.");
     }
 
     /**
@@ -163,6 +176,8 @@ public class GroupController {
     /**
      * Returns a response entity containing a list of UserGroupAsso objects related to the given groupId.
      * If no user-group associations are found for the given groupId, a not-found response entity is returned.
+     *
+     *  TODO: Remove? Seems pointless
      *
      * @param groupId the ID of the group to retrieve user-group associations for
      * @return a response entity containing a list of UserGroupAsso objects related to the given groupId, or a not-found response entity if no associations are found
