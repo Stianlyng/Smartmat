@@ -53,24 +53,6 @@ public class GroupRepositoryTest {
     }
 
     @Test
-    void shouldFindAllByAchievementsAchievementName() {
-        // given
-        Achievement achievement = Achievement.builder().achievementName("test achievement").build();
-        Group group1 = Group.builder().groupName("group 1").achievements(List.of(achievement)).build();
-        Group group2 = Group.builder().groupName("group 2").achievements(List.of(achievement)).build();
-        Group group3 = Group.builder().groupName("group 3").build();
-
-
-        groupRepository.saveAll(List.of(group1, group2, group3));
-
-        // when
-        List<Group> result = groupRepository.findAllByAchievementsAchievementName("test achievement");
-
-        // then
-        assertThat(result).containsExactlyInAnyOrder(group1, group2);
-    }
-
-    @Test
     void shouldFindById() {
         // given
         Group group = Group.builder().groupName("test group").build();

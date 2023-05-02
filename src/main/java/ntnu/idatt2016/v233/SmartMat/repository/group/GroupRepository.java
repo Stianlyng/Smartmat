@@ -26,12 +26,6 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
      */
     Optional<Group> findByGroupName(String name);
 
-    /**
-     * Finds all groups by achievement name
-     * @param achievementName the name of the achievement
-     * @return list of groups with the given achievement
-     */
-    List<Group> findAllByAchievementsAchievementName(String achievementName);
 
     /**
      * Gets group level by group id

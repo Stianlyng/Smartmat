@@ -3,6 +3,7 @@ package ntnu.idatt2016.v233.SmartMat.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
@@ -39,15 +40,21 @@ public class Recipe {
     @Column(name = "recipe_description")
     String description;
     
-    @ManyToMany
-    @JoinTable(name = "recipe_product",
-        joinColumns = @JoinColumn(name = "recipe_id"),
-        inverseJoinColumns = @JoinColumn(name = "ean"))
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}
+            ,mappedBy = "recipes"
+    )
     @JsonIgnoreProperties({"recipes"})
     List<Product> products;
 
-    @ManyToMany(mappedBy = "recipes")
-    @JsonIgnoreProperties({"recipes"})
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}
+    )
+    @JoinTable(
+            name = "favorite_recipes",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "username"))
+    @JsonIgnore
     List<User> users;
 
 

@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,13 +32,16 @@ public class Waste {
     @Column(name = "waste_id")
     long wasteId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "group_id")
-    @JsonIgnoreProperties("group")
+    @JsonIgnore
     Group groupId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn (name= "ean")
+    @JsonIgnore
     Product ean;
 
     @Column(name = "timestamp")

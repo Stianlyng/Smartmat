@@ -1,10 +1,8 @@
 package ntnu.idatt2016.v233.SmartMat.entity.group;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,7 +34,11 @@ public class Achievement {
     @Column(name = "achievement_description")
     private String achievementDescription;
 
-    @ManyToMany(mappedBy = "achievements")
-    @JsonIgnoreProperties({"achievements"})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH},
+            fetch = FetchType.LAZY)
+    @JoinTable(name = "group_achievement",
+            joinColumns = @JoinColumn(name = "achievement_name"),
+            inverseJoinColumns =  @JoinColumn(name = "group_id"))
+    @JsonIgnore
     private List<Group> groups;
 }
