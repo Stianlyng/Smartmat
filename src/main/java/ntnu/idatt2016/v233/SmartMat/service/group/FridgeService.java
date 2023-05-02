@@ -72,6 +72,10 @@ public class FridgeService {
     public Optional<Object> addProductToFridge(FridgeProductRequest fridgeProductRequest) {
         Optional<Product> product = productService.getProductById(fridgeProductRequest.ean());
         Optional<Fridge> fridge = fridgeRepository.findByGroupGroupId(fridgeProductRequest.groupId());
+        double price = 100.0;
+        if(fridgeProductRequest.price() != 0.0){
+            price = fridgeProductRequest.price();
+        }
 
         if(product.isEmpty() || fridge.isEmpty()) return Optional.empty();
 
@@ -81,6 +85,7 @@ public class FridgeService {
                         .amount(fridgeProductRequest.amount())
                         .daysToExpiration(fridgeProductRequest.days())
                         .purchaseDate(java.sql.Date.valueOf(LocalDate.now()))
+                        .buyPrice(price)
                 .build());
 
         fridgeRepository.save(fridge.get());
@@ -192,7 +197,7 @@ public class FridgeService {
             group.setLevel(GroupUtil.getLevel(group.getPoints()));
         }
         groupRepository.save(group);
-        return Optional.of(wasteRepository.save(Waste.builder().amount(fridgeProductAsso1.getAmount()).unit(fridgeProductAsso1.getEan().getUnit()).ean(fridgeProductAsso1.getEan()).groupId(fridgeProductAsso1.getFridgeId().getGroup()).timestamp(new Timestamp(System.currentTimeMillis())).build()));
+        return Optional.of(wasteRepository.save(Waste.builder().buyPrice(fridgeProductAsso1.getBuyPrice()).amount(fridgeProductAsso1.getAmount()).unit(fridgeProductAsso1.getEan().getUnit()).ean(fridgeProductAsso1.getEan()).groupId(fridgeProductAsso1.getFridgeId().getGroup()).timestamp(new Timestamp(System.currentTimeMillis())).build()));
     }
 
 

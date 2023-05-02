@@ -53,4 +53,7 @@ public class Waste {
     @Column(name = "unit")
     String unit;
 
+    @Column(name = "buy_price")
+    double buyPrice;
+
 }
