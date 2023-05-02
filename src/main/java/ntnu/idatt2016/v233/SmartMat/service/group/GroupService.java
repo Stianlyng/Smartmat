@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.service.group;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.ShoppingList;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
@@ -228,5 +229,28 @@ public class GroupService {
      */
     public List<UserGroupAsso> getUserGroupAssoByUserName(String username) {
         return userGroupAssoRepository.findAllByUserUsername(username);
+    }
+
+    /**
+     * removes user_group relatioon
+     * @param username the username of the user
+     * @param groupId the id of the group
+     * @return true if the user is the owner of the group, false otherwise
+     */
+    @Transactional
+    public boolean removeUserFromGroup(UserGroupAsso userGroup) {
+        Group group = groupRepository.findByGroupId(userGroup.getGroup().getGroupId())
+                .orElseThrow(() -> new IllegalArgumentException("Group does not exist"));
+
+        group.getUser().remove(userGroup);
+
+        if (group.getUser().isEmpty()) {
+            groupRepository.delete(group);
+        } else {
+            groupRepository.save(group);
+        }
+
+        userGroupAssoRepository.delete(userGroup);
+        return true;
     }
 }

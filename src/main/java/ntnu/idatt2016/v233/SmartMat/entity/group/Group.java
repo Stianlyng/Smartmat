@@ -56,8 +56,10 @@ public class Group {
     private ShoppingList shoppingList;
 
 
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
-            fetch = FetchType.LAZY, mappedBy = "group")
+    @OneToMany(cascade = {CascadeType.ALL},
+            fetch = FetchType.LAZY, mappedBy = "group"
+            , orphanRemoval = true
+    )
     @JsonIgnoreProperties("group")
     private List<UserGroupAsso> user = new ArrayList<>();
 
