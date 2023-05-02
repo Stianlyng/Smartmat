@@ -2,6 +2,8 @@ package ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
@@ -28,7 +30,7 @@ public class FridgeProductAsso {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "ean")
-    @JsonIgnore
+    @JsonIncludeProperties({"HibernateLazyInitializer", "handler", "name", "description", "price", "image", "allergies"})
     private Product ean;
 
     @Column(name = "purchase_date")
