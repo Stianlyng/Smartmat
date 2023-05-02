@@ -4,7 +4,9 @@ import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -16,51 +18,32 @@ import java.util.regex.Pattern;
 public class ProductUtil {
 
 
-    private static final String[] VOLUME_UNITS = {"ml", "cl", "dl", "l", "g", "kg"};
+    private static final String VOLUME_REGEX = "(\\d+(\\.\\d+)?)\\s*(mls?|centiliters?|deciliters?|liters?|grams?|kilograms?)";
+    private static final Map<String, List<String>> VOLUME_UNIT_VARIATIONS = Map.of(
+            "ml", List.of("ml", "milliliters", "millilitres"),
+            "cl", List.of("cl", "centiliters", "centilitres"),
+            "dl", List.of("dl", "deciliters", "decilitres"),
+            "l", List.of("l", "liters", "litres"),
+            "g", List.of("g", "grams"),
+            "kg", List.of("kg", "kilograms")
+    );
 
-    /**
-     * Gets the volume of a product, if it exists
-     * By looking at the name and description of the product
-     * it will try to first find the volume in the name, and then in the description
-     * It uses pre defined volume units to find the volume
-     * Todo: Make it be able to find volume if the size is definde by count
-     * @param product The product to get the volume from
-     * @return The volume of the product, if it exists
-     */
     public static Optional<List<String>> getVolumeFromProduct(Product product) {
-        for (String desc : Arrays.asList(product.getName(), product.getDescription())) {
-            List<String> words = List.of(desc.split(" "));
-            if (words.size() > 1) {
-                String volume = "";
-                for (String unit : VOLUME_UNITS) {
-                    int i = words.indexOf(unit);
-                    if (i != -1) {
-                        return Optional.of(List.of(words.get(i - 1), unit));
-                    }
-                }
-
-                volume = words.stream().map(word -> Arrays.stream(VOLUME_UNITS).map(unit -> {
-                                    int index = word.indexOf(unit);
-                                    if (index == -1) {
-                                        if (!Pattern.matches("[a-zA-Z]+", word) && ProductUtil.hasNumbers(word)) {
-                                            return word;
-                                        }
-                                        return "";
-                                    }
-                                    return word.substring(0, index) + " " + word.substring(index);
-                                }).findAny().orElse(""))
-                        .filter(ProductUtil::hasNumbers)
-                        .findAny()
-                        .orElse("");
-                if (!volume.equals("")){
-                    return Optional.of(List.of(volume.split(" ")));
+        String desc = product.getName() + " " + product.getDescription();
+        Matcher matcher = Pattern.compile(VOLUME_REGEX).matcher(desc);
+        if (matcher.find()) {
+            String volumeString = matcher.group(1);
+            double volume = Double.parseDouble(volumeString);
+            String unitString = matcher.group(3);
+            for (Map.Entry<String, List<String>> entry : VOLUME_UNIT_VARIATIONS.entrySet()) {
+                if (entry.getValue().contains(unitString)) {
+                    return Optional.of(List.of(String.valueOf(volume), entry.getKey()));
                 }
             }
         }
-
-
         return Optional.empty();
     }
+
 
     /**
      * Checks if a string contains any numbers

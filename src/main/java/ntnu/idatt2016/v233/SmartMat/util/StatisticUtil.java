@@ -113,7 +113,7 @@ public class StatisticUtil {
                 case "ml" -> sum += waste.getAmount() * 0.000998;
                 case "cl" -> sum += waste.getAmount() * 0.00998;
                 case "dl" -> sum += waste.getAmount() * 0.0998;
-                default -> sum += 0.1;
+                default -> sum += 0.1 * waste.getAmount();
             }
         }
         return sum;
