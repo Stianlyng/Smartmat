@@ -78,7 +78,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<Object[]> findTop5RecipesWithProductsRaw(@Param("fridgeId") long fridgeId);
         
     @Query( value = """
-        SELECT r.recipe_id, r.recipe_name,r.recipe_description, COUNT(fp.ean) as product_count
+        SELECT r.recipe_id, r.recipe_name,r.recipe_description,r.image_url,r.guide, COUNT(fp.ean) as product_count
         FROM recipe r
         LEFT JOIN recipe_product rp ON r.recipe_id = rp.recipe_id
         LEFT JOIN fridge_product fp ON rp.ean = fp.ean AND fp.fridge_id = :fridgeId
