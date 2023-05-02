@@ -2,6 +2,7 @@ package ntnu.idatt2016.v233.SmartMat.entity.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -73,6 +74,7 @@ public class Product{
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
             fetch = FetchType.LAZY, mappedBy = "products")
     @JsonIgnoreProperties({"products", "users"})
+    @JsonIgnore
     List<Allergy> allergies;
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
