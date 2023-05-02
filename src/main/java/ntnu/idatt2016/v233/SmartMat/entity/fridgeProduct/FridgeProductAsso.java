@@ -30,7 +30,8 @@ public class FridgeProductAsso {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "ean")
-    @JsonIncludeProperties({"HibernateLazyInitializer", "handler", "name", "description", "price", "image", "allergies"})
+    @JsonIncludeProperties({"HibernateLazyInitializer", "handler", "ean", "name", "description", "category",
+            "url", "allergies", "bestBefore", "expirationDate", "unit", "amount"})
     private Product ean;
 
     @Column(name = "purchase_date")
