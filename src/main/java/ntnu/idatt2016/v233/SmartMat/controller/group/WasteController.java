@@ -79,4 +79,17 @@ public class WasteController {
         return wasteService.getCakeDiagram(groupId).map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
+
+    /**
+     * Get the information of the last months of a specific group.
+     *
+     * @param groupId the id of the group to get the information for
+     * @return a ResponseEntity object containing an array of doubles representing the waste for each category
+     * in the last four months, or a not found response if the group does not exist or has no waste data
+     */
+    @GetMapping("/statistic/lastMonths/{groupId}")
+    public ResponseEntity<double[]> getInformationOfLastMoths(@PathVariable("groupId") long groupId){
+        return wasteService.getLastMonth(groupId).map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
+    }
+
 }
