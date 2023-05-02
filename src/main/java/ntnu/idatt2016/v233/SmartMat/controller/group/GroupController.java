@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Controller for groups API, providing endpoints for group management
@@ -322,6 +323,16 @@ public class GroupController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    /**
+     * Handles the HTTP DELETE request to remove a user from a group.
+     * @param auth the authentication object containing the username of the user
+     * @return a ResponseEntity object containing the list of groups the user is associated with and an HTTP status code of 200,
+     */
+    @GetMapping("/")
+    public ResponseEntity<List<UserGroupAsso>> getAllGroupsByUser(Authentication auth) {
+        return ResponseEntity.ok(groupService.getUserGroupAssoByUserName(auth.getName()));
     }
 
 }

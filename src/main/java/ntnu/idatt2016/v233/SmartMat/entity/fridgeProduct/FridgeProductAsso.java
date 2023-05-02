@@ -23,12 +23,12 @@ public class FridgeProductAsso {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "fridge_id")
-    @JsonIgnoreProperties({"products"})
+    @JsonIgnore
     private Fridge fridgeId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "ean")
-    @JsonIgnoreProperties({"fridges"})
+    @JsonIgnore
     private Product ean;
 
     @Column(name = "purchase_date")
