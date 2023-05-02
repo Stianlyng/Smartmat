@@ -57,8 +57,8 @@ public class Group {
 
 
     @OneToMany(cascade = {CascadeType.ALL},
-            fetch = FetchType.LAZY, mappedBy = "group"
-            , orphanRemoval = true
+            fetch = FetchType.LAZY, mappedBy = "group",
+            orphanRemoval = true
     )
     @JsonIgnoreProperties("group")
     private List<UserGroupAsso> user = new ArrayList<>();
