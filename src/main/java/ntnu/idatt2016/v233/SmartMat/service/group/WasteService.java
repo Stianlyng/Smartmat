@@ -89,4 +89,15 @@ public class WasteService {
         Optional<Group> group = groupRepository.findByGroupId(groupId);
         return group.map(value -> StatisticUtil.getNumberOfWasteByLastMonth(wasteRepository.findByGroupId(value).get()));
     }
+
+    /**
+     * Retrieves the lost money in the last month for the group with the given ID.
+     *
+     * @param groupId the ID of the group to retrieve the lost money for
+     * @return an {@code Optional} containing the lost money if the group exists, or empty if it doesn't exist or there are no wastes in the last month
+     */
+    public Optional<Double> getLostMoney(long groupId) {
+        Optional<Group> group = groupRepository.findByGroupId(groupId);
+        return group.map(value -> StatisticUtil.getLostMoneyInLastMonth(wasteRepository.findByGroupId(value).get()));
+    }
 }

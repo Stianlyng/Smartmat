@@ -3,7 +3,9 @@ package ntnu.idatt2016.v233.SmartMat.util;
 import ntnu.idatt2016.v233.SmartMat.entity.Waste;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -113,6 +115,39 @@ public class StatisticUtil {
                 case "dl" -> sum += waste.getAmount() * 0.0998;
                 default -> sum += 0.1;
             }
+        }
+        return sum;
+    }
+
+    /**
+     * Calculates the total amount of money lost due to expired or discarded items in the last 30 days,
+     * based on the list of wastes passed as a parameter.
+     *
+     * @param wastes the list of wastes to be analyzed
+     * @return the total amount of money lost due to expired or discarded items in the last 30 days
+     */
+    public static double getLostMoneyInLastMonth(List<Waste> wastes){
+        List<Waste> wasteList = new ArrayList<>();
+        LocalDateTime time = LocalDateTime.now().minusDays(30);
+        for(Waste waste: wastes){
+            if(waste.getTimestamp().after(Timestamp.valueOf(time))){
+                wasteList.add(waste);
+            }
+        }
+        return lostMoney(wasteList);
+    }
+
+    /**
+     * Calculates the total amount of money lost due to expired or discarded items,
+     * based on the list of wastes passed as a parameter.
+     *
+     * @param wastes the list of wastes to be analyzed
+     * @return the total amount of money lost due to expired or discarded items
+     */
+    private static double lostMoney(List<Waste> wastes){
+        double sum = 0.0;
+        for(Waste waste: wastes){
+            sum += waste.getAmount()*waste.getBuyPrice();
         }
         return sum;
     }

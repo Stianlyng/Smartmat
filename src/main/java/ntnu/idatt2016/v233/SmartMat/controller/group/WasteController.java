@@ -92,4 +92,15 @@ public class WasteController {
         return wasteService.getLastMonth(groupId).map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
+    /**
+     * Retrieves the amount of money lost due to expired products in a specific group.
+     * The amount is calculated based on the total cost of the expired products.
+     *
+     * @param groupId the ID of the group to retrieve the lost money from
+     * @return a ResponseEntity with the lost money as a Double if found, or a ResponseEntity with status 404 if the group is not found
+     */
+    @GetMapping("/statistic/lostMoney/{groupId}")
+    public ResponseEntity<Double> getLostMoney(@PathVariable("groupId") long groupId){
+        return wasteService.getLostMoney(groupId).map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
+    }
 }
