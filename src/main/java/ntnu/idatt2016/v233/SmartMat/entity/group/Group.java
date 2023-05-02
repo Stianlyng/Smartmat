@@ -56,10 +56,9 @@ public class Group {
     private ShoppingList shoppingList;
 
 
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id")
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.LAZY, mappedBy = "group")
     @JsonIgnoreProperties("group")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<UserGroupAsso> user = new ArrayList<>();
 
 
@@ -76,10 +75,8 @@ public class Group {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Fridge fridge;
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
-    @JoinTable(name = "group_achievement",
-            joinColumns = @JoinColumn(name = "group_id"),
-            inverseJoinColumns = @JoinColumn(name = "achievement_name"))
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY,
+            mappedBy = "groups")
     @JsonIgnoreProperties({"groups"})
     private List<Achievement> achievements;
 

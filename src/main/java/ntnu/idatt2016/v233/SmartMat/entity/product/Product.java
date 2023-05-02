@@ -39,15 +39,19 @@ public class Product{
     @Column(name = "description")
     String description;
 
-    @ManyToMany(mappedBy = "products")
-    @JsonIgnoreProperties({"products"})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "shopping_list_product",
+            joinColumns = @JoinColumn(name = "ean"),
+            inverseJoinColumns = @JoinColumn(name = "shopping_list_id") )
     @JsonIgnore
     List<ShoppingList> shoppingLists;
 
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.LAZY)
     @JoinColumn(name = "category_name")
-    @JsonIgnoreProperties({"products"})
     @JsonIgnore
     Category category;
 
@@ -66,24 +70,22 @@ public class Product{
     @Column(name = "amount")
     Double amount;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.LAZY, mappedBy = "products")
     @JsonIgnoreProperties({"products", "users"})
-    @JoinTable(
-            name = "product_allergy",
-            joinColumns = @JoinColumn(name = "ean"),
-            inverseJoinColumns = @JoinColumn(name = "allergy_name"))
-    @JsonIgnore
     List<Allergy> allergies;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.LAZY, mappedBy = "ean")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "ean")
     @JsonIgnoreProperties({"products"})
     @JsonIgnore
     List<FridgeProductAsso> fridges;
     
-    @ManyToMany(mappedBy = "products")
-    @JsonIgnoreProperties({"products"})
+    @ManyToMany
+    @JoinTable(name = "recipe_product",
+            joinColumns = @JoinColumn(name = "ean"),
+            inverseJoinColumns = @JoinColumn(name = "recipe_id"))
     @JsonIgnore
     List<Recipe> recipes;
 
