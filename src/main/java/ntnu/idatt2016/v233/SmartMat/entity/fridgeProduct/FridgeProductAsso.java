@@ -40,5 +40,8 @@ public class FridgeProductAsso {
     @Column(name = "amount")
     private double amount;
 
+    @Column(name = "buy_price")
+    private double buyPrice;
+
 
 }
