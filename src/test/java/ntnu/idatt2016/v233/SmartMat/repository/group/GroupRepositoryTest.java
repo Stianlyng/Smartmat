@@ -106,24 +106,22 @@ public class GroupRepositoryTest {
 
     @Test
     void groupShouldHaveAchivments(){
-        Optional<Group> tempGroupe = groupRepository.findByGroupName("test");
+
+        Group tempgroup = Group.builder().groupName("testiossxjak").build();
+        Achievement tempAchievement = Achievement.builder().achievementName("test2").build();
+
+        tempgroup.setAchievements(new ArrayList<>(Collections.singletonList(tempAchievement)));
+        groupRepository.save(tempgroup);
+
+        Optional<Group> tempGroupe = groupRepository.findByGroupName("testiossxjak");
 
 
         assertTrue(tempGroupe.isPresent());
 
-        Achievement tempAchievement = Achievement.builder().achievementName("test2").build();
-        Group tempGroup = tempGroupe.get();
 
+        assertTrue(tempGroupe.get().getAchievements().contains(tempAchievement));
 
-        tempGroup.setAchievements(new ArrayList<>(Collections.singletonList(tempAchievement)));
-
-        groupRepository.save(tempGroup);
-
-        assertTrue(groupRepository.findByGroupName("test").isPresent());
-
-        assertTrue(groupRepository.findByGroupName("test").get().getAchievements().contains(tempAchievement));
-
-        assertNull(groupRepository.findByGroupName("test").get().getAchievements().get(0).getGroups());
+        assertNull(tempGroupe.get().getAchievements().get(0).getGroups());
 
     }
 
