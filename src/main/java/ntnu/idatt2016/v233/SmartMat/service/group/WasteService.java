@@ -10,6 +10,7 @@ import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.WasteRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.product.ProductRepository;
+import ntnu.idatt2016.v233.SmartMat.util.StatisticUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -62,6 +63,18 @@ public class WasteService {
      */
     public Optional<List<Waste>> getWasteOfCategoryByGroupId(long groupId, String categoryName){
         return wasteRepository.findAllWasteOfOneCategoryFromGroup(groupId,categoryName);
+    }
+
+    /**
+     * Get the cake diagram for a group of waste.
+     *
+     * @param groupId The ID of the group for which to retrieve the cake diagram.
+     * @return An Optional containing an array of doubles representing the cake diagram for the group,
+     *         or an empty Optional if the group is not found.
+     */
+    public Optional<double[]> getCakeDiagram(long groupId){
+        Optional<Group> group = groupRepository.findByGroupId(groupId);
+        return group.map(value -> StatisticUtil.getNumberOfWasteByCategoryName(wasteRepository.findByGroupId(value).get()));
     }
 
 }

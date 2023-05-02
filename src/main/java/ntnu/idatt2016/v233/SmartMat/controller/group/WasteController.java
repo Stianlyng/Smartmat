@@ -67,4 +67,16 @@ public class WasteController {
         return wasteService.getWasteOfCategoryByGroupId(groupId, CategoryUtil.getCategoryName(categoryNumber)).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * Retrieve information about the cake diagram for a given group ID using a GET request.
+     *
+     * @param groupId The ID of the group for which to retrieve the cake diagram information.
+     * @return A ResponseEntity containing an array of doubles representing the cake diagram information if found,
+     *         or a 404 Not Found response if not found.
+     */
+    @GetMapping("/statistic/cakeGraph/{groupId}")
+    public ResponseEntity<double[]> getInformationOfCakeGraph(@PathVariable("groupId") long groupId){
+        return wasteService.getCakeDiagram(groupId).map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
+    }
+
 }
