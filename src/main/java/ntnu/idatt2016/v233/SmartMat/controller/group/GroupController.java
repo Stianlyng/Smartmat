@@ -1,6 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.controller.group;
 
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.dto.request.group.ChangeAuthorityRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.request.group.GroupConnectionRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.request.group.GroupRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.response.group.GroupDetailsResponse;
@@ -12,7 +13,9 @@ import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupId;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.service.group.GroupService;
 import ntnu.idatt2016.v233.SmartMat.service.user.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -31,18 +34,6 @@ public class GroupController {
     private final GroupService groupService;
 
     private final UserService userService;
-
-    /**
-     * Gets a group by its name
-     * @param groupName the name of the group
-     * @return a ResponseEntity containing the group if it exists, or a 404 if it doesn't
-     */
-    /*@GetMapping("/{groupName}")
-    public ResponseEntity<Group> getGroupByName(@PathVariable("groupName") String groupName){
-        return groupService.getGroupByName(groupName)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }*/
 
     /**
      * Gets a group by its id
@@ -80,7 +71,7 @@ public class GroupController {
      * or a 400 if the group name is invalid or already exists, or if the username is invalid
      */
     @PostMapping("/group")
-    public ResponseEntity<?> createGroup(@RequestBody GroupRequest groupRequest) {
+    public ResponseEntity<?> createGroup(@RequestBody GroupRequest groupRequest, Authentication auth) {
         if (groupRequest.groupName() == null || groupRequest.groupName().trim().length() < 3) {
             return ResponseEntity.badRequest().body("Group name must be at least 3 characters long.");
         }
@@ -89,7 +80,7 @@ public class GroupController {
             return ResponseEntity.badRequest().body("Group name already exists.");
         }
 
-        Optional<User> optionalUser = userService.getUserFromUsername(groupRequest.username());
+        Optional<User> optionalUser = userService.getUserFromUsername(auth.getName());
         if (optionalUser.isEmpty()) {
             return ResponseEntity.badRequest().body("Invalid username.");
         }
@@ -201,15 +192,13 @@ public class GroupController {
     /**
      * Handles the HTTP PUT request to change the primary group of a user.
      *
-     * @param username the username of the user whose primary group is to be changed
      * @param newPrimaryGroupId the ID of the new primary group
      * @return a ResponseEntity object containing an HTTP status code and the updated UserGroupAsso object,
      *         or a ResponseEntity object with an HTTP status code indicating that the request was not successful
      */
-    @PutMapping("/markNewPrimary/{username}/{newPrimaryGroupId}")
-    public ResponseEntity<?> markNewPrimaryGroup(@PathVariable("username") String username,
-                                                 @PathVariable("newPrimaryGroupId") long newPrimaryGroupId) {
-        Optional<User> optionalUser = userService.getUserFromUsername(username);
+    @PutMapping("/markNewPrimary/{newPrimaryGroupId}")
+    public ResponseEntity<?> markNewPrimaryGroup(@PathVariable("newPrimaryGroupId") long newPrimaryGroupId, Authentication auth) {
+        Optional<User> optionalUser = userService.getUserFromUsername(auth.getName());
 
         if (optionalUser.isEmpty()) {
             return ResponseEntity.badRequest().body("Invalid username.");
@@ -217,7 +206,7 @@ public class GroupController {
 
         User user = optionalUser.get();
 
-        Optional<UserGroupAsso> oldPrimaryOpt = groupService.findPrimaryUserGroupAssoForUser(username);
+        Optional<UserGroupAsso> oldPrimaryOpt = groupService.findPrimaryUserGroupAssoForUser(user.getUsername());
         if (oldPrimaryOpt.isEmpty()) {
             return ResponseEntity.badRequest().body("No primary group found for the user.");
         }
@@ -226,7 +215,7 @@ public class GroupController {
         oldPrimary.setPrimaryGroup(false);
         groupService.updateUserGroupAsso(oldPrimary);
 
-        Optional<UserGroupAsso> newPrimaryOpt = groupService.getUserGroupAsso(username, newPrimaryGroupId);
+        Optional<UserGroupAsso> newPrimaryOpt = groupService.getUserGroupAsso(user.getUsername(), newPrimaryGroupId);
         if (newPrimaryOpt.isEmpty()) {
             return ResponseEntity.badRequest().body("Invalid new primary group ID.");
         }
@@ -238,7 +227,7 @@ public class GroupController {
         userService.updateUser(user);
 
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("username", username);
+        responseBody.put("username", user.getUsername());
         responseBody.put("oldPrimaryGroupId", oldPrimary.getGroup().getGroupId());
         responseBody.put("newPrimaryGroupId", newPrimary.getGroup().getGroupId());
         return ResponseEntity.ok(responseBody);
@@ -252,14 +241,14 @@ public class GroupController {
      *         or a ResponseEntity object with an HTTP status code indicating that the request was not successful
      */
     @PostMapping("/connection")
-    public ResponseEntity<?> addConnection(@RequestBody GroupConnectionRequest groupConnectionRequest) {
+    public ResponseEntity<?> addConnection(@RequestBody GroupConnectionRequest groupConnectionRequest, Authentication auth) {
         Optional<Group> optionalGroup = groupService.getGroupByLinkCode(groupConnectionRequest.linkCode());
 
         if (optionalGroup.isEmpty()) {
             return ResponseEntity.badRequest().body("Invalid link code.");
         }
 
-        Optional<User> optionalUser = userService.getUserFromUsername(groupConnectionRequest.username());
+        Optional<User> optionalUser = userService.getUserFromUsername(auth.getName());
 
         if (optionalUser.isEmpty()) {
             return ResponseEntity.badRequest().body("Invalid username.");
@@ -297,24 +286,29 @@ public class GroupController {
     /**
      * Changes the authority level of a user in a group.
      *
-     * @param groupId the ID of the group
-     * @param username the username of the user whose authority level is to be changed
-     * @param authority the new authority level of the user
+     * @param authorityRequest the request object containing the username and group ID of the user to change the authority of
      * @return a ResponseEntity object containing the updated UserGroupAsso object and an HTTP status code of 200,
+     *        or a ResponseEntity object with an HTTP status code of 403 if the user is not authorized to change the authority,
      *         or a ResponseEntity object with an HTTP status code of 404 if the group or user does not exist
      */
-    @PutMapping("/changeAuthority/{groupId}/{username}/{authority}")
-    public ResponseEntity<?> changeAuthority(@PathVariable("groupId") long groupId,
-                                             @PathVariable("username") String username,
-                                             @PathVariable("authority") String authority){
-        return groupService.getGroupById(groupId).flatMap(group -> userService.getUserFromUsername(username)
+    @PutMapping("/groupAuthority")
+    public ResponseEntity<?> changeAuthority(@RequestBody ChangeAuthorityRequest authorityRequest,
+                                             Authentication auth){
+        Optional<User> groupAdminOpt = userService.getUserFromUsername(auth.getName());
+        if(groupAdminOpt.isPresent()) {
+            User groupAdmin = groupAdminOpt.get();
+            if(!(groupService.isUserAssociatedWithGroup(groupAdmin.getUsername(), authorityRequest.groupId())
+            && (groupService.getUserGroupAssoAuthority(groupAdmin.getUsername(), authorityRequest.groupId()).equals("ADMIN"))))
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to change the authority of this user.");
+        }
+        return groupService.getGroupById(authorityRequest.groupId()).flatMap(group -> userService.getUserFromUsername(authorityRequest.username())
                 .flatMap(user -> {
                     UserGroupAsso userGroupAsso = user.getGroup().stream()
-                            .filter(asso -> asso.getGroup().getGroupId() == groupId)
+                            .filter(asso -> asso.getGroup().getGroupId() == authorityRequest.groupId())
                             .findFirst()
                             .orElse(null);
                     if(userGroupAsso != null){
-                        userGroupAsso.setGroupAuthority(authority);
+                        userGroupAsso.setGroupAuthority(authorityRequest.authority());
                         userService.updateUser(user);
                         return Optional.of(userGroupAsso);
                     }
