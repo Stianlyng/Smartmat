@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.entity.group;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,13 +27,13 @@ public class UserGroupAsso {
     @ManyToOne
     @MapsId("username")
     @JoinColumn(name = "username")
-    @JsonIgnoreProperties("group")
+    @JsonIgnore
     private User user;
 
     @ManyToOne
     @MapsId("group_id")
     @JoinColumn(name = "group_id")
-    @JsonIgnoreProperties({"group", "user"})
+    @JsonIgnoreProperties({"user", "fridge", "shoppingList"})
     private Group group;
 
     @Column(name = "primary_group")

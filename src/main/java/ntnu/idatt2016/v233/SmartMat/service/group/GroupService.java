@@ -219,4 +219,14 @@ public class GroupService {
         Optional<UserGroupAsso> userGroupAsso = getUserGroupAsso(username, groupId);
         return userGroupAsso.map(UserGroupAsso::getGroupAuthority).orElseThrow(() -> new IllegalArgumentException("User is not associated with group"));
     }
+
+
+    /**
+     * Gets all user group associations for a user
+     * @param username the username of the user
+     * @return a list of all user group associations for the user
+     */
+    public List<UserGroupAsso> getUserGroupAssoByUserName(String username) {
+        return userGroupAssoRepository.findAllByUserUsername(username);
+    }
 }
