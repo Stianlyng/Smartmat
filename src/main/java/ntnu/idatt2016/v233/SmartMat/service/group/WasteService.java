@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.service.group;
 
+import java.nio.channels.FileChannel;
 import java.sql.Timestamp;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -77,4 +78,15 @@ public class WasteService {
         return group.map(value -> StatisticUtil.getNumberOfWasteByCategoryName(wasteRepository.findByGroupId(value).get()));
     }
 
+    /**
+     * Retrieve an optional array of doubles representing the amount of waste produced in each of the last 4 months for a given group.
+     *
+     * @param groupId a long representing the id of the group whose waste production statistics are to be retrieved
+     * @return an optional array of doubles representing the amount of waste produced in each of the last 4 months for the given group,
+     *         or an empty optional if the group could not be found or no waste was produced in the last 4 months
+     */
+    public Optional<double[]>  getLastMonth(long groupId) {
+        Optional<Group> group = groupRepository.findByGroupId(groupId);
+        return group.map(value -> StatisticUtil.getNumberOfWasteByLastMonth(wasteRepository.findByGroupId(value).get()));
+    }
 }
