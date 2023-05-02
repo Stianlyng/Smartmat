@@ -40,6 +40,12 @@ public class Recipe {
     @Column(name = "recipe_description")
     String description;
     
+    @Column(name = "image_url")
+    String imageUrl;
+
+    @Column(name = "guide")
+    String guide;
+    
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}
             ,mappedBy = "recipes"
