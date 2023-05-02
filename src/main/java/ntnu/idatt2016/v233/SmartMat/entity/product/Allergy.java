@@ -1,10 +1,8 @@
 package ntnu.idatt2016.v233.SmartMat.entity.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,12 +33,20 @@ public class Allergy{
     @Column(name = "allergy_description")
     String description;
 
-    @ManyToMany(mappedBy = "allergies")
-    @JsonIgnoreProperties({"allergies"})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "product_allergy",
+            joinColumns = @JoinColumn(name = "allergy_name"),
+            inverseJoinColumns = @JoinColumn(name = "ean") )
+    @JsonIgnore
     private List<Product> products;
 
-    @ManyToMany(mappedBy = "allergies")
-    @JsonIgnoreProperties({"allergies"})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(
+            name = "user_allergy",
+            joinColumns = @JoinColumn(name = "allergy_name"),
+            inverseJoinColumns = @JoinColumn(name = "username") )
+    @JsonIgnore
     private List<User> users;
 
 }

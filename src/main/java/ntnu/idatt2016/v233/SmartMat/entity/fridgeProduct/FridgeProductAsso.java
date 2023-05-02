@@ -21,16 +21,14 @@ public class FridgeProductAsso {
     @Column(name = "fridge_product_id")
     private long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "fridge_id")
     @JsonIgnoreProperties({"products"})
-    @JsonIgnore
     private Fridge fridgeId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "ean")
     @JsonIgnoreProperties({"fridges"})
-    //@JsonIgnore // Til Birk: måtte fjerne denne for å få nødvendig info i fridge. Er det dumt?
     private Product ean;
 
     @Column(name = "purchase_date")

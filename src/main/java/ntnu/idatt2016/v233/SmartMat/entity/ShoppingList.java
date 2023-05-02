@@ -1,6 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,14 +34,11 @@ public class ShoppingList {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
-    @JsonIgnoreProperties({"shoppingList", "hibernateLazyInitializer", "handler"})
+    @JsonIgnore
     private Group group;
 
-    @ManyToMany
-    @JoinTable(
-            name = "shopping_list_product",
-            joinColumns = @JoinColumn(name = "shopping_list_id"),
-            inverseJoinColumns = @JoinColumn(name = "ean"))
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.LAZY, mappedBy = "shoppingLists")
     @JsonIgnoreProperties("shoppingLists")
     private List<Product> products;
 

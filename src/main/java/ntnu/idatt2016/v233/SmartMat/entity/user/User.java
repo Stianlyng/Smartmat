@@ -57,24 +57,18 @@ public class User implements UserDetails {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "username")
-    @JsonIgnoreProperties("user")
+    @JsonIgnore
     private List<UserGroupAsso> group;
 
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_allergy",
-            joinColumns = @JoinColumn(name = "username"),
-            inverseJoinColumns = @JoinColumn(name = "allergy_name"))
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            mappedBy = "users")
     @JsonIgnoreProperties({"users", "products"})
     private List<Allergy> allergies;
 
 
-    @ManyToMany
-    @JoinTable(
-            name = "favorite_recipes",
-            joinColumns = @JoinColumn(name = "username"),
-            inverseJoinColumns = @JoinColumn(name = "recipe_id"))
+    @ManyToMany(mappedBy = "users",
+            fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JsonIgnoreProperties({"users"})
     private List<Recipe> recipes;
 

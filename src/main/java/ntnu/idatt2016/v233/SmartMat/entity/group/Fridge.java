@@ -3,6 +3,7 @@ package ntnu.idatt2016.v233.SmartMat.entity.group;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
@@ -33,14 +34,14 @@ public class Fridge{
     @Column(name = "fridge_id")
     long fridgeId;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "group_id")
-    @JsonIgnoreProperties("fridge")
+    @JsonIgnore
     Group group;
     
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.LAZY, mappedBy = "fridgeId")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "fridge_id")
     @JsonIgnoreProperties("fridge")
     List<FridgeProductAsso> products;
 
