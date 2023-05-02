@@ -41,12 +41,14 @@ public class Product{
 
     @ManyToMany(mappedBy = "products")
     @JsonIgnoreProperties({"products"})
+    @JsonIgnore
     List<ShoppingList> shoppingLists;
 
 
     @ManyToOne
     @JoinColumn(name = "category_name")
     @JsonIgnoreProperties({"products"})
+    @JsonIgnore
     Category category;
 
     @Column(name = "image_url")
@@ -70,6 +72,7 @@ public class Product{
             name = "product_allergy",
             joinColumns = @JoinColumn(name = "ean"),
             inverseJoinColumns = @JoinColumn(name = "allergy_name"))
+    @JsonIgnore
     List<Allergy> allergies;
 
     @OneToMany(cascade = CascadeType.ALL)
