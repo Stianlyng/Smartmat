@@ -2,7 +2,9 @@ package ntnu.idatt2016.v233.SmartMat.controller.group;
 
 import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.dto.request.FridgeProductRequest;
+import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.service.group.FridgeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,12 +58,12 @@ public class FridgeController {
      * @return success if the product was added, bad request if the product was already in the fridge, or not found if the group or product doesn't exist
      */
     @PostMapping("/group/product")
-    public ResponseEntity<Object> addProductToFridge(@RequestBody FridgeProductRequest request) {
+    public ResponseEntity<Product> addProductToFridge(@RequestBody FridgeProductRequest request) {
         return fridgeService.addProductToFridge(request).map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/group/product")
-    public ResponseEntity<Object> updateProductInFridge(@RequestBody FridgeProductRequest request) {
+    public ResponseEntity<FridgeProductAsso> updateProductInFridge(@RequestBody FridgeProductRequest request) {
         return fridgeService.updateProductInFridge(request).map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.notFound().build());
     }
 
