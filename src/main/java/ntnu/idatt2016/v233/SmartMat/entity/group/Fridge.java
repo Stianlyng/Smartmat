@@ -42,7 +42,7 @@ public class Fridge{
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
             fetch = FetchType.LAZY, mappedBy = "fridgeId")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnoreProperties("fridge")
+    @JsonIgnoreProperties("fridgeId")
     List<FridgeProductAsso> products;
 
 

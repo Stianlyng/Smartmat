@@ -78,7 +78,6 @@ public class Product{
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
             fetch = FetchType.LAZY, mappedBy = "ean")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnoreProperties({"products"})
     @JsonIgnore
     List<FridgeProductAsso> fridges;
     

@@ -11,7 +11,7 @@ import java.sql.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter @Setter
+@Data
 @Entity(name = "fridge_product")
 @Builder
 public class FridgeProductAsso {
