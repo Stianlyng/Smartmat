@@ -293,29 +293,35 @@ public class GroupController {
      */
     @PutMapping("/groupAuthority")
     public ResponseEntity<?> changeAuthority(@RequestBody ChangeAuthorityRequest authorityRequest,
-                                             Authentication auth){
+                                             Authentication auth) {
         Optional<User> groupAdminOpt = userService.getUserFromUsername(auth.getName());
-        if(groupAdminOpt.isPresent()) {
+        if (groupAdminOpt.isPresent()) {
             User groupAdmin = groupAdminOpt.get();
-            if(!(groupService.isUserAssociatedWithGroup(groupAdmin.getUsername(), authorityRequest.groupId())
-            && (groupService.getUserGroupAssoAuthority(groupAdmin.getUsername(), authorityRequest.groupId()).equals("ADMIN"))))
+            if (!(groupService.isUserAssociatedWithGroup(groupAdmin.getUsername(), authorityRequest.groupId())
+                    && (groupService.getUserGroupAssoAuthority(groupAdmin.getUsername(), authorityRequest.groupId()).equals("ADMIN"))))
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to change the authority of this user.");
         }
-        return groupService.getGroupById(authorityRequest.groupId()).flatMap(group -> userService.getUserFromUsername(authorityRequest.username())
-                .flatMap(user -> {
-                    UserGroupAsso userGroupAsso = user.getGroup().stream()
-                            .filter(asso -> asso.getGroup().getGroupId() == authorityRequest.groupId())
-                            .findFirst()
-                            .orElse(null);
-                    if(userGroupAsso != null){
-                        userGroupAsso.setGroupAuthority(authorityRequest.authority());
-                        userService.updateUser(user);
-                        return Optional.of(userGroupAsso);
-                    }
-                    return Optional.empty();
-                }))
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+
+        Optional<Group> groupOpt = groupService.getGroupById(authorityRequest.groupId());
+        Optional<User> userOpt = userService.getUserFromUsername(authorityRequest.username());
+
+        if (groupOpt.isEmpty() || userOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User user = userOpt.get();
+        UserGroupAsso userGroupAsso = user.getGroup().stream()
+                .filter(asso -> asso.getGroup().getGroupId() == authorityRequest.groupId())
+                .findFirst()
+                .orElse(null);
+
+        if (userGroupAsso != null) {
+            userGroupAsso.setGroupAuthority(authorityRequest.authority());
+            userService.updateUser(user);
+            return ResponseEntity.ok("Authority changed successfully.");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
