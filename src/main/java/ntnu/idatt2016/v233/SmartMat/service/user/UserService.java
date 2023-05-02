@@ -8,6 +8,8 @@ import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.repository.AllergyRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.user.UserRepository;
 import ntnu.idatt2016.v233.SmartMat.service.RecipeService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -132,23 +134,27 @@ public class UserService {
      * Adds allergy to user
      * @param username username of user
      * @param allergyName name of allergy
-     * @return user with added allergy
-     * @throws EntityNotFoundException if user or allergy does not exist
+     * @return string of allergies
      */
-    public Optional<User> addAllergyToUser(String username, String allergyName){
+    public ResponseEntity<String> addAllergyToUser(String username, String allergyName){
 
         Optional<User> user = userRepository.findByUsername(username);
         Optional<Allergy> allergy = allergyRepository.findByName(allergyName);
 
         if (user.isPresent() && allergy.isPresent()){
-            user.get().addAllergy(allergy.get());
-            return Optional.of(userRepository.save(user.get()));
-        } else if (!user.isPresent()) {
-            throw new EntityNotFoundException("User not found");
-        } else if (!allergy.isPresent()) {
-            throw new EntityNotFoundException("Allergy not found");
+            if(user.get().getAllergies().contains(allergy.get())
+                    || allergy.get().getUsers().contains(user.get()))
+                return ResponseEntity.status(HttpStatus.NOT_MODIFIED)
+                        .body("User already has this allergy");
+
+            User tempuser = user.get();
+            allergy.get().addUser(tempuser);
+            tempuser.addAllergy(allergy.get());
+            return ResponseEntity.ok(userRepository.save(tempuser).getAllergies().stream()
+                    .map(Allergy::getName)
+                    .reduce("", (a, b) -> a + " " + b));
         }
-        return Optional.empty();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Did not find allergy, our user");
     }
 
     /**
@@ -157,40 +163,23 @@ public class UserService {
      * @param allergyName name of allergy
      * @return user with removed allergy
      */
-    public Optional<User> removeAllergyFromUser(String username, String allergyName){
+    public ResponseEntity<String> removeAllergyFromUser(String username, String allergyName){
         Optional<User> user = userRepository.findByUsername(username);
         Optional<Allergy> allergy = allergyRepository.findByName(allergyName);
 
         if (user.isPresent() && allergy.isPresent()){
+            if (!user.get().getAllergies().contains(allergy.get())
+                    || !allergy.get().getUsers().contains(user.get()))
+                return ResponseEntity.status(HttpStatus.NOT_MODIFIED)
+                        .body("User does not have this allergy");
+
             user.get().getAllergies().remove(allergy.get());
-            return Optional.of(userRepository.save(user.get()));
-        } else if (user.isEmpty()) {
-            throw new EntityNotFoundException("User not found");
-        } else if (allergy.isEmpty()) {
-            throw new EntityNotFoundException("Allergy not found");
+            allergy.get().getUsers().remove(user.get());
+            return ResponseEntity.ok(userRepository.save(user.get()).getAllergies().stream()
+                    .map(Allergy::getName)
+                    .reduce("", (a, b) -> a + " " + b));
         }
-        return Optional.empty();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Did not find allergy, our user");
     }
 
-    /**
-     * Deletes the specified allergy from the user with the given username.
-     *
-     * @param username the username of the user to delete the allergy from
-     * @param allergyName the name of the allergy to delete
-     * @return an Optional containing the updated User object if the operation was successful, or an empty Optional otherwise
-     * @throws EntityNotFoundException if the specified user or allergy cannot be found
-     */
-    public Optional<User> deleteAllergy(String username, String allergyName) {
-        Optional<User> user = userRepository.findByUsername(username);
-        Optional<Allergy> allergy = allergyRepository.findByName(allergyName);
-
-        if (user.isPresent() && allergy.isPresent()) {
-            if(user.get().deleteAllergy(allergy.get())) return Optional.of(userRepository.save(user.get()));
-        } else if (user.isEmpty()) {
-            throw new EntityNotFoundException("User not found");
-        } else {
-            throw new EntityNotFoundException("Allergy not found");
-        }
-        return Optional.empty();
-    }
 }

@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,4 +50,15 @@ public class Allergy{
     @JsonIgnore
     private List<User> users;
 
+    /**
+     * adds a user to the allergy
+     * @param tempuser adds a user to the list of users with this allergy
+     */
+    public void addUser(User tempuser) {
+        if (users == null)
+            users = new ArrayList<>();
+
+        users.add(tempuser);
+
+    }
 }

@@ -6,16 +6,19 @@ import ntnu.idatt2016.v233.SmartMat.dto.request.AllergyRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.request.RegisterUserRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
 import ntnu.idatt2016.v233.SmartMat.dto.request.UpdateUserRequest;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Allergy;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.service.user.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 /**
@@ -105,14 +108,13 @@ public class UserController {
      * @return a ResponseEntity with a boolean indicating whether the operation was successful
      */
     @PostMapping("/addAllergy")
-    public ResponseEntity<Boolean> addAllergyToUser(@RequestBody AllergyRequest allergyRequest) {
-        try {
-            return userService.addAllergyToUser(allergyRequest.getUsername(), allergyRequest.getAllergyName())
-                    .map(user -> ResponseEntity.ok(user.getAllergies().size() > 0))
-                    .orElseGet(() -> ResponseEntity.notFound().build());
-        }catch (Exception e){
-            return ResponseEntity.status(409).body(false);
-        }
+    public ResponseEntity<String> addAllergyToUser(@RequestBody AllergyRequest allergyRequest,
+                                                    Authentication authentication) {
+        if(!allergyRequest.getUsername().equals(authentication.getName()) &&
+                !authentication.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.name())))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        return userService.addAllergyToUser(allergyRequest.getUsername(), allergyRequest.getAllergyName());
     }
 
     /**
@@ -122,14 +124,14 @@ public class UserController {
      * @return a ResponseEntity with a boolean indicating whether the operation was successful
      */
     @DeleteMapping("/deleteAllergy")
-    public ResponseEntity<Boolean> deleteAllergyFromUser(@RequestBody AllergyRequest allergyRequest) {
-        try {
-            return userService.deleteAllergy(allergyRequest.getUsername(), allergyRequest.getAllergyName())
-                    .map(user -> ResponseEntity.ok(true))
-                    .orElseGet(() -> ResponseEntity.notFound().build());
-        }catch (Exception e){
-            return ResponseEntity.status(409).body(false);
-        }
+    public ResponseEntity<String> deleteAllergyFromUser(@RequestBody AllergyRequest allergyRequest,
+                                                         Authentication authentication) {
+        if(!allergyRequest.getUsername().equals(authentication.getName()) &&
+                !authentication.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.name())))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        return userService.removeAllergyFromUser(allergyRequest.getUsername(), allergyRequest.getAllergyName());
+
     }
 
 
