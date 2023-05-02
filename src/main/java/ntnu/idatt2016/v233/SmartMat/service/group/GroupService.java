@@ -191,10 +191,21 @@ public class GroupService {
         return userGroupAssoRepository.save(userGroupAsso);
     }
 
+    /**
+     * Finds the primary group for a user
+     * @param username the username of the user
+     * @return an optional containing the primary group if it exists
+     */
     public Optional<UserGroupAsso> findPrimaryUserGroupAssoForUser(String username) {
         return userGroupAssoRepository.findByUser_UsernameAndPrimaryGroupTrue(username);
     }
 
+    /**
+     * Gets a user group association
+     * @param username the username of the user
+     * @param groupId the id of the group
+     * @return
+     */
     public Optional<UserGroupAsso> getUserGroupAsso(String username, Long groupId) {
         UserGroupId userGroupId = UserGroupId.builder()
                 .username(username)
@@ -202,5 +213,10 @@ public class GroupService {
                 .build();
 
         return userGroupAssoRepository.findById(userGroupId);
+    }
+
+    public String getUserGroupAssoAuthority(String username, long groupId) {
+        Optional<UserGroupAsso> userGroupAsso = getUserGroupAsso(username, groupId);
+        return userGroupAsso.map(UserGroupAsso::getGroupAuthority).orElseThrow(() -> new IllegalArgumentException("User is not associated with group"));
     }
 }
