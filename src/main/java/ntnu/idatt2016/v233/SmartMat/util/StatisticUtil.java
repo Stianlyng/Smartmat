@@ -113,7 +113,11 @@ public class StatisticUtil {
         long diffInDays = diffInMillis / (24 * 60 * 60 * 1000);
         double co2Sum = 0.0;
         for (double c02 : co2List) co2Sum += c02;
-        return co2Sum / (((double) (diffInDays +1) / 365.0) * (double) numberOfPerson);
+        if(diffInDays >= 365){
+            return co2Sum / (((double) (diffInDays +1) / 365.0) * (double) numberOfPerson);
+        }else {
+            return (((co2Sum)/((double) numberOfPerson) + 118.0) /2.0);
+        }
     }
 
     /**
