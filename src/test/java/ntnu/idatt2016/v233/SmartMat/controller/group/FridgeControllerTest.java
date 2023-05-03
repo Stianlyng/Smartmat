@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(FridgeController.class)
-@AutoConfigureMockMvc(addFilters = false) // Disables security for this test class
+@AutoConfigureMockMvc(addFilters = false)
 public class FridgeControllerTest {
 
     @Autowired

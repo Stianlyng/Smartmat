@@ -1,93 +1,132 @@
 package ntnu.idatt2016.v233.SmartMat.controller.group;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import ntnu.idatt2016.v233.SmartMat.dto.request.WasteRequest;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.entity.Waste;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.service.group.WasteService;
+import ntnu.idatt2016.v233.SmartMat.util.CategoryUtil;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(WasteController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class WasteControllerTest {
 
-    @InjectMocks
-    private WasteController wasteController;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @Mock
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @MockBean
     private WasteService wasteService;
 
-    private Waste waste;
-/**
+    private Group group;
+    private Product product;
+    private WasteRequest wasteRequest;
+    private Waste expectedWaste;
+
     @BeforeEach
     public void setUp() {
-        waste = Waste.builder()
-                .wasteId(1L)
-                .groupId(1L)
-                .ean(123456789L)
-                .timestamp(new Timestamp(System.currentTimeMillis()))
-                .amount(5.5)
-                .unit("kg")
-                .build();
+        group = new Group();
+        group.setGroupId(1L);
+        group.setGroupName("TestGroup");
+
+        product = new Product();
+        product.setEan(12345678L);
+
+        wasteRequest = new WasteRequest(1L, 12345678L, 0.5, "kg");
+
+        expectedWaste = new Waste();
+        expectedWaste.setWasteId(1L);
+        expectedWaste.setGroupId(group);
+        expectedWaste.setEan(product);
+        expectedWaste.setTimestamp(new Timestamp(System.currentTimeMillis()));
+        expectedWaste.setAmount(0.5);
+        expectedWaste.setUnit("kg");
+    }
+
+    // Test cases go here
+    @Test
+    public void testCreateWaste() throws Exception {
+        when(wasteService.createWaste(wasteRequest)).thenReturn(Optional.of(expectedWaste));
+
+        mockMvc.perform(post("/api/waste/waste")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(wasteRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("wasteId").value(expectedWaste.getWasteId()));
+
+        verify(wasteService, times(1)).createWaste(wasteRequest);
     }
 
     @Test
-    public void testCreateWaste() {
-        when(wasteService.getWasteById(waste.getWasteId())).thenReturn(Optional.empty());
-        when(wasteService.createWaste(any(Waste.class))).thenReturn(waste);
+    public void testGetWasteOfCategoryByGroupId() throws Exception {
+        int categoryNumber = 1;
+        String categoryName = CategoryUtil.getCategoryName(categoryNumber);
+        List<Waste> expectedWastes = Arrays.asList(new Waste(/*...*/), new Waste(/*...*/));
 
-        ResponseEntity<Waste> response = wasteController.createWaste(waste);
+        when(wasteService.getWasteOfCategoryByGroupId(group.getGroupId(), categoryName)).thenReturn(Optional.of(expectedWastes));
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(waste, response.getBody());
+        mockMvc.perform(get("/api/waste/group/{groupId}/category/{categoryNumber}", group.getGroupId(), categoryNumber))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].wasteId").value(expectedWastes.get(0).getWasteId()))
+                .andExpect(jsonPath("$[1].wasteId").value(expectedWastes.get(1).getWasteId()));
 
-        verify(wasteService, times(1)).getWasteById(waste.getWasteId());
-        verify(wasteService, times(1)).createWaste(any(Waste.class));
+        verify(wasteService, times(1)).getWasteOfCategoryByGroupId(group.getGroupId(), categoryName);
     }
 
     @Test
-    public void testCreateWaste_badRequest() {
-        when(wasteService.getWasteById(waste.getWasteId())).thenReturn(Optional.of(waste));
+    public void testGetInformationOfCakeGraph() throws Exception {
+        double[] expectedData = new double[]{0.3, 0.2, 0.5};
 
-        ResponseEntity<Waste> response = wasteController.createWaste(waste);
+        when(wasteService.getCakeDiagram(group.getGroupId())).thenReturn(Optional.of(expectedData));
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        mockMvc.perform(get("/api/waste/statistic/cakeGraph/{groupId}", group.getGroupId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0]").value(expectedData[0]))
+                .andExpect(jsonPath("$[1]").value(expectedData[1]))
+                .andExpect(jsonPath("$[2]").value(expectedData[2]));
 
-        verify(wasteService, times(1)).getWasteById(waste.getWasteId());
-        verify(wasteService, never()).createWaste(any(Waste.class));
+        verify(wasteService, times(1)).getCakeDiagram(group.getGroupId());
     }
 
     @Test
-    public void testGetWasteById_found() {
-        when(wasteService.getWasteById(waste.getWasteId())).thenReturn(Optional.of(waste));
+    public void testGetWasteById_NotFound() throws Exception {
+        long nonExistingWasteId = 99L;
 
-        ResponseEntity<Waste> response = wasteController.getWasteById(waste.getWasteId());
+        when(wasteService.getWasteById(nonExistingWasteId)).thenReturn(Optional.empty());
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(waste, response.getBody());
+        mockMvc.perform(get("/api/waste/{wasteId}", nonExistingWasteId))
+                .andExpect(status().isNotFound());
 
-        verify(wasteService, times(1)).getWasteById(waste.getWasteId());
+        verify(wasteService, times(1)).getWasteById(nonExistingWasteId);
     }
-
-    @Test
-    public void testGetWasteById_notFound() {
-        when(wasteService.getWasteById(waste.getWasteId())).thenReturn(Optional.empty());
-
-        ResponseEntity<Waste> response = wasteController.getWasteById(waste.getWasteId());
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-
-        verify(wasteService, times(1)).getWasteById(waste.getWasteId());
-    }
-    */
 }

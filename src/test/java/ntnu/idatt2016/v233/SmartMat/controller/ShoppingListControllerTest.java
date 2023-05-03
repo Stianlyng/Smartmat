@@ -31,7 +31,6 @@ public class ShoppingListControllerTest {
     @BeforeEach
     public void setUp() {
         shoppingList = new ShoppingList();
-        // Set properties for the shoppingList object
     }
 
 
