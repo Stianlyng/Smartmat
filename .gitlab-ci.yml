@@ -22,4 +22,4 @@ run-tests:
 deploy-jar:
     stage: deploy
     script:
-    - mvn install
+    - mvn main
