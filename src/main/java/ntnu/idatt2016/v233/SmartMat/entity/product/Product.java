@@ -120,6 +120,21 @@ public class Product{
         if (allergies == null){
             allergies = new ArrayList<>();
         }
-        allergies.add(allergy);
+        if(!allergies.contains(allergy))
+            allergies.add(allergy);
+    }
+
+
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof Product p){
+            return p.getEan() == this.getEan();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode(){
+        return (int) this.getEan();
     }
 }

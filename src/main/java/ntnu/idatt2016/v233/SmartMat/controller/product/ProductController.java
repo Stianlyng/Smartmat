@@ -55,6 +55,7 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
 
         product.setCategory(category);
+        category.addProduct(product);
 
 
         if(productService.getProductById(productRequest.ean()).isPresent())
@@ -77,8 +78,13 @@ public class ProductController {
         }
 
         if(productRequest.allergies() != null){
-            productRequest.allergies().forEach(allergyName-> product.addAllergy(allergyService.getAllergyByName(allergyName).get()));
-        }
+            productRequest.allergies().forEach(allergyName-> {
+                allergyService.getAllergyByName(allergyName).ifPresent(allergy -> {
+                    product.addAllergy(allergy);
+                    allergy.addProduct(product);
+                });
+            });
+            }
 
         productService.saveProduct(product);
         return ResponseEntity.ok(product);
@@ -141,6 +147,19 @@ public class ProductController {
                 product.get().setAmount(Double.parseDouble(volumeUnit.get().get(0)));
             }
 
+            product.get().getAllergies().stream().filter(allergy -> allergy.getProducts().contains(product.get()))
+                            .forEach(allergy -> allergy.getProducts().remove(product.get()));
+            product.get().getAllergies().clear();
+
+
+            if(productRequest.allergies() != null){
+                productRequest.allergies().forEach(allergyName-> {
+                    allergyService.getAllergyByName(allergyName).ifPresent(allergy -> {
+                        product.get().addAllergy(allergy);
+                        allergy.addProduct(product.get());
+                    });
+                });
+            }
 
             productService.updateProduct(product.get());
             return ResponseEntity.ok(product.get());
