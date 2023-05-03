@@ -19,10 +19,12 @@ test:
 pages:
   stage: deploy
   script:
-    - mvn jacoco:prepare-agent install jacoco:report
+    - mvn jacoco:prepare-agent install jacoco:report javadoc:javadoc -Dmaven.javadoc.failOnError=false
     - mvn site
     - mkdir -p public
     - cp -r target/site/jacoco public/
+    - cp -r target/site/apidocs public/
+    
   artifacts:
     paths:
       - public
