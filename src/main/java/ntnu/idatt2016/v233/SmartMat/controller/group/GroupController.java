@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Controller for groups API, providing endpoints for group management
@@ -323,5 +324,60 @@ public class GroupController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    /**
+     * Handles the HTTP DELETE request to remove a user from a group.
+     * @param auth the authentication object containing the username of the user
+     * @return a ResponseEntity object containing the list of groups the user is associated with and an HTTP status code of 200,
+     */
+    @GetMapping("/")
+    public ResponseEntity<List<UserGroupAsso>> getAllGroupsByUser(Authentication auth) {
+        return ResponseEntity.ok(groupService.getUserGroupAssoByUserName(auth.getName()));
+    }
+
+
+    /**
+     * Handles the HTTP DELETE request to remove a user from a group.
+     * @param groupId the ID of the group to get the members of
+     * @param username the username of the user to remove from the group
+     * @param auth the authentication object containing the username of the user
+     * @return a ResponseEntity object containing the list of groups the
+     * user is associated with and an HTTP status code of 200,
+     */
+    @DeleteMapping("/removeUser/{groupId}/{username}")
+    public ResponseEntity<?> removeUserFromGroup(@PathVariable("groupId") long groupId,
+                                                 @PathVariable("username") String username,
+                                                 Authentication auth) {
+        Optional<User> groupAdminOpt = userService.getUserFromUsername(auth.getName());
+        if (groupAdminOpt.isPresent()) {
+            User groupAdmin = groupAdminOpt.get();
+            if (!(groupService.isUserAssociatedWithGroup(groupAdmin.getUsername(), groupId)
+                    && (groupService.getUserGroupAssoAuthority(groupAdmin.getUsername(), groupId).equals("ADMIN"))
+            || groupAdmin.getUsername().equals(username)))
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to remove this user.");
+        }
+
+        Optional<Group> groupOpt = groupService.getGroupById(groupId);
+        Optional<User> userOpt = userService.getUserFromUsername(username);
+
+        if (groupOpt.isEmpty() || userOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User user = userOpt.get();
+        UserGroupAsso userGroupAsso = user.getGroup().stream()
+                .filter(asso -> asso.getGroup().getGroupId() == groupId)
+                .findFirst()
+                .orElse(null);
+
+        if (userGroupAsso != null) {
+            groupService.removeUserFromGroup(userGroupAsso);
+            return ResponseEntity.ok("User removed successfully.");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 
 }

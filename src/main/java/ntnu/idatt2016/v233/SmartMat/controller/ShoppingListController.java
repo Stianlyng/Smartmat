@@ -134,8 +134,10 @@ public class ShoppingListController {
         if(product.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
+        System.out.println("Removing product from shopping list : " + shoppingListId + " - " + ean);
+
         Optional<ShoppingList> returnVal = shoppingListService
-                .removeProductFromShoppingList(Long.parseLong(shoppingListId), Long.parseLong(ean));
+                .removeProductFromShoppingList(Long.parseLong(ean), Long.parseLong(shoppingListId));
 
         return returnVal.map(list -> ResponseEntity.status(HttpStatus.OK).body(list))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());

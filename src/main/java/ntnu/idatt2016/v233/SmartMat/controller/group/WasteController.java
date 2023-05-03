@@ -79,4 +79,40 @@ public class WasteController {
         return wasteService.getCakeDiagram(groupId).map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
 
+
+    /**
+     * Get the information of the last months of a specific group.
+     *
+     * @param groupId the id of the group to get the information for
+     * @return a ResponseEntity object containing an array of doubles representing the waste for each category
+     * in the last four months, or a not found response if the group does not exist or has no waste data
+     */
+    @GetMapping("/statistic/lastMonths/{groupId}")
+    public ResponseEntity<double[]> getInformationOfLastMoths(@PathVariable("groupId") long groupId){
+        return wasteService.getLastMonth(groupId).map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Retrieves the amount of money lost due to expired products in a specific group.
+     * The amount is calculated based on the total cost of the expired products.
+     *
+     * @param groupId the ID of the group to retrieve the lost money from
+     * @return a ResponseEntity with the lost money as a Double if found, or a ResponseEntity with status 404 if the group is not found
+     */
+    @GetMapping("/statistic/lostMoney/{groupId}")
+    public ResponseEntity<Double> getLostMoney(@PathVariable("groupId") long groupId){
+        return wasteService.getLostMoney(groupId).map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Retrieves the amount of CO2 emitted annually per person in a specific group.
+     *
+     * @param groupId the ID of the group to retrieve the statistic for
+     * @return a ResponseEntity containing the amount of CO2 emitted annually per person in the group,
+     *         or a ResponseEntity with HTTP status 404 (not found) if the group or data is not found
+     */
+    @GetMapping("/statistic/annuallyCO2/{groupId}")
+    public ResponseEntity<Double> getCO2Annually(@PathVariable("groupId") long groupId){
+        return wasteService.getCO2PerPerson(groupId).map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
+    }
 }

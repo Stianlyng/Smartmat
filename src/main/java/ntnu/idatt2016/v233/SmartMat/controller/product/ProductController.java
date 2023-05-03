@@ -8,6 +8,7 @@ import ntnu.idatt2016.v233.SmartMat.service.AllergyService;
 import ntnu.idatt2016.v233.SmartMat.service.product.CategoryService;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 import ntnu.idatt2016.v233.SmartMat.util.CategoryUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -110,13 +111,13 @@ public class ProductController {
      * @return The product that was deleted.
      */
     @DeleteMapping("ean/{ean}")
-    public ResponseEntity<Product> deleteProduct(@PathVariable long ean) {
+    public ResponseEntity<String> deleteProduct(@PathVariable long ean) {
         Optional<Product> product = productService.getProductById(ean);
         if(product.isPresent()) {
             productService.deleteProductById(product.get().getEan());
-            return ResponseEntity.ok(product.get());
+            return ResponseEntity.ok("Product deleted");
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
     }
 
 

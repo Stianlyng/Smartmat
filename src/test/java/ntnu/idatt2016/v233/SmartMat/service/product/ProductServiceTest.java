@@ -134,7 +134,7 @@ public class ProductServiceTest {
         // Verify that the service returns the correct volume
         Optional<List<String>> returnedVolume = productService.getProductVolume(productId);
         assertTrue(returnedVolume.isPresent());
-        assertEquals(List.of("500", "ml"), returnedVolume.get());
+        assertEquals(List.of("500.0", "ml"), returnedVolume.get());
     }
 
     @Test

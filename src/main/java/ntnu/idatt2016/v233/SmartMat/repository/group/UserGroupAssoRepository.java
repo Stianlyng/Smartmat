@@ -73,4 +73,12 @@ public interface UserGroupAssoRepository extends JpaRepository<UserGroupAsso, Us
      * @return
      */
     String findAuthorityByUser_UsernameAndGroup_GroupId(String username, long groupId);
+
+
+    /**
+     * Finds all groups a user is a member of
+     * @param username the username of the user
+     * @return a list of all groups the user is a member of
+     */
+    List<UserGroupAsso> findAllByUserUsername(String username);
 }

@@ -69,37 +69,46 @@ public class FridgeService {
      * @param fridgeProductRequest the fridge product request
      * @return the product that was added to the fridge
      */
-    public Optional<Product> addProductToFridge(FridgeProductRequest fridgeProductRequest) {
+    public Optional<Object> addProductToFridge(FridgeProductRequest fridgeProductRequest) {
         Optional<Product> product = productService.getProductById(fridgeProductRequest.ean());
         Optional<Fridge> fridge = fridgeRepository.findByGroupGroupId(fridgeProductRequest.groupId());
+        double price = 100.0;
+        if(fridgeProductRequest.price() != 0.0){
+            price = fridgeProductRequest.price();
+        }
 
         if(product.isEmpty() || fridge.isEmpty()) return Optional.empty();
 
         fridge.get().addProduct(FridgeProductAsso.builder()
-                .fridgeId(fridge.get())
-                .ean(product.get())
-                .amount(fridgeProductRequest.amount())
-                .daysToExpiration(fridgeProductRequest.days())
-                .purchaseDate(java.sql.Date.valueOf(LocalDate.now()))
+                        .fridgeId(fridge.get())
+                        .ean(product.get())
+                        .amount(fridgeProductRequest.amount())
+                        .daysToExpiration(fridgeProductRequest.days())
+                        .purchaseDate(java.sql.Date.valueOf(LocalDate.now()))
+                        .buyPrice(price)
                 .build());
 
         fridgeRepository.save(fridge.get());
-        return product;
-    }
+        return Optional.of(product);
 
-    public Optional<FridgeProductAsso> updateProductInFridge(FridgeProductRequest request) {
+    }
+    
+    public Optional<Object> updateProductInFridge(FridgeProductRequest request) {
         Optional<FridgeProductAsso> fridgeProductAsso = fridgeProductAssoRepo.findById(request.fridgeProductId());
         if (fridgeProductAsso.isEmpty()) return Optional.empty();
+        
+        Integer amount = request.amount();
+        Integer days = request.days();
 
-        int amount = request.amount();
-        int days = request.days();
+        if (amount != null) fridgeProductAsso.get()
+                                .setAmount(request.amount());
 
-        fridgeProductAsso.get().setAmount(amount);
-        fridgeProductAsso.get().setDaysToExpiration(days);
-
+        if (days != null) fridgeProductAsso.get()
+                                .setDaysToExpiration(request.days());
+        
         fridgeProductAssoRepo.save(fridgeProductAsso.get());
 
-        return fridgeProductAsso;
+        return Optional.of(fridgeProductAsso);
     }
 
 
@@ -155,12 +164,12 @@ public class FridgeService {
      * @param amount the amount to delete
      * @return an optional containing the fridge product if it exists
      */
-    public Optional<FridgeProductAsso> deleteAmountFromFridge(long fridgeProductId, double amount) {
+    public Optional<Object> deleteAmountFromFridge(long fridgeProductId, double amount) {
         Optional<FridgeProductAsso> fridgeProductAsso = fridgeProductAssoRepo.findAllById(fridgeProductId);
         if(fridgeProductAsso.isEmpty()) return Optional.empty();
         FridgeProductAsso fridgeProductAsso1 = fridgeProductAsso.get();
         if(amount < fridgeProductAsso1.getAmount() ){
-            fridgeProductAsso1.setAmount(fridgeProductAsso1.getAmount() - amount);
+            fridgeProductAsso1.setAmount(fridgeProductAsso1.getAmount() -amount);
             return Optional.of(fridgeProductAssoRepo.save(fridgeProductAsso1));
         } else {
             Group group = fridgeProductAsso1.getFridgeId().getGroup();
@@ -168,7 +177,7 @@ public class FridgeService {
             group.setLevel(GroupUtil.getLevel(group.getPoints()));
             groupRepository.save(group);
             fridgeProductAssoRepo.delete(fridgeProductAsso.get());
-            return Optional.empty();
+            return Optional.of(true);
         }
     }
 
@@ -177,7 +186,7 @@ public class FridgeService {
      * @param fridgeProductId the ID of the fridge product association to delete
      * @return an Optional containing the saved waste object, or an empty Optional if the fridge product association with the given ID is not found
      */
-    public Optional<Waste> wasteProductFromFridge(long fridgeProductId){
+    public Optional<Object> wasteProductFromFridge(long fridgeProductId){
         Optional<FridgeProductAsso> fridgeProductAsso = fridgeProductAssoRepo.findById(fridgeProductId);
         if(fridgeProductAsso.isEmpty()) return Optional.empty();
         FridgeProductAsso fridgeProductAsso1 = fridgeProductAsso.get();
@@ -188,13 +197,7 @@ public class FridgeService {
             group.setLevel(GroupUtil.getLevel(group.getPoints()));
         }
         groupRepository.save(group);
-        return Optional.of(wasteRepository.save(Waste.builder()
-                .amount(fridgeProductAsso1.getAmount())
-                .unit(fridgeProductAsso1.getEan().getUnit())
-                .ean(fridgeProductAsso1.getEan())
-                .groupId(fridgeProductAsso1.getFridgeId().getGroup())
-                .timestamp(new Timestamp(System.currentTimeMillis()))
-                .build()));
+        return Optional.of(wasteRepository.save(Waste.builder().buyPrice(fridgeProductAsso1.getBuyPrice()).amount(fridgeProductAsso1.getAmount()).unit(fridgeProductAsso1.getEan().getUnit()).ean(fridgeProductAsso1.getEan()).groupId(fridgeProductAsso1.getFridgeId().getGroup()).timestamp(new Timestamp(System.currentTimeMillis())).build()));
     }
 
 

@@ -114,24 +114,5 @@ public class FridgeController {
         return fridgeService.wasteProductFromFridge(fridgeProductId).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    /**
-     * Deletes all products in a fridge
-     * @param fridgeId the id of the fridge
-     * @return success if the products were deleted, bad request if the fridge doesn't exist
-     *
-    @DeleteMapping("/delete/all/{fridgeId}")
-    public ResponseEntity<String> deleteAllProductsInFridge(@PathVariable("fridgeId") long fridgeId) {
-        try {
-            boolean success = fridgeService.deleteAllProductsInFridge(fridgeId);
-            if (success){
-                return ResponseEntity.ok("Success");
-            }
-            return ResponseEntity.badRequest().body("Fridge not found");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Internal server error");
-        }
-    }
-
-    */
 
 }

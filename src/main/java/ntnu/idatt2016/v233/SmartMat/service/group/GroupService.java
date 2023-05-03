@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.service.group;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.entity.ShoppingList;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
@@ -218,5 +219,38 @@ public class GroupService {
     public String getUserGroupAssoAuthority(String username, long groupId) {
         Optional<UserGroupAsso> userGroupAsso = getUserGroupAsso(username, groupId);
         return userGroupAsso.map(UserGroupAsso::getGroupAuthority).orElseThrow(() -> new IllegalArgumentException("User is not associated with group"));
+    }
+
+
+    /**
+     * Gets all user group associations for a user
+     * @param username the username of the user
+     * @return a list of all user group associations for the user
+     */
+    public List<UserGroupAsso> getUserGroupAssoByUserName(String username) {
+        return userGroupAssoRepository.findAllByUserUsername(username);
+    }
+
+    /**
+     * removes user_group relatioon
+     * @param username the username of the user
+     * @param groupId the id of the group
+     * @return true if the user is the owner of the group, false otherwise
+     */
+    @Transactional
+    public boolean removeUserFromGroup(UserGroupAsso userGroup) {
+        Group group = groupRepository.findByGroupId(userGroup.getGroup().getGroupId())
+                .orElseThrow(() -> new IllegalArgumentException("Group does not exist"));
+
+        group.getUser().remove(userGroup);
+
+        if (group.getUser().isEmpty()) {
+            groupRepository.delete(group);
+        } else {
+            groupRepository.save(group);
+        }
+
+        userGroupAssoRepository.delete(userGroup);
+        return true;
     }
 }
