@@ -93,13 +93,14 @@ public class ShoppingListService {
      * @return the shopping list that the product was removed from
      */
     public Optional<ShoppingList> removeProductFromShoppingList(long ean, long shoppingListId){
+        System.out.println("shopping list status : " + shoppingListRepository.findById(shoppingListId).isPresent());
+
             shoppingListRepository.findById(shoppingListId).ifPresent(shoppingList -> {
-            productRepository.findById(ean).ifPresent(product -> {
-                shoppingList.getProducts().remove(product);
-                product.getShoppingLists().remove(shoppingList);
-                productRepository.save(product);
-                shoppingListRepository.save(shoppingList);
-            });
+                productRepository.findById(ean).ifPresent(product -> {
+                    shoppingList.getProducts().remove(product);
+                    product.getShoppingLists().remove(shoppingList);
+                    shoppingListRepository.save(shoppingList);
+                });
             });
 
         return shoppingListRepository.findById(shoppingListId);
