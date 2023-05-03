@@ -103,4 +103,16 @@ public class WasteController {
     public ResponseEntity<Double> getLostMoney(@PathVariable("groupId") long groupId){
         return wasteService.getLostMoney(groupId).map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
     }
+
+    /**
+     * Retrieves the amount of CO2 emitted annually per person in a specific group.
+     *
+     * @param groupId the ID of the group to retrieve the statistic for
+     * @return a ResponseEntity containing the amount of CO2 emitted annually per person in the group,
+     *         or a ResponseEntity with HTTP status 404 (not found) if the group or data is not found
+     */
+    @GetMapping("/statistic/annuallyCO2/{groupId}")
+    public ResponseEntity<Double> getCO2Annually(@PathVariable("groupId") long groupId){
+        return wasteService.getCO2PerPerson(groupId).map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
+    }
 }
