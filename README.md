@@ -6,6 +6,7 @@
 - **Backend Render URl:** https://smartmat.onrender.com/swagger-ui/index.html
 - **Swagger ui:** https://api.smartmat.app/swagger-ui/index.html
 - **Jacoco tests:** https://idatt2106-v23-03.pages.stud.idi.ntnu.no/backend/jacoco/index.html
+- **Javadoc Documentation:** https://idatt2106-v23-03.pages.stud.idi.ntnu.no/backend/apidocs/index.html
 
 
 
