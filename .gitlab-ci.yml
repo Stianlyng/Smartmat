@@ -7,6 +7,7 @@ stages:
   - build
   - test
   - deploy
+  - pages
 
 maven-build:
   stage: build
@@ -17,9 +18,21 @@ maven-build:
 run-tests:
   stage: test
   script:
-  - mvn test
+    - mvn test
 
 deploy-jar:
-    stage: deploy
-    script:
+  stage: deploy
+  script:
     - mvn install
+
+jacoco-report:
+  stage: pages
+  script:
+    - mvn jacoco:report
+    - mkdir public
+    - cp -r target/site/jacoco public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
