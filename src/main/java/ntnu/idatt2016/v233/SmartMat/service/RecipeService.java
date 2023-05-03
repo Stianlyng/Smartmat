@@ -9,7 +9,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import ntnu.idatt2016.v233.SmartMat.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**
@@ -26,6 +29,9 @@ public class RecipeService {
      */
     @Autowired
     private RecipeRepository recipeRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * Creates a new recipe service
@@ -122,5 +128,56 @@ public class RecipeService {
             
                 return result;
             }
-    
+
+    /**
+     * Adds a recipe to a users favorites
+     * @param recipeId id of the recipe
+     * @param name name of the user
+     * @return ResponsEntity with succsess/fail message
+     */
+    public ResponseEntity<String> addRecipeToFavorites(Long recipeId, String name) {
+        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
+        Optional<User> user = userRepository.findByUsername(name);
+        if (recipe.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find Recipe");
+        } else if (user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find User");
+        } else {
+            if (user.get().getRecipes().contains(recipe.get())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Recipe already in favorites");
+            }
+
+            user.get().addRecipe(recipe.get());
+            recipe.get().addUser(user.get());
+            userRepository.save(user.get());
+            return ResponseEntity.ok("Recipe added to favorites");
+        }
+
+    }
+
+    /**
+     * Removes a recipe from a users favorites
+     * @param recipeId id of the recipe
+     * @param name name of the user
+     * @return ResponseEntity with succsess/fail message
+     */
+    public ResponseEntity<String> removeRecipeFromFavorites(Long recipeId, String name) {
+        Optional<Recipe> recipe = recipeRepository.findById(recipeId);
+        Optional<User> user = userRepository.findByUsername(name);
+
+        if (recipe.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find Recipe");
+        } else if (user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Could not find User");
+        } else {
+            if (!user.get().getRecipes().contains(recipe.get())) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Recipe not in favorites");
+            }
+
+            user.get().getRecipes().remove(recipe.get());
+            recipe.get().getUsers().remove(user.get());
+            userRepository.save(user.get());
+            return ResponseEntity.ok("Recipe deleted from favorites");
+        }
+    }
 }

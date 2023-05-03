@@ -70,7 +70,7 @@ public class User implements UserDetails {
     @ManyToMany(mappedBy = "users",
             fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JsonIgnoreProperties({"users"})
-    private List<Recipe> recipes;
+    private Set<Recipe> recipes;
 
 
     @Column(name = "authority")
@@ -114,7 +114,7 @@ public class User implements UserDetails {
      */
     public void addRecipe(Recipe recipe){
         if (this.recipes == null) {
-            this.recipes = new ArrayList<>();
+            this.recipes = new HashSet<>();
         }
         this.recipes.add(recipe);
     }
@@ -192,6 +192,20 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return this.enabled;
+    }
+
+    @Override
+    public boolean equals(Object o){
+
+        if(o instanceof User user){
+            return user.getUsername().equals(this.username);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(username);
     }
 
 
