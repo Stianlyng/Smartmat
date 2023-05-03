@@ -72,7 +72,7 @@ public class FridgeService {
     public Optional<Product> addProductToFridge(FridgeProductRequest fridgeProductRequest) {
         Optional<Product> product = productService.getProductById(fridgeProductRequest.ean());
         Optional<Fridge> fridge = fridgeRepository.findByGroupGroupId(fridgeProductRequest.groupId());
-        double price = 100.0;
+        double price = 10.0;
         if(fridgeProductRequest.price() != 0.0){
             price = fridgeProductRequest.price();
         }
