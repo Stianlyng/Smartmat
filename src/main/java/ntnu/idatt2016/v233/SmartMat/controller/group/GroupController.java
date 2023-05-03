@@ -88,6 +88,8 @@ public class GroupController {
 
         Group group = new Group();
         group.setGroupName(groupRequest.groupName());
+        group.setPoints(10);
+        group.setLevel(0);
 
         Group createdGroup = groupService.createGroup(group);
 
