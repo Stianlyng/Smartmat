@@ -2,12 +2,14 @@ package ntnu.idatt2016.v233.SmartMat.controller.product;
 
 import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.dto.request.ProductRequest;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Allergy;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Category;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.service.AllergyService;
 import ntnu.idatt2016.v233.SmartMat.service.product.CategoryService;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 import ntnu.idatt2016.v233.SmartMat.util.CategoryUtil;
+import ntnu.idatt2016.v233.SmartMat.util.ProductUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -85,6 +87,26 @@ public class ProductController {
                 });
             });
             }
+        boolean vegan = CategoryUtil.isVegan(product.getName(),product.getDescription());
+        if(!vegan){
+            Allergy allergy = allergyService.getAllergyByName("ikke vegansk").get();
+            product.addAllergy(allergy);
+            allergy.addProduct(product);
+            allergy = allergyService.getAllergyByName("Ikke vegetariansk").get();
+            product.addAllergy(allergy);
+            allergy.addProduct(product);
+        }
+        boolean vegetarian = CategoryUtil.isVegetarian(product.getName(),product.getDescription(),vegan);
+        if(!vegetarian){
+            Allergy allergy = allergyService.getAllergyByName("ikke vegetariansk").get();
+            product.addAllergy(allergy);
+            allergy.addProduct(product);
+        }
+        if(!CategoryUtil.isHalal(product.getName(),product.getDescription(),vegetarian)){
+            Allergy allergy = allergyService.getAllergyByName("Haram").get()    ;
+            product.addAllergy(allergy);
+            allergy.addProduct(product);
+        }
 
         productService.saveProduct(product);
         return ResponseEntity.ok(product);
