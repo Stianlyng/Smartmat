@@ -89,7 +89,7 @@ public class ProductController {
             }
         boolean vegan = CategoryUtil.isVegan(product.getName(),product.getDescription());
         if(!vegan){
-            Allergy allergy = allergyService.getAllergyByName("ikke vegansk").get();
+            Allergy allergy = allergyService.getAllergyByName("Ikke vegansk").get();
             product.addAllergy(allergy);
             allergy.addProduct(product);
             allergy = allergyService.getAllergyByName("Ikke vegetariansk").get();
@@ -98,7 +98,7 @@ public class ProductController {
         }
         boolean vegetarian = CategoryUtil.isVegetarian(product.getName(),product.getDescription(),vegan);
         if(!vegetarian){
-            Allergy allergy = allergyService.getAllergyByName("ikke vegetariansk").get();
+            Allergy allergy = allergyService.getAllergyByName("Ikke vegetariansk").get();
             product.addAllergy(allergy);
             allergy.addProduct(product);
         }
