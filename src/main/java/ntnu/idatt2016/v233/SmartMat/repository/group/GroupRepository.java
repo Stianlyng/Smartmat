@@ -47,4 +47,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 
     Optional<Group> findByLinkCode(String linkCode);
 
+    @Query(value = "SELECT count(*) FROM user_group where group_id = :groupId", nativeQuery = true)
+    int countAllUserInGroup(@Param("groupId") long groupId);
+
 }

@@ -1,7 +1,9 @@
 package ntnu.idatt2016.v233.SmartMat.service.group;
 
 import java.nio.channels.FileChannel;
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import ntnu.idatt2016.v233.SmartMat.dto.request.WasteRequest;
@@ -100,4 +102,19 @@ public class WasteService {
         Optional<Group> group = groupRepository.findByGroupId(groupId);
         return group.map(value -> StatisticUtil.getLostMoneyInLastMonth(wasteRepository.findByGroupId(value).get()));
     }
+
+    /**
+     * Calculates the annual average CO2 emissions per person in the specified group.
+     *
+     * @param groupId the ID of the group for which to calculate CO2 emissions
+     * @return an Optional containing the annual average CO2 emissions per person, or empty if the group has no users or does not exist
+     */
+    public Optional<Double> getCO2PerPerson(long groupId){
+        Optional<Group> group = groupRepository.findByGroupId(groupId);
+        int number = groupRepository.countAllUserInGroup(groupId);
+        if(number == 0 || group.isEmpty()) return Optional.empty();
+        List<Waste> wastes = wasteRepository.findByGroupId(group.get()).get();
+        return Optional.of(StatisticUtil.getAnnualAverage(wastes,number));
+    }
+
 }
