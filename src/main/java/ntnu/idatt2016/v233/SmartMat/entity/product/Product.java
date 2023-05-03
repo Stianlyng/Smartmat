@@ -53,7 +53,7 @@ public class Product{
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
             fetch = FetchType.LAZY)
     @JoinColumn(name = "category_name")
-    @JsonIgnore
+    @JsonIncludeProperties("categoryName")
     Category category;
 
     @Column(name = "image_url")
@@ -73,8 +73,7 @@ public class Product{
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
             fetch = FetchType.LAZY, mappedBy = "products")
-    @JsonIgnoreProperties({"products", "users"})
-    @JsonIgnore
+    @JsonIncludeProperties("name")
     List<Allergy> allergies;
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
