@@ -34,4 +34,4 @@ jacoco-report:
     paths:
       - public
   only:
-    - master
+    - main
