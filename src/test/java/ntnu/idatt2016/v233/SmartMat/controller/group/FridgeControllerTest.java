@@ -49,7 +49,7 @@ public class FridgeControllerTest {
         fridge = new Fridge();
         product = new Product();
         fridgeProductAsso = new FridgeProductAsso();
-        fridgeProductRequest = new FridgeProductRequest(1L, 1L, 1L, 2, 7);
+        fridgeProductRequest = new FridgeProductRequest(1L, 1L, 1L, 2, 7, 100);
     }
 
     @Test
