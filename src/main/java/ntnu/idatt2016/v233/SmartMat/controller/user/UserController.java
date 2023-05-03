@@ -91,7 +91,12 @@ public class UserController {
      * @return The user with the given username.
      */
     @GetMapping("/get/{username}")
-    public ResponseEntity<User> getUser(@PathVariable String username) {
+    public ResponseEntity<User> getUser(@PathVariable String username, Authentication authentication) {
+        if (!username.equals(authentication.getName()) &&
+                !authentication.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.name())))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+
         return userService.getUserFromUsername(username)
                 .map(user -> {
                     user.setPassword(null);

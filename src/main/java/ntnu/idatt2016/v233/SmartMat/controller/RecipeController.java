@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.controller;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
@@ -59,12 +60,36 @@ public class RecipeController {
     public ResponseEntity<List<RecipeFridgeMatch>> getRecipeWithByProductsInFridge(
         @PathVariable("fridgeId") Long fridgeId, @PathVariable("recipeId") Long recipeId) {
 
-        List<RecipeFridgeMatch> recipe = recipeService.getRecipeWithFridgeProductMatch(fridgeId, recipeId);       
+        List<RecipeFridgeMatch> recipe = recipeService.getRecipeWithFridgeProductMatch(fridgeId, recipeId);
         if (recipe.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.ok(recipe);
         }
+    }
+
+    /**
+     * add recipe to favorites in user
+     * @param recipeId the id of the recipe
+     * @param authentication the authentication object
+     * @return 200 if the recipe was added to favorites, otherwise 404
+     */
+    @PostMapping("/favorite/{recipeId}")
+    public ResponseEntity<String> addRecipeToFavorites(@PathVariable("recipeId") Long recipeId,
+                                                       Authentication authentication) {
+        return recipeService.addRecipeToFavorites(recipeId, authentication.getName());
+    }
+
+    /**
+     * remove recipe from favorites in user
+     * @param recipeId the id of the recipe
+     * @param authentication the authentication object
+     * @return 200 if the recipe was removed from favorites, otherwise 404
+     */
+    @DeleteMapping("/favorite/{recipeId}")
+    public ResponseEntity<String> removeRecipeFromFavorites(@PathVariable("recipeId") Long recipeId,
+                                                            Authentication authentication) {
+        return recipeService.removeRecipeFromFavorites(recipeId, authentication.getName());
     }
 
 }
