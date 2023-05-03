@@ -31,7 +31,6 @@ public class WeeklyMenuControllerTest {
     @BeforeEach
     public void setUp() {
         weeklyMenu = new ArrayList<>();
-        // Add WeeklyMenuResponse objects to the weeklyMenu list
         weeklyMenu.add(WeeklyMenuResponse.builder()
                 .recipeId(1)
                 .recipeName("Recipe1")
@@ -49,7 +48,7 @@ public class WeeklyMenuControllerTest {
 
     @Test
     public void getWeeklyMenu_found() {
-        Long fridgeId = 1L;
+        long fridgeId = 1L;
         when(weeklyMenuService.getWeeklyMenu(fridgeId)).thenReturn(weeklyMenu);
 
         ResponseEntity<List<WeeklyMenuResponse>> response = weeklyMenuController.getWeeklyMenu(fridgeId);
@@ -60,7 +59,7 @@ public class WeeklyMenuControllerTest {
 
     @Test
     public void getWeeklyMenu_notFound() {
-        Long fridgeId = 1L;
+        long fridgeId = 1L;
         when(weeklyMenuService.getWeeklyMenu(fridgeId)).thenReturn(new ArrayList<>());
 
         ResponseEntity<List<WeeklyMenuResponse>> response = weeklyMenuController.getWeeklyMenu(fridgeId);
