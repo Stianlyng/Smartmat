@@ -223,4 +223,16 @@ public class FridgeService {
         return fridge.map(value -> value.getGroup().getUser().stream()
                 .anyMatch(user -> user.getUser().getUsername().equals(username))).orElse(false);
     }
+
+    /**
+     * check if user has accsess to fridge
+     * @param username the username of the user
+     * @param fridgeId the id of the fridge
+     * @return true if the user is in the group of the fridge
+     */
+    public boolean isUserInFridge(String username, long fridgeId) {
+        Optional<Fridge> fridge = fridgeRepository.findById(fridgeId);
+        return fridge.map(value -> value.getGroup().getUser().stream()
+                .anyMatch(user -> user.getUser().getUsername().equals(username))).orElse(false);
+    }
 }

@@ -7,6 +7,7 @@ import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.service.group.FridgeService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,9 +19,9 @@ import java.util.Optional;
 /**
  * Controller for fridges API, providing endpoints for fridge management
  *
- * @author Anders Austlid
- * @version 1.0
- * @since 24.04.2023
+ * @author Anders Austlid & Birk
+ * @version 2.0
+ * @since 3.05.2023
  */
 @AllArgsConstructor
 @RestController
@@ -32,25 +33,39 @@ public class FridgeController {
 
     /**
      * Gets the fridge of a group
-     * @param groupId the id of the group
-     *                group must exist
-     * @return the fridge of the group if it exists, or a 404 if it doesn't
+     * @param groupId the id of the group must exist
+     * @return the fridge of the group if it exists, or a 404 if it doesn't exist or the user is not in the group
      */
     @GetMapping("/group/{groupId}")
-    public ResponseEntity<Fridge> getFridgeByGroupId(@PathVariable("groupId") long groupId) {
-        return fridgeService.getFridgeByGroupId(groupId)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Fridge> getFridgeByGroupId(@PathVariable("groupId") long groupId, Authentication authentication) {
+        Optional<Fridge> fridge = fridgeService.getFridgeByGroupId(groupId);
+
+        if (fridge.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (!fridgeService.isUserInFridge(authentication.getName(), fridge.get().getFridgeId())
+                && !authentication.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.name()))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        return fridge.map(ResponseEntity::ok).get();
     }
 
 
     /**
      * Gets the fridge by its fridge id
      * @param fridgeId the id of the fridge
-     * @return the fridge if it exists, or a 404 if it doesn't
+     * @return the fridge if it exists, or a 404 if it doesn't, or a 403 if the user is not in the fridge
      */
     @GetMapping("/fridge/{fridgeId}")
-    public ResponseEntity<Fridge> getFridgeByFridgeId(@PathVariable("fridgeId") long fridgeId) {
+    public ResponseEntity<Fridge> getFridgeByFridgeId(@PathVariable("fridgeId") long fridgeId,
+                                                      Authentication authentication) {
+        if (!fridgeService.isUserInFridge(authentication.getName(), fridgeId)
+                && !authentication.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.name()))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         return fridgeService.getFridgeByFridgeId(fridgeId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
