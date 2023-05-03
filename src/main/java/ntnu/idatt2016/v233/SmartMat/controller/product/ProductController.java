@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +48,8 @@ public class ProductController {
                 .url(productRequest.image())
                 .build();
 
+
+
         Category category = categoryService
                 .getCategoryByName(CategoryUtil.defineCategory(product.getName(),product.getDescription()))
                 .orElse(null);
@@ -55,7 +58,6 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
 
         product.setCategory(category);
-        category.addProduct(product);
 
 
         if(productService.getProductById(productRequest.ean()).isPresent())
@@ -78,6 +80,8 @@ public class ProductController {
         }
 
         if(productRequest.allergies() != null){
+            product.setAllergies(new ArrayList<>());
+
             productRequest.allergies().forEach(allergyName-> {
                 allergyService.getAllergyByName(allergyName).ifPresent(allergy -> {
                     product.addAllergy(allergy);
@@ -120,6 +124,10 @@ public class ProductController {
     public ResponseEntity<String> deleteProduct(@PathVariable long ean) {
         Optional<Product> product = productService.getProductById(ean);
         if(product.isPresent()) {
+            product.get().getAllergies().stream().filter(allergy -> allergy.getProducts().contains(product.get()))
+                    .forEach(allergy -> allergy.getProducts().remove(product.get()));
+            product.get().getAllergies().clear();
+
             productService.deleteProductById(product.get().getEan());
             return ResponseEntity.ok("Product deleted");
         }
