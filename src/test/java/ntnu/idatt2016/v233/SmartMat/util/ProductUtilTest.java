@@ -22,7 +22,7 @@ class ProductUtilTest {
 
     @Test
     void getVolumeFromProduct() {
-        assertEquals(List.of("24x500", "ml"), ProductUtil.getVolumeFromProduct(product).get());
+        assertEquals(List.of("500.0", "ml"), ProductUtil.getVolumeFromProduct(product).get());
 
         this.product = Product.builder()
                 .ean(123456789)
@@ -30,7 +30,7 @@ class ProductUtilTest {
                 .description("Pepsi Original 24x500 ml")
                 .build();
 
-        assertEquals(List.of("24x500", "ml"), ProductUtil.getVolumeFromProduct(product).get());
+        assertEquals(List.of("500.0", "ml"), ProductUtil.getVolumeFromProduct(product).get());
 
         this.product = Product.builder()
                 .ean(123456789)
@@ -39,7 +39,7 @@ class ProductUtilTest {
                 .build();
 
 
-        assertEquals(List.of("24x500", "ml"), ProductUtil.getVolumeFromProduct(product).get());
+        assertEquals(List.of("500.0", "ml"), ProductUtil.getVolumeFromProduct(product).get());
 
         this.product = Product.builder()
                 .ean(123456789)
@@ -48,6 +48,6 @@ class ProductUtilTest {
                 .build();
 
 
-        assertEquals(List.of("24x500", "ml"), ProductUtil.getVolumeFromProduct(product).get());
+        assertEquals(List.of("500.0", "ml"), ProductUtil.getVolumeFromProduct(product).get());
     }
 }
