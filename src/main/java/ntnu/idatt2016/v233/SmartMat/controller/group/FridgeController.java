@@ -94,7 +94,8 @@ public class FridgeController {
         }
 
         try {
-            return fridgeService.addProductToFridge(request).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+            return fridgeService.addProductToFridge(request).map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -148,8 +149,7 @@ public class FridgeController {
                 return ResponseEntity.badRequest().body("Amount must be greater than or equal to 0.");
             }
 
-            return fridgeService.deleteAmountFromFridge(fridgeProductId, amount)
-                    .map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+            return ResponseEntity.ok(fridgeService.deleteAmountFromFridge(fridgeProductId, amount));
         } catch (NumberFormatException e) {
             return ResponseEntity.badRequest().body("Invalid amount format. Please provide a valid number.");
         }
@@ -173,11 +173,10 @@ public class FridgeController {
         }
 
         try {
-            boolean success = fridgeService.removeProductFromFridge(fridgeProductId);
-            if (success){
-                return ResponseEntity.ok("Success");
-            }
-            return ResponseEntity.badRequest().body("Product not found in the fridge");
+            return (fridgeService.removeProductFromFridge(fridgeProductId)) ?
+                    ResponseEntity.ok("Product removed from fridge")
+                    : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found in the fridge");
+
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Internal server error");
         }
@@ -199,7 +198,8 @@ public class FridgeController {
             return ResponseEntity.status(403).body("You are not a member of this group");
         }
 
-        return fridgeService.wasteProductFromFridge(fridgeProductId).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return fridgeService.wasteProductFromFridge(fridgeProductId)
+                .map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 
