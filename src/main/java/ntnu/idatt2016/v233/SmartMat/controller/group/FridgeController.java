@@ -59,7 +59,11 @@ public class FridgeController {
      */
     @PostMapping("/group/product")
     public ResponseEntity<Product> addProductToFridge(@RequestBody FridgeProductRequest request) {
-        return fridgeService.addProductToFridge(request).map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.notFound().build());
+        try {
+            return fridgeService.addProductToFridge(request).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/group/product")
