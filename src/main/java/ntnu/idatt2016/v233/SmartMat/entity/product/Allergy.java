@@ -61,4 +61,26 @@ public class Allergy{
         users.add(tempuser);
 
     }
+
+    public void addProduct(Product product) {
+        if (products == null)
+            products = new ArrayList<>();
+
+        if(!products.contains(product))
+            products.add(product);
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Allergy allergy)) return false;
+        return getName().equals(allergy.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
+    }
+
 }

@@ -25,4 +25,11 @@ public class Category {
     @OneToMany(mappedBy = "category")
     @JsonIgnore
     private List<Product> products;
+
+    public void addProduct(Product product) {
+        if (products == null)
+            products = List.of(product);
+        else if(!products.contains(product))
+            products.add(product);
+    }
 }
