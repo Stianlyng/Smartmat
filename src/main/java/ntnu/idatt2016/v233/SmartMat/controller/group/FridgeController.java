@@ -1,13 +1,18 @@
 package ntnu.idatt2016.v233.SmartMat.controller.group;
 
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
 import ntnu.idatt2016.v233.SmartMat.dto.request.FridgeProductRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.service.group.FridgeService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 
 /**
@@ -23,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 public class FridgeController {
 
     private final FridgeService fridgeService;
+
 
     /**
      * Gets the fridge of a group
@@ -73,7 +79,19 @@ public class FridgeController {
 
     @DeleteMapping("/group/delete/product/{fridgeProductId}/{amount}")
     public ResponseEntity<?> deleteAmountFridgeProduct(@PathVariable("fridgeProductId") long fridgeProductId,
-                                                       @PathVariable("amount") String amountStr) {
+                                                       @PathVariable("amount") String amountStr, Authentication authentication) {
+        Optional<Fridge> fridge = fridgeService.getFridgeByFridgeId(fridgeProductId);
+
+        if (fridge.isEmpty()) {
+            return ResponseEntity.status(404).body("Fridge not found");
+        }
+
+        if (fridge.get().getGroup().getUser().stream().map(user -> user.getUser().getUsername())
+                .noneMatch(username -> username.equals(authentication.getName()))
+        && authentication.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.name()))){
+            return ResponseEntity.status(403).body("You are not a member of this group");
+        }
+
         try {
             double amount = Double.parseDouble(amountStr);
 
@@ -81,7 +99,8 @@ public class FridgeController {
                 return ResponseEntity.badRequest().body("Amount must be greater than or equal to 0.");
             }
 
-            return fridgeService.deleteAmountFromFridge(fridgeProductId, amount).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+            return fridgeService.deleteAmountFromFridge(fridgeProductId, amount)
+                    .map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
         } catch (NumberFormatException e) {
             return ResponseEntity.badRequest().body("Invalid amount format. Please provide a valid number.");
         }
