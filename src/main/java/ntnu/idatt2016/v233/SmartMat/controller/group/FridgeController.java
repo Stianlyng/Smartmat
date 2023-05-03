@@ -79,7 +79,20 @@ public class FridgeController {
      * @return success if the product was added, bad request if the product was already in the fridge, or not found if the group or product doesn't exist
      */
     @PostMapping("/group/product")
-    public ResponseEntity<Product> addProductToFridge(@RequestBody FridgeProductRequest request) {
+    public ResponseEntity<Product> addProductToFridge(@RequestBody FridgeProductRequest request,
+                                                      Authentication authentication) {
+
+        Optional<Fridge> fridge = fridgeService.getFridgeByGroupId(request.groupId());
+
+        if (fridge.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (!fridgeService.isUserInFridge(authentication.getName(), fridge.get().getFridgeId()) &&
+                !authentication.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.name()))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         try {
             return fridgeService.addProductToFridge(request).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
         } catch (IllegalArgumentException e) {
@@ -87,11 +100,37 @@ public class FridgeController {
         }
     }
 
+    /**
+     * Updates a product in a fridge
+     * @param request the request containing the group id and product id
+     * @return success if the product was added, bad request if the product was already in the fridge,
+     * or not found if the group or product doesn't exist
+     */
     @PutMapping("/group/product")
-    public ResponseEntity<FridgeProductAsso> updateProductInFridge(@RequestBody FridgeProductRequest request) {
+    public ResponseEntity<FridgeProductAsso> updateProductInFridge(@RequestBody FridgeProductRequest request,
+                                                                   Authentication authentication) {
+        Optional<Fridge> fridge = fridgeService.getFridgeByGroupId(request.groupId());
+
+        if (fridge.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (!fridgeService.isUserInFridge(authentication.getName(), fridge.get().getFridgeId()) &&
+                !authentication.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.name()))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+
         return fridgeService.updateProductInFridge(request).map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.notFound().build());
     }
 
+    /**
+     * Deletes an amount of a product from a fridge
+     * @param fridgeProductId the id of the fridge product to delete
+     * @param amountStr      the amount to delete
+     * @param authentication the authentication of the user
+     * @return 200 if the amount was deleted, 404 if the fridge product doesn't exist, 403 if the user is not in the group
+     */
     @DeleteMapping("/group/delete/product/{fridgeProductId}/{amount}")
     public ResponseEntity<?> deleteAmountFridgeProduct(@PathVariable("fridgeProductId") long fridgeProductId,
                                                        @PathVariable("amount") String amountStr, Authentication authentication) {
@@ -122,9 +161,17 @@ public class FridgeController {
      * Deletes a product from the fridge
      * @param fridgeProductId the id of the fridge product association
      * @return success if the product was deleted, bad request if the product wasn't found
+     * , or forbidden if the user is not in the group
      */
     @DeleteMapping("/delete/product/{fridgeProductId}")
-    public ResponseEntity<String> removeProductFromFridge(@PathVariable("fridgeProductId") long fridgeProductId) {
+    public ResponseEntity<String> removeProductFromFridge(@PathVariable("fridgeProductId") long fridgeProductId,
+                                                          Authentication authentication) {
+
+        if (!fridgeService.isUserInGroupWithFridgeProduct( authentication.getName(), fridgeProductId)
+                && !authentication.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.name()))){
+            return ResponseEntity.status(403).body("You are not a member of this group");
+        }
+
         try {
             boolean success = fridgeService.removeProductFromFridge(fridgeProductId);
             if (success){
@@ -140,10 +187,18 @@ public class FridgeController {
      * Deletes a product from the fridge and creates a waste object from it.
      *
      * @param fridgeProductId The id of the fridge product association to be deleted
-     * @return A ResponseEntity with status code 200 if successful, or status code 404 if the specified fridge product association was not found.
+     * @return A ResponseEntity with status code 200 if successful,
+     * or status code 404 if the specified fridge product association was not found.
+     * or status code 403 if the user is not in the group
      */
     @DeleteMapping("/waste/product/{fridgeProductId}")
-    public ResponseEntity<?> wasteProductFromFridge(@PathVariable("fridgeProductId") long fridgeProductId){
+    public ResponseEntity<?> wasteProductFromFridge(@PathVariable("fridgeProductId") long fridgeProductId,
+                                                    Authentication authentication){
+        if (!fridgeService.isUserInGroupWithFridgeProduct( authentication.getName(), fridgeProductId)
+                && !authentication.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.name()))){
+            return ResponseEntity.status(403).body("You are not a member of this group");
+        }
+
         return fridgeService.wasteProductFromFridge(fridgeProductId).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
