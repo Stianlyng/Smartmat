@@ -1,6 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.controller.product;
 
 import ntnu.idatt2016.v233.SmartMat.dto.request.ProductRequest;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Allergy;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Category;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.service.AllergyService;
@@ -31,6 +32,9 @@ public class ProductControllerTest {
     @Mock
     private CategoryService categoryService;
 
+    @Mock
+    private AllergyService allergyService;
+
     @InjectMocks
     private ProductController productController;
 
@@ -42,13 +46,16 @@ public class ProductControllerTest {
                 .name("Test Product")
                 .description("A test product kylling")
                 .image("http://test.com/image.jpg")
+                .allergies(List.of("Gluten", "Melk"))
                 .build();
 
         when(productService.getProductById(123L)).thenReturn(Optional.empty());
         when(productService.getProductVolume(123L)).thenReturn(Optional.of(List.of("1", "kg")));
         when(categoryService.getCategoryByName(anyString())).thenReturn(Optional.of(Category.builder()
-                        .categoryName("Kjøtt")
+                .categoryName("Kjøtt")
                 .build()));
+
+        when(allergyService.getAllergyByName(anyString())).thenReturn(Optional.of(Allergy.builder().name("test-allergy").build()));
 
         // Act
         ResponseEntity<Product> response = productController.createProduct(productRequest);
