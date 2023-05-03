@@ -80,15 +80,10 @@ public class FridgeController {
     @DeleteMapping("/group/delete/product/{fridgeProductId}/{amount}")
     public ResponseEntity<?> deleteAmountFridgeProduct(@PathVariable("fridgeProductId") long fridgeProductId,
                                                        @PathVariable("amount") String amountStr, Authentication authentication) {
-        Optional<Fridge> fridge = fridgeService.getFridgeByFridgeId(fridgeProductId);
 
-        if (fridge.isEmpty()) {
-            return ResponseEntity.status(404).body("Fridge not found");
-        }
 
-        if (fridge.get().getGroup().getUser().stream().map(user -> user.getUser().getUsername())
-                .noneMatch(username -> username.equals(authentication.getName()))
-        && authentication.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.name()))){
+        if (!fridgeService.isUserInGroupWithFridgeProduct( authentication.getName(), fridgeProductId)
+        && !authentication.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.name()))){
             return ResponseEntity.status(403).body("You are not a member of this group");
         }
 
