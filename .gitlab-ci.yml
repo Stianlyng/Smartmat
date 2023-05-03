@@ -18,7 +18,7 @@ maven-build:
 run-tests:
   stage: test
   script:
-    - mvn test
+    - mvn jacoco:prepare-agent test jacoco:report verify
 
 deploy-jar:
   stage: deploy
@@ -28,7 +28,6 @@ deploy-jar:
 jacoco-report:
   stage: pages
   script:
-    - mvn jacoco:report
     - mkdir public
     - cp -r target/site/jacoco public/
   artifacts:
