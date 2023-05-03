@@ -1,2 +1,30 @@
 # The Docker image that will be used to build your app
 image: maven:3.9.0-eclipse-temurin-19-focal
+
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  script:
+    - mvn compile
+
+test:
+  stage: test
+  script:
+    - mvn test
+
+pages:
+  stage: deploy
+  script:
+    - mvn jacoco:prepare-agent install jacoco:report
+    - mvn site
+    - mkdir -p public
+    - cp -r target/site/jacoco public/
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
