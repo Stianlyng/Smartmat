@@ -18,12 +18,15 @@ maven-build:
 run-tests:
   stage: test
   script:
-    - mvn jacoco:prepare-agent test jacoco:report verify
+    - mvn test
 
 deploy-jar:
   stage: deploy
   script:
-    - mvn install
+    - mvn install jacoco:report
+  artifacts:
+    paths:
+      - target/site/jacoco
 
 jacoco-report:
   stage: pages
