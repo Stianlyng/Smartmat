@@ -12,8 +12,7 @@ maven-build:
   stage: build
   script:
     - mvn -v
-    - mvn package -DskipTests
-
+    - mvn compile
 
 run-tests:
   stage: test
