@@ -229,7 +229,13 @@ public class RecipeService {
     Collections.shuffle(zeroMatchRecipes);
 
     // Combine the commonRecipes and zeroMatchRecipes lists
-    commonRecipes.addAll(zeroMatchRecipes);
+    for (RecipeWithMatchCount zeroMatchRecipe : zeroMatchRecipes) {
+        if (commonRecipes.size() < 5) {
+            commonRecipes.add(zeroMatchRecipe);
+        } else {
+            break;
+        }
+    }
         return commonRecipes;
     }
 }
