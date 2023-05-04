@@ -326,7 +326,7 @@ public class ShoppingListControllerTest {
 
         verify(shoppingListService, times(1)).removeProductFromShoppingList(ean, shoppingListId);
 
-        
+
 
     }
 

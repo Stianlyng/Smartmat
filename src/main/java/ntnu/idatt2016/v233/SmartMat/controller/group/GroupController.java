@@ -19,14 +19,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Controller for groups API, providing endpoints for group management
  *
- * @author Anders Austlid, Pedro Cardona
- * @version 1.1
- * @since 27.04.2023
+ * @author Anders Austlid, Pedro Cardona, Birk
+ * @version 2.0
  */
 @AllArgsConstructor
 @RestController
@@ -42,7 +40,13 @@ public class GroupController {
      * @return a ResponseEntity containing the group if it exists, or a 404 if it doesn't
      */
     @GetMapping("/{groupId}")
-    public ResponseEntity<?> getGroupById(@PathVariable("groupId") long groupId) {
+    public ResponseEntity<?> getGroupById(@PathVariable("groupId") long groupId, Authentication auth) {
+        if (auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals("ADMIN"))){
+            if (!groupService.isUserAssociatedWithGroup(auth.getName(), groupId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+        }
+
         Optional<Group> group = groupService.getGroupById(groupId);
         if (group.isPresent()) {
             List<UserGroupAsso> users = group.get().getUser();
@@ -129,35 +133,34 @@ public class GroupController {
      * @return a ResponseEntity containing the level of the group if it exists, or a 404 if it doesn't
      */
     @GetMapping("/{groupId}/level")
-    public ResponseEntity<Long> getGroupLevel(@PathVariable("groupId") long groupId) {
+    public ResponseEntity<Long> getGroupLevel(@PathVariable("groupId") long groupId, Authentication auth) {
+        if (auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals("ADMIN"))){
+            if (!groupService.isUserAssociatedWithGroup(auth.getName(), groupId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+        }
+
         return groupService.getGroupById(groupId)
                 .map(group -> ResponseEntity.ok(group.getLevel()))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-    /**
-     * Sets the level of the group identified by the given ID to the level corresponding to the given experience points.
-     * Returns a ResponseEntity containing the new level of the group, or a 404 Not Found response if no Group with the given ID was found.
-     *
-     * @param groupId the ID of the group to update
-     * @param exp     the new experience points of the group
-     * @return a ResponseEntity containing the new level of the group, or a 404 Not Found response if no Group with the given ID was found
-     */
-    @PutMapping("/{groupId}/newLevel/{exp}")
-    public ResponseEntity<Long> setNewLevel(@PathVariable("groupId") long groupId, @PathVariable("exp") long exp) {
-        return groupService.setLevelByGroupId(groupId, exp)
-                .map(group -> ResponseEntity.ok(group.getLevel()))
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+
 
     /**
      * Returns the progress of the level for the group identified by the given ID.
      * Returns a ResponseEntity containing the progress of the current level as a percentage, or a 404 Not Found response if no Group with the given ID was found.
      *
      * @param groupId the ID of the group to query
+     * @param auth    the Authentication object containing the user's credentials
      * @return a ResponseEntity containing the progress of the current level as a percentage, or a 404 Not Found response if no Group with the given ID was found
      */
     @GetMapping("/{groupId}/progress")
-    public ResponseEntity<Integer> getProgressOfLevel(@PathVariable("groupId") long groupId) {
+    public ResponseEntity<Integer> getProgressOfLevel(@PathVariable("groupId") long groupId, Authentication auth) {
+        if (!groupService.isUserAssociatedWithGroup(auth.getName(), groupId) ||
+                auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals("ADMIN"))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         return groupService.getProgressOfLevel(groupId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -170,25 +173,18 @@ public class GroupController {
      * @return a ResponseEntity with a Boolean value indicating whether the operation was successful
      */
     @PutMapping("/{groupId}/changeOpen")
-    public ResponseEntity<Boolean> changeOpenValue(@PathVariable("groupId") long groupId) {
+    public ResponseEntity<Boolean> changeOpenValue(@PathVariable("groupId") long groupId, Authentication auth) {
+        if (auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals("ADMIN"))){
+            if (!groupService.isUserAssociatedWithGroup(auth.getName(), groupId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+            if (!(groupService.getUserGroupAssoAuthority(auth.getName(), groupId).equals("ADMIN")))
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+
         return groupService.OpenOrCloseGroup(groupId)
                 .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    /**
-     * Returns a response entity containing a list of UserGroupAsso objects related to the given groupId.
-     * If no user-group associations are found for the given groupId, a not-found response entity is returned.
-     *
-     *  TODO: Remove? Seems pointless
-     *
-     * @param groupId the ID of the group to retrieve user-group associations for
-     * @return a response entity containing a list of UserGroupAsso objects related to the given groupId, or a not-found response entity if no associations are found
-     */
-    @GetMapping("/information/{groupId}")
-    public ResponseEntity<List<UserGroupAsso>> getInformationByGroupId(@PathVariable("groupId") long groupId){
-        return groupService.getGroupById(groupId)
-                .map(group -> ResponseEntity.ok(group.getUser()))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -201,6 +197,10 @@ public class GroupController {
      */
     @PutMapping("/markNewPrimary/{newPrimaryGroupId}")
     public ResponseEntity<?> markNewPrimaryGroup(@PathVariable("newPrimaryGroupId") long newPrimaryGroupId, Authentication auth) {
+        if (!groupService.isUserAssociatedWithGroup(auth.getName(), newPrimaryGroupId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         Optional<User> optionalUser = userService.getUserFromUsername(auth.getName());
 
         if (optionalUser.isEmpty()) {
@@ -300,31 +300,40 @@ public class GroupController {
         Optional<User> groupAdminOpt = userService.getUserFromUsername(auth.getName());
         if (groupAdminOpt.isPresent()) {
             User groupAdmin = groupAdminOpt.get();
-            if (!(groupService.isUserAssociatedWithGroup(groupAdmin.getUsername(), authorityRequest.groupId())
-                    && (groupService.getUserGroupAssoAuthority(groupAdmin.getUsername(), authorityRequest.groupId()).equals("ADMIN"))))
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to change the authority of this user.");
+
+            if (auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals("ADMIN"))){
+                if (!groupService.isUserAssociatedWithGroup(auth.getName(), authorityRequest.groupId())) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                }
+                boolean isUserAdmin = groupService.getUserGroupAssoAuthority(auth.getName(), authorityRequest.groupId()).equals("ADMIN");
+                System.out.println(auth.getName() + ((isUserAdmin)  ? " is admin" : " is not admin"));
+                if (!isUserAdmin)
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            Optional<Group> groupOpt = groupService.getGroupById(authorityRequest.groupId());
+            Optional<User> userOpt = userService.getUserFromUsername(authorityRequest.username());
+
+            if (groupOpt.isEmpty() || userOpt.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            User user = userOpt.get();
+            UserGroupAsso userGroupAsso = user.getGroup().stream()
+                    .filter(asso -> asso.getGroup().getGroupId() == authorityRequest.groupId())
+                    .findFirst()
+                    .orElse(null);
+
+            if (userGroupAsso != null) {
+                userGroupAsso.setGroupAuthority(authorityRequest.authority());
+                userService.updateUser(user);
+                return ResponseEntity.ok("Authority changed successfully.");
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         }
-
-        Optional<Group> groupOpt = groupService.getGroupById(authorityRequest.groupId());
-        Optional<User> userOpt = userService.getUserFromUsername(authorityRequest.username());
-
-        if (groupOpt.isEmpty() || userOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        User user = userOpt.get();
-        UserGroupAsso userGroupAsso = user.getGroup().stream()
-                .filter(asso -> asso.getGroup().getGroupId() == authorityRequest.groupId())
-                .findFirst()
-                .orElse(null);
-
-        if (userGroupAsso != null) {
-            userGroupAsso.setGroupAuthority(authorityRequest.authority());
-            userService.updateUser(user);
-            return ResponseEntity.ok("Authority changed successfully.");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("Cant find user");
     }
 
     /**
@@ -353,33 +362,42 @@ public class GroupController {
         Optional<User> groupAdminOpt = userService.getUserFromUsername(auth.getName());
         if (groupAdminOpt.isPresent()) {
             User groupAdmin = groupAdminOpt.get();
-            if (!(groupService.isUserAssociatedWithGroup(groupAdmin.getUsername(), groupId)
-                    && (groupService.getUserGroupAssoAuthority(groupAdmin.getUsername(), groupId).equals("ADMIN"))
-            || groupAdmin.getUsername().equals(username)))
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to remove this user.");
+            if (auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals("ADMIN"))){
+                if (!groupService.isUserAssociatedWithGroup(groupAdmin.getUsername(), groupId)) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                }
+                try {
+                    if (!username.equals(auth.getName()))
+                        if (!(groupService.getUserGroupAssoAuthority(groupAdmin.getUsername(), groupId).equals("ADMIN")))
+                            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+                } catch (IllegalArgumentException e) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                }
+            }
+
+            Optional<Group> groupOpt = groupService.getGroupById(groupId);
+            Optional<User> userOpt = userService.getUserFromUsername(username);
+
+            if (groupOpt.isEmpty() || userOpt.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            User user = userOpt.get();
+            UserGroupAsso userGroupAsso = user.getGroup().stream()
+                    .filter(asso -> asso.getGroup().getGroupId() == groupId)
+                    .findFirst()
+                    .orElse(null);
+
+            if (userGroupAsso != null) {
+                groupService.removeUserFromGroup(userGroupAsso);
+                return ResponseEntity.ok("User removed successfully.");
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         }
 
-        Optional<Group> groupOpt = groupService.getGroupById(groupId);
-        Optional<User> userOpt = userService.getUserFromUsername(username);
-
-        if (groupOpt.isEmpty() || userOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        User user = userOpt.get();
-        UserGroupAsso userGroupAsso = user.getGroup().stream()
-                .filter(asso -> asso.getGroup().getGroupId() == groupId)
-                .findFirst()
-                .orElse(null);
-
-        if (userGroupAsso != null) {
-            groupService.removeUserFromGroup(userGroupAsso);
-            return ResponseEntity.ok("User removed successfully.");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("Cant find user");
     }
-
-
-
 }
