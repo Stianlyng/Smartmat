@@ -38,7 +38,8 @@ public class WeeklyMenuService {
                 (Integer) row[0],
                 (String) row[1],
                 (String) row[2],
-                (long) row[3]
+                (String) row[3],
+                (long) row[4]
             ))
             .collect(Collectors.toList());
             

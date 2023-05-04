@@ -17,6 +17,7 @@ public class WeeklyMenuResponse {
     private Integer recipeId;
     private String recipeName;
     private String recipeDescription;
+    private String recipeImage;
     private long matchingProducts;
     
 } 

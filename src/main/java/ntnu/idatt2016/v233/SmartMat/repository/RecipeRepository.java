@@ -22,63 +22,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      */
     List<Recipe> findAllByName(String name);
 
-    /**
-     * Finds the top 5 recipes with products that have a match with items in the given fridge.
-     * Returns a list of Object arrays, where each array contains the recipe details and product information.
-     *
-     * @param fridgeId the ID of the fridge to use for matching products
-     * @return a list of Object arrays with recipe and product details
-     */
-    @Query(value = """
-        WITH fridge_products AS (
-            SELECT ean
-            FROM public.fridge_product
-            WHERE fridge_id = :fridgeId
-        ),
-        matched_products_count AS (
-            SELECT
-                r.recipe_id,
-                r.recipe_name,
-                COUNT(*) AS product_count
-            FROM
-                public.recipe_product rp
-                JOIN public.recipe r ON rp.recipe_id = r.recipe_id
-                JOIN fridge_products fp ON rp.ean = fp.ean
-            GROUP BY
-                r.recipe_id,
-                r.recipe_name
-        ),
-        top_5_recipes AS (
-            SELECT
-                recipe_id,
-                recipe_name,
-                product_count
-            FROM
-                matched_products_count
-            ORDER BY
-                product_count DESC,
-                recipe_id
-            LIMIT 5
-        )
-        SELECT
-            t.recipe_id,
-            t.recipe_name,
-            p.ean,
-            p.item_name,
-            p.description,
-            (rp.ean IN (SELECT ean FROM fridge_products)) AS in_fridge
-        FROM
-            top_5_recipes t
-            JOIN public.recipe_product rp ON t.recipe_id = rp.recipe_id
-            JOIN public.product p ON rp.ean = p.ean
-        ORDER BY
-            t.recipe_id,
-            p.ean;
-        """, nativeQuery = true)
-    List<Object[]> findTop5RecipesWithProductsRaw(@Param("fridgeId") long fridgeId);
-        
     @Query( value = """
-        SELECT r.recipe_id, r.recipe_name,r.recipe_description,r.image_url,r.guide, COUNT(fp.ean) as product_count
+        SELECT r.recipe_id, r.recipe_name,r.recipe_description,r.image_url, COUNT(fp.ean) as product_count
         FROM recipe r
         LEFT JOIN recipe_product rp ON r.recipe_id = rp.recipe_id
         LEFT JOIN fridge_product fp ON rp.ean = fp.ean AND fp.fridge_id = :fridgeId
