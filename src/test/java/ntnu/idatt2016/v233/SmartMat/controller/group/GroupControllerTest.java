@@ -1,6 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.controller.group;
 
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
+import ntnu.idatt2016.v233.SmartMat.dto.request.group.ChangeAuthorityRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.response.group.GroupDetailsResponse;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
@@ -229,6 +230,58 @@ public class GroupControllerTest {
         assertSame(HttpStatus.OK, groupResponseEntity.getStatusCode());
         assertNotNull(groupResponseEntity.getBody());
         assertEquals("User removed successfully.", groupResponseEntity.getBody());
+    }
+
+    @Test
+    void shouldChangeAuthority(){
+        when(groupService.getGroupById(group.getGroupId())).thenReturn(Optional.ofNullable(group));
+        when(groupService.isUserAssociatedWithGroup(regularUser.getName(), group.getGroupId())).thenReturn(true);
+        when(groupService.getUserGroupAssoAuthority(regularUser.getName(), group.getGroupId())).thenReturn("ADMIN");
+
+        when(userService.getUserFromUsername(regularUser.getName())).thenReturn(Optional.ofNullable(user));
+
+        ChangeAuthorityRequest changeAuthorityRequest = new ChangeAuthorityRequest(user.getUsername(),
+                group.getGroupId(), "USER");
+
+        ResponseEntity<?> groupResponseEntity =
+                groupController.changeAuthority(changeAuthorityRequest, regularUser);
+
+        assertSame(HttpStatus.OK, groupResponseEntity.getStatusCode());
+        assertNotNull(groupResponseEntity.getBody());
+        assertEquals("Authority changed successfully.", groupResponseEntity.getBody());
+
+        when(groupService.getUserGroupAssoAuthority(regularUser.getName(), group.getGroupId())).thenReturn("USER");
+
+        groupResponseEntity =
+                groupController.changeAuthority(changeAuthorityRequest, regularUser);
+
+        assertSame(HttpStatus.FORBIDDEN, groupResponseEntity.getStatusCode());
+        assertNull(groupResponseEntity.getBody());
+
+    }
+
+    @Test
+    void shouldChangeOpen(){
+        when(groupService.isUserAssociatedWithGroup(regularUser.getName(), group.getGroupId())).thenReturn(true);
+        when(groupService.getUserGroupAssoAuthority(regularUser.getName(), group.getGroupId())).thenReturn("ADMIN");
+
+
+        when(groupService.OpenOrCloseGroup(group.getGroupId())).thenReturn(Optional.of(true));
+
+        ResponseEntity<?> groupResponseEntity =
+                groupController.changeOpenValue(group.getGroupId(), regularUser);
+
+        assertSame(HttpStatus.OK, groupResponseEntity.getStatusCode());
+        assertNotNull(groupResponseEntity.getBody());
+        assertTrue((boolean) groupResponseEntity.getBody());
+
+        when(groupService.getUserGroupAssoAuthority(regularUser.getName(), group.getGroupId())).thenReturn("USER");
+
+        groupResponseEntity =
+                groupController.changeOpenValue(group.getGroupId(), regularUser);
+
+        assertSame(HttpStatus.FORBIDDEN, groupResponseEntity.getStatusCode());
+        assertNull(groupResponseEntity.getBody());
     }
     
 
