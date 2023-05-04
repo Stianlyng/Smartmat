@@ -2,8 +2,10 @@ package ntnu.idatt2016.v233.SmartMat.controller;
 
 import java.util.Optional;
 
+import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
+import ntnu.idatt2016.v233.SmartMat.service.group.GroupService;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 import ntnu.idatt2016.v233.SmartMat.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,17 +37,22 @@ public class ShoppingListController {
 
     UserService userService;
 
+    GroupService groupService;
+
 
 
     /**
      * Gets a shopping list by its ID
      *
      * @param id the shopping list ID
-     * @return the shopping list, or an error if the ID is invalid
+     * @return the shopping list, or an error if the ID is invalid,
+     * or the user dose not have the rights to edit the shopping list
      */
     @GetMapping("/{id}")
     public ResponseEntity<ShoppingList> getShoppingListById(@PathVariable("id") long id, Authentication auth) {
-        shoppingListService.isUserInShoppinglist(id, auth.getName());
+        if(!shoppingListService.isUserInShoppinglist(id, auth.getName()) &&
+                auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals(Authority.ADMIN.name())))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
         Optional<ShoppingList> shoppingList = shoppingListService.getShoppingListById(id);
         return shoppingList.map(list -> ResponseEntity.status(HttpStatus.OK).body(list))
@@ -59,7 +66,11 @@ public class ShoppingListController {
      * @return the shopping list, or an error if the ID is invalid
      */
     @GetMapping("/group/{groupId}")
-    public ResponseEntity<ShoppingList> getAllShoppingListsByGroupId(@PathVariable("groupId") long id) {
+    public ResponseEntity<ShoppingList> getAllShoppingListsByGroupId(@PathVariable("groupId") long id, Authentication auth) {
+        if(!groupService.isUserAssociatedWithGroup(auth.getName(), id) &&
+                auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals(Authority.ADMIN.name())))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
         Optional<ShoppingList> shoppingList = shoppingListService.getShoppingListByGroupId(id);
         return shoppingList.map(list -> ResponseEntity.status(HttpStatus.OK).body(list))
                            .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
@@ -75,6 +86,10 @@ public class ShoppingListController {
     @PostMapping("/addProduct/{shoppingListId}/{ean}")
     public ResponseEntity<?> addItemToShoppingList(@PathVariable("shoppingListId") long shoppingListId,
                                                               @PathVariable("ean") String ean, Authentication auth){
+
+        if(!shoppingListService.isUserInShoppinglist(shoppingListId, auth.getName()) &&
+                auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals(Authority.ADMIN.name())))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
         Optional<ShoppingList> shoppingList = shoppingListService.getShoppingListById(shoppingListId);
 
@@ -125,7 +140,13 @@ public class ShoppingListController {
      */
     @DeleteMapping("/removeProduct/{shoppingListId}/{ean}")
     public ResponseEntity<ShoppingList> removeProductFromShoppingList(@PathVariable("shoppingListId") String shoppingListId,
-                                                                      @PathVariable("ean") String ean) {
+                                                                      @PathVariable("ean") String ean, Authentication auth) {
+
+        if(!shoppingListService.isUserInShoppinglist(Long.parseLong(shoppingListId), auth.getName()) &&
+                auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals(Authority.ADMIN.name())))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+
         Optional<ShoppingList> shoppingList = shoppingListService.getShoppingListById(Long.parseLong(shoppingListId));
         if(shoppingList.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
