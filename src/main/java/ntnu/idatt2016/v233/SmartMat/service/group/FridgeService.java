@@ -100,19 +100,16 @@ public class FridgeService {
     public Optional<FridgeProductAsso> updateProductInFridge(FridgeProductRequest request) {
         Optional<FridgeProductAsso> fridgeProductAsso = fridgeProductAssoRepo.findById(request.fridgeProductId());
         if (fridgeProductAsso.isEmpty()) return Optional.empty();
-        
-        Integer amount = request.amount();
-        Integer days = request.days();
 
-        if (amount != null) fridgeProductAsso.get()
+        fridgeProductAsso.get()
                                 .setAmount(request.amount());
 
-        if (days != null) fridgeProductAsso.get()
+        fridgeProductAsso.get()
                                 .setDaysToExpiration(request.days());
         
-        fridgeProductAssoRepo.save(fridgeProductAsso.get());
 
-        return fridgeProductAsso;
+
+        return Optional.of(fridgeProductAssoRepo.save(fridgeProductAsso.get()));
     }
 
 

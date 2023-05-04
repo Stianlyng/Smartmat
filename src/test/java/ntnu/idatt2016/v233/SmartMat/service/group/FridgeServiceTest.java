@@ -6,11 +6,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import ntnu.idatt2016.v233.SmartMat.dto.request.FridgeProductRequest;
+import ntnu.idatt2016.v233.SmartMat.entity.Waste;
 import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.group.WasteRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.product.FridgeProductAssoRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +23,6 @@ import org.mockito.MockitoAnnotations;
 import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeRepository;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -37,6 +38,10 @@ public class FridgeServiceTest {
 
     @Mock
     private GroupRepository groupRepository;
+
+
+    @Mock
+    private WasteRepository wasteRepository;
 
     @Mock
     private FridgeProductAssoRepo fridgeProductAssoRepo;
@@ -271,4 +276,114 @@ public class FridgeServiceTest {
         verify(fridgeProductAssoRepo).delete(any(FridgeProductAsso.class));
 
     }
+
+    @Test
+    void wasteProductFromFridge(){
+        // Arrange
+        long ean = 12345L;
+        Product product = Product.builder()
+                .ean(ean)
+                .name("Test Product")
+                .build();
+
+        Fridge fridge = Fridge.builder()
+                .fridgeId(1234L)
+                .build();
+        fridge.setProducts(new ArrayList<>());
+        Group group = new Group();
+        group.setPoints(100);
+        fridge.setGroup(group);
+        group.setFridge(fridge);
+
+        FridgeProductAsso fridgepr = FridgeProductAsso.builder()
+                .fridgeId(fridge)
+                .ean(product)
+                .id(123456L)
+                .amount(2)
+                .build();
+
+        fridge.addProduct(fridgepr);
+        product.addFridge(fridgepr);
+
+        when(fridgeProductAssoRepo.findById(123456L)).thenReturn(Optional.of(fridgepr));
+        when(fridgeProductAssoRepo.findAllById(123456L)).thenReturn(Optional.of(fridgepr));
+        when(productService.getProductById(ean)).thenReturn(Optional.of(product));
+        when(wasteRepository.save(any(Waste.class))).thenReturn(Waste.builder()
+                .amount(2)
+                .ean(product)
+                .groupId(group)
+                .build());
+
+        // Act
+
+        Optional<Waste> result = fridgeService.wasteProductFromFridge(123456L);
+
+        // Assert
+        assertTrue(result.isPresent());
+        assertEquals(2, result.get().getAmount());
+        assertEquals(product.getEan(), result.get().getEan().getEan());
+        assertEquals(group.getGroupId(), result.get().getGroupId().getGroupId());
+        assertEquals(group.getPoints(), 99);
+
+        verify(fridgeProductAssoRepo).delete(any(FridgeProductAsso.class));
+        verify(groupRepository).save(any(Group.class));
+    }
+
+    @Test
+    void updateProductInFridge(){
+        // Arrange
+        long ean = 12345L;
+        Product product = Product.builder()
+                .ean(ean)
+                .name("Test Product")
+                .build();
+
+        Fridge fridge = Fridge.builder()
+                .fridgeId(1234L)
+                .build();
+        fridge.setProducts(new ArrayList<>());
+        Group group = new Group();
+        fridge.setGroup(group);
+        group.setFridge(fridge);
+
+        FridgeProductAsso fridgepr = FridgeProductAsso.builder()
+                .fridgeId(fridge)
+                .ean(product)
+                .id(123456L)
+                .amount(2)
+                .build();
+
+        fridge.addProduct(fridgepr);
+        product.addFridge(fridgepr);
+
+        when(fridgeProductAssoRepo.findById(123456L)).thenReturn(Optional.of(fridgepr));
+        when(productService.getProductById(ean)).thenReturn(Optional.of(product));
+
+        when(fridgeProductAssoRepo.save(any(FridgeProductAsso.class))).thenReturn(FridgeProductAsso.builder()
+                .fridgeId(fridge)
+                .ean(product)
+                .id(123456L)
+                .amount(1)
+                .daysToExpiration(100)
+                .buyPrice(100.0)
+                .build());
+        // Act
+
+        FridgeProductRequest fridgeProductRequest = new FridgeProductRequest(123456L, group.getGroupId(),
+                product.getEan(), 1, 100, 100);
+
+        Optional<FridgeProductAsso> result = fridgeService.updateProductInFridge(fridgeProductRequest);
+
+        // Assert
+
+        assertTrue(result.isPresent());
+        assertEquals(1, result.get().getAmount());
+        assertEquals(100, result.get().getDaysToExpiration());
+        assertEquals(100, result.get().getBuyPrice());
+
+        verify(fridgeProductAssoRepo).save(any(FridgeProductAsso.class));
+
+    }
+
+    
 }
