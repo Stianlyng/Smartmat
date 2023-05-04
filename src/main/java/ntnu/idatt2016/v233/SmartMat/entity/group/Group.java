@@ -82,4 +82,29 @@ public class Group {
     @JsonIgnoreProperties({"groups"})
     private List<Achievement> achievements;
 
+    /**
+     * Checks if two objects are equal
+     * @param o the object to compare to
+     * @return true if the objects are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object o){
+        if(o == this){
+            return true;
+        }
+        if(!(o instanceof Group group)){
+            return false;
+        }
+        return group.getGroupId() == this.getGroupId();
+    }
+
+    /**
+     * Gets the hashcode of the object
+     * @return the hashcode of the object
+     */
+    @Override
+    public int hashCode(){
+        return Long.hashCode(this.getGroupId());
+    }
+
 }
