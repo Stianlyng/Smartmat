@@ -282,7 +282,7 @@ public class GroupControllerTest {
 
         assertSame(HttpStatus.FORBIDDEN, groupResponseEntity.getStatusCode());
         assertNull(groupResponseEntity.getBody());
-    }
-    
+ }
+
 
 }
