@@ -10,7 +10,10 @@ import ntnu.idatt2016.v233.SmartMat.entity.Waste;
 import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
+import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
+import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupId;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
+import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.WasteRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.product.FridgeProductAssoRepo;
@@ -385,5 +388,190 @@ public class FridgeServiceTest {
 
     }
 
-    
+    @Test
+    void isUserAssosiatedWithFridge(){
+        Fridge fridge = new Fridge();
+        fridge.setProducts(new ArrayList<>());
+        Group group = new Group();
+        fridge.setGroup(group);
+        group.setFridge(fridge);
+
+        User user = User.builder()
+                .username("test")
+                .password("test")
+                .build();
+
+        UserGroupAsso userGroupAsso = UserGroupAsso.builder()
+                .id(new UserGroupId(user.getUsername(), group.getGroupId()))
+                .user(user)
+                .group(group)
+                .build();
+
+        user.addGroup(userGroupAsso);
+        group.addUser(userGroupAsso);
+
+        when(fridgeRepository.findById(fridge.getFridgeId())).thenReturn(Optional.of(fridge));
+
+        // Act
+
+        boolean result = fridgeService.isUserInFridge(user.getUsername(), fridge.getFridgeId());
+
+        // Assert
+
+        assertTrue(result);
+        verify(fridgeRepository).findById(fridge.getFridgeId());
+
+    }
+
+    @Test
+    void isUserNotAssosiatedWithFridge(){
+        Fridge fridge = new Fridge();
+        fridge.setProducts(new ArrayList<>());
+        Group group = new Group();
+        fridge.setGroup(group);
+        group.setFridge(fridge);
+
+        User user = User.builder()
+                .username("test")
+                .password("test")
+                .build();
+
+        when(fridgeRepository.findById(fridge.getFridgeId())).thenReturn(Optional.of(fridge));
+
+        // Act
+
+        boolean result = fridgeService.isUserInFridge(user.getUsername(), fridge.getFridgeId());
+
+        // Assert
+
+        assertFalse(result);
+        verify(fridgeRepository).findById(fridge.getFridgeId());
+
+    }
+
+    @Test
+    void getFridgeByFridgeId(){
+        // Arrange
+        Fridge fridge = Fridge.builder()
+                .fridgeId(1234L)
+                .build();
+        fridge.setProducts(new ArrayList<>());
+        Group group = new Group();
+        fridge.setGroup(group);
+        group.setFridge(fridge);
+
+        when(fridgeRepository.findById(1234L)).thenReturn(Optional.of(fridge));
+
+        // Act
+
+        Optional<Fridge> result = fridgeService.getFridgeByFridgeId(1234L);
+
+        // Assert
+
+        assertTrue(result.isPresent());
+        assertEquals(1234L, result.get().getFridgeId());
+
+        verify(fridgeRepository).findById(1234L);
+    }
+
+    @Test
+    void isUserInGroupWithFridgeProduct(){
+        // Arrange
+        long ean = 12345L;
+        Product product = Product.builder()
+                .ean(ean)
+                .name("Test Product")
+                .build();
+
+        Fridge fridge = Fridge.builder()
+                .fridgeId(1234L)
+                .build();
+        fridge.setProducts(new ArrayList<>());
+        Group group = new Group();
+        fridge.setGroup(group);
+        group.setFridge(fridge);
+
+        FridgeProductAsso fridgepr = FridgeProductAsso.builder()
+                .fridgeId(fridge)
+                .ean(product)
+                .id(123456L)
+                .amount(2)
+                .build();
+
+        fridge.addProduct(fridgepr);
+        product.addFridge(fridgepr);
+
+        User user = User.builder()
+                .username("test")
+                .password("test")
+                .build();
+
+        UserGroupAsso userGroupAsso = UserGroupAsso.builder()
+                .id(new UserGroupId(user.getUsername(), group.getGroupId()))
+                .user(user)
+                .group(group)
+                .build();
+
+        user.addGroup(userGroupAsso);
+        group.addUser(userGroupAsso);
+
+        when(fridgeProductAssoRepo.findById(123456L)).thenReturn(Optional.of(fridgepr));
+
+        // Act
+
+        boolean result = fridgeService.isUserInGroupWithFridgeProduct(user.getUsername(), 123456L);
+
+        // Assert
+
+        assertTrue(result);
+        verify(fridgeProductAssoRepo).findById(123456L);
+    }
+
+
+    @Test
+    void isUserInGroupWithFridgeProduct_not(){
+        // Arrange
+        long ean = 12345L;
+        Product product = Product.builder()
+                .ean(ean)
+                .name("Test Product")
+                .build();
+
+        Fridge fridge = Fridge.builder()
+                .fridgeId(1234L)
+                .build();
+        fridge.setProducts(new ArrayList<>());
+        Group group = new Group();
+        fridge.setGroup(group);
+        group.setFridge(fridge);
+
+        FridgeProductAsso fridgepr = FridgeProductAsso.builder()
+                .fridgeId(fridge)
+                .ean(product)
+                .id(123456L)
+                .amount(2)
+                .build();
+
+        fridge.addProduct(fridgepr);
+        product.addFridge(fridgepr);
+
+        User user = User.builder()
+                .username("test")
+                .password("test")
+                .build();
+
+
+        when(fridgeProductAssoRepo.findById(123456L)).thenReturn(Optional.of(fridgepr));
+
+        // Act
+
+        boolean result = fridgeService.isUserInGroupWithFridgeProduct(user.getUsername(), 123456L);
+
+        // Assert
+
+        assertFalse(result);
+        verify(fridgeProductAssoRepo).findById(123456L);
+    }
+
+
 }

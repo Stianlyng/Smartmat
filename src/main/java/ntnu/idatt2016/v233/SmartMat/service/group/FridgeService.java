@@ -27,8 +27,8 @@ import java.util.Optional;
  * Service for management of a group fridge
  *
  * @author Anders Austlid & Birk
- * @version 1.2
- * @since 26.04.2023
+ * @version 2
+ * @since 04.05.2023
  */
 @AllArgsConstructor
 @Service
@@ -131,15 +131,6 @@ public class FridgeService {
         return true;
     }
 
-    /**
-     * Updates a fridge
-     * @param fridge the fridge to update
-     */
-    public void updateFridge(Fridge fridge) {
-        if (fridgeRepository.findById(fridge.getFridgeId()).isEmpty())
-            return;
-        fridgeRepository.save(fridge);
-    }
 
 
     /**
