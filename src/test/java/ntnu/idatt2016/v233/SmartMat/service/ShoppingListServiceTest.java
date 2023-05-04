@@ -99,7 +99,7 @@ class ShoppingListServiceTest {
                 .build());
 
 
-        when(shoppingListRepository.findAllByGroupUsersUsername(user.getUsername()))
+        when(shoppingListRepository.findAllByGroupUserUserUsername(user.getUsername()))
                 .thenReturn(List.of(shoppingList));
 
         boolean result = shoppingListService.isUserInShoppinglist(
@@ -108,6 +108,6 @@ class ShoppingListServiceTest {
         assertTrue(result);
 
         verify(shoppingListRepository, times(1))
-                .findAllByGroupUsersUsername(user.getUsername());
+                .findAllByGroupUserUserUsername(user.getUsername());
     }
 }

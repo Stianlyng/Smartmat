@@ -113,7 +113,7 @@ public class ShoppingListService {
      * @return true if user is in shoppinglist, false if not
      */
     public boolean isUserInShoppinglist(long id, String name) {
-        return shoppingListRepository.findAllByGroupUsersUsername(name).stream()
+        return shoppingListRepository.findAllByGroupUserUserUsername(name).stream()
                 .anyMatch(shoppingList -> shoppingList.getShoppingListID() == id);
 
     }

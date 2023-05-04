@@ -30,7 +30,7 @@ public interface ShoppingListRepository extends JpaRepository<ShoppingList, Long
      * @param username the username of the user
      * @return a list of shopping lists
      */
-    List<ShoppingList> findAllByGroupUsersUsername(String username);
+    List<ShoppingList> findAllByGroupUserUserUsername(String username);
 
 
 }
