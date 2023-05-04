@@ -13,14 +13,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class RecipeFridgeMatch {
+public class RecipeWithMatchCount {
     
-    private Integer recipeId;
-    private String recipeName;
-    private String recipeDescription;
-    private long ean;
-    private String productName;
-    private String productDescription;
-    private boolean inFridge;
+    private RecipeDetails recipeDetails;
+    private int matchCount;
 
 }
