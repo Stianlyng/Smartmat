@@ -247,6 +247,8 @@ public class GroupService {
 
         group.getUser().remove(userGroup);
 
+        userGroup.getUser().getGroup().remove(userGroup);
+
         if (group.getUser().isEmpty()) {
             groupRepository.delete(group);
         } else {
