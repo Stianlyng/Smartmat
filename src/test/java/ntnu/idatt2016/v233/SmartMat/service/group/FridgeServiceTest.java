@@ -217,7 +217,58 @@ public class FridgeServiceTest {
 
     @Test
     void deleteEntireAmountFromProduct(){
+        // Arrange
+        long ean = 12345L;
+        Product product = Product.builder()
+                .ean(ean)
+                .name("Test Product")
+                .build();
 
+        Fridge fridge = Fridge.builder()
+                .fridgeId(1234L)
+                .build();
+        fridge.setProducts(new ArrayList<>());
+        Group group = new Group();
+        fridge.setGroup(group);
+        group.setFridge(fridge);
+
+        FridgeProductAsso fridgepr = FridgeProductAsso.builder()
+                .fridgeId(fridge)
+                .ean(product)
+                .id(123456L)
+                .amount(2)
+                .build();
+
+        fridge.addProduct(fridgepr);
+        product.addFridge(fridgepr);
+
+        when(fridgeProductAssoRepo.findById(123456L)).thenReturn(Optional.of(fridgepr));
+        when(fridgeProductAssoRepo.findAllById(123456L)).thenReturn(Optional.of(fridgepr));
+        when(productService.getProductById(ean)).thenReturn(Optional.of(product));
+
+        double newAmount = fridgepr.getAmount() - 1;
+
+
+        when(fridgeProductAssoRepo.save(FridgeProductAsso.builder()
+                .amount(newAmount)
+                .id(123456L)
+                .ean(product)
+                .fridgeId(fridge)
+                .build()
+        )).thenReturn(FridgeProductAsso.builder()
+                .amount(newAmount)
+                .id(139132L)
+                .ean(product)
+                .fridgeId(fridge)
+                .build());
+
+        // Act
+        Optional<FridgeProductAsso> result = fridgeService.deleteAmountFromFridge(123456L, 2);
+
+        // Assert
+        assertTrue(result.isEmpty());
+
+        verify(fridgeProductAssoRepo).delete(any(FridgeProductAsso.class));
 
     }
 }
