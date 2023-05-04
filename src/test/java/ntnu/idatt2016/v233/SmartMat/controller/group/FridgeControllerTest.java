@@ -29,8 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @ExtendWith(MockitoExtension.class)
 public class FridgeControllerTest {
@@ -88,7 +87,7 @@ public class FridgeControllerTest {
         }
     };
 
-    private Authentication adminUser = new Authentication() {
+    private final Authentication adminUser = new Authentication() {
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
             return List.of(new SimpleGrantedAuthority(Authority.ADMIN.name()));
