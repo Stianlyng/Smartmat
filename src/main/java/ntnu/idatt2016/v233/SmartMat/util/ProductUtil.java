@@ -17,32 +17,48 @@ import java.util.regex.Pattern;
  */
 public class ProductUtil {
 
-
-    private static final String VOLUME_REGEX = "(\\d+(\\.\\d+)?)\\s*(mls?|centiliters?|deciliters?|liters?|grams?|kilograms?)";
-    private static final Map<String, List<String>> VOLUME_UNIT_VARIATIONS = Map.of(
-            "ml", List.of("ml", "milliliters", "millilitres"),
-            "cl", List.of("cl", "centiliters", "centilitres"),
-            "dl", List.of("dl", "deciliters", "decilitres"),
-            "l", List.of("l", "liters", "litres"),
-            "g", List.of("g", "grams"),
-            "kg", List.of("kg", "kilograms")
-    );
-
     public static Optional<List<String>> getVolumeFromProduct(Product product) {
-        String desc = product.getName() + " " + product.getDescription();
-        Matcher matcher = Pattern.compile(VOLUME_REGEX).matcher(desc);
-        if (matcher.find()) {
-            String volumeString = matcher.group(1);
-            double volume = Double.parseDouble(volumeString);
-            String unitString = matcher.group(3);
-            for (Map.Entry<String, List<String>> entry : VOLUME_UNIT_VARIATIONS.entrySet()) {
-                if (entry.getValue().contains(unitString)) {
-                    return Optional.of(List.of(String.valueOf(volume), entry.getKey()));
-                }
+        String total = product.getName() + " " + product.getDescription();
+        double amount = parseAmount(total);
+        String unit = parseUnit(total);
+        if (unit.equals("STK") && total.matches(".*\\d+x\\d+.*")) {
+            // If no unit was found but the description matches "number x number", assume a multiplication and calculate the result
+            Pattern pattern = Pattern.compile("(\\d+)x(\\d+)");
+            Matcher matcher = pattern.matcher(total);
+            if (matcher.find()) {
+                amount = Integer.parseInt(matcher.group(1)) * Integer.parseInt(matcher.group(2));
             }
         }
-        return Optional.empty();
+        return Optional.of(List.of(amount + "", unit));
     }
+
+    private static String parseUnit(String input) {
+        Pattern pattern = Pattern.compile("(\\d+(\\.\\d+)?)\\s*(g|kg|l|ml|dl|cl|Kg|L|STK)\\b", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(input);
+        if (matcher.find()) {
+            String unit = matcher.group(3).toLowerCase();
+            if (!unit.equals("stk")) {
+                return unit;
+            }
+        }
+        return "STK";
+    }
+
+    private static double parseAmount(String input) {
+        Pattern pattern = Pattern.compile("(\\d+(\\.\\d+)?)\\s*(g|kg|l|ml|dl|cl|Kg|L|STK)\\b", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(input);
+        if (matcher.find()) {
+            double amount = Double.parseDouble(matcher.group(1));
+            Pattern multiplicationPattern = Pattern.compile("(\\d+)x(\\d+)");
+            Matcher multiplicationMatcher = multiplicationPattern.matcher(input);
+            if (multiplicationMatcher.find()) {
+                amount *= Integer.parseInt(multiplicationMatcher.group(1));
+            }
+            return amount;
+        }
+        return 1.0;
+    }
+
 
 
     /**
