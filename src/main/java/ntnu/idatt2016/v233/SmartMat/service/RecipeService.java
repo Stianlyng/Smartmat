@@ -6,7 +6,9 @@ import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.repository.RecipeRepository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -165,14 +167,22 @@ public class RecipeService {
             return ResponseEntity.ok("Recipe deleted from favorites");
         }
     }
+
+    /**
+     * Returns a list of RecipeWithMatchCount objects representing the weekly menu based on ingredients in a fridge.
+     * The list contains recipes with matched ingredients and additional recipes with no matching ingredients
+     * (if there are less than 5 recipes with matching ingredients). Recipes with 0 match count are shuffled before returning.
+     *
+     * @param fridgeId The ID of the fridge to get the weekly menu for
+     * @return A list of RecipeWithMatchCount objects representing the weekly menu
+     */
     public List<RecipeWithMatchCount> getWeeklyMenu(Integer fridgeId) {
         // Get the results from both repository methods
         List<Object[]> weeklyMenu = recipeRepository.findWeeklyMenu(fridgeId);
-    
         List<Object[]> recipeProducts = recipeRepository.findRecipeProductsWithName();
     
-                // Prepare a map to store RecipeDetails with their match count
-                Map<RecipeDetails, Integer> recipeMatchCountMap = new HashMap<>();
+        // Prepare a map to store RecipeDetails with their match count
+        Map<RecipeDetails, Integer> recipeMatchCountMap = new HashMap<>();
         
         // Compare the item_name on both lists
         for (Object[] menuRow : weeklyMenu) {
@@ -208,12 +218,18 @@ public class RecipeService {
                 .collect(Collectors.toList());
     
         // Add additional recipes from uniqueRecipeDetails with a count of 0 if the list has less than 5 recipes
+        List<RecipeWithMatchCount> zeroMatchRecipes = new ArrayList<>();
         for (RecipeDetails recipeDetails : uniqueRecipeDetails) {
             if (commonRecipes.size() < 5 && !recipeMatchCountMap.containsKey(recipeDetails)) {
-                commonRecipes.add(new RecipeWithMatchCount(recipeDetails, 0));
+                zeroMatchRecipes.add(new RecipeWithMatchCount(recipeDetails, 0));
             }
         }
-    
+
+    // Shuffle the zeroMatchRecipes list
+    Collections.shuffle(zeroMatchRecipes);
+
+    // Combine the commonRecipes and zeroMatchRecipes lists
+    commonRecipes.addAll(zeroMatchRecipes);
         return commonRecipes;
     }
 }
