@@ -2,9 +2,13 @@ package ntnu.idatt2016.v233.SmartMat.service.group;
 
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
+import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
+import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupId;
+import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.repository.ShoppingListRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.group.UserGroupAssoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class GroupServiceTest {
@@ -24,6 +29,9 @@ public class GroupServiceTest {
 
     @Mock
     private FridgeRepository fridgeRepository;
+
+    @Mock
+    private UserGroupAssoRepository userGroupAssoRepository;
 
     @Mock
     private ShoppingListRepository shoppingListRepository;
@@ -96,5 +104,38 @@ public class GroupServiceTest {
         verify(groupRepository).findByGroupId(groupId);
         verify(groupRepository).save(group);
         verify(fridgeRepository).save(fridge);
+    }
+
+    @Test
+    void isUserAssosiatedWithGroup(){
+        // Arrange
+        long userId = 1L;
+        long groupId = 2L;
+        Group group = new Group();
+        group.setGroupId(groupId);
+        User user = User.builder()
+                .username("test")
+                .build();
+
+        UserGroupAsso userGroupAsso = UserGroupAsso.builder()
+                .id(UserGroupId.builder()
+                        .groupId(groupId)
+                        .username("test")
+                        .build())
+                .user(user)
+                .group(group)
+                .build();
+
+        group.addUser(userGroupAsso);
+        user.addGroup(userGroupAsso);
+
+        when(userGroupAssoRepository.findById(userGroupAsso.getId())).thenReturn(Optional.of(userGroupAsso));
+
+        // Act
+        boolean result = groupService.isUserAssociatedWithGroup(user.getUsername(), groupId);
+
+        // Assert
+        assertTrue(result);
+        verify(userGroupAssoRepository).findById(userGroupAsso.getId());
     }
 }
