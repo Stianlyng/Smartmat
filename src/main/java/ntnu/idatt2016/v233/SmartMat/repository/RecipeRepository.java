@@ -23,25 +23,19 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<Recipe> findAllByName(String name);
 
     @Query( value = """
-        SELECT r.recipe_id, r.recipe_name,r.recipe_description,r.image_url, COUNT(fp.ean) as product_count
-        FROM recipe r
-        LEFT JOIN recipe_product rp ON r.recipe_id = rp.recipe_id
-        LEFT JOIN fridge_product fp ON rp.ean = fp.ean AND fp.fridge_id = :fridgeId
-        GROUP BY r.recipe_id, r.recipe_name
-        ORDER BY product_count DESC
-        LIMIT 5;
+        select p2.item_name, f.fridge_id  
+        from fridge f 
+        inner join fridge_product fp on f.fridge_id = fp.fridge_id and f.fridge_id = :fridgeId 
+        inner join product p2 on p2.ean = fp.ean
         """, nativeQuery = true)
-    List<Object[]> findWeeklyMenu(@Param("fridgeId") long fridgeId);
+    List<Object[]> findWeeklyMenu(long fridgeId);
     
     @Query( value = """
-        SELECT r.recipe_id, r.recipe_name, r.recipe_description, p.ean, p.item_name, p.description as product_description,
-            CASE WHEN fp.fridge_id IS NOT NULL THEN TRUE ELSE FALSE END as in_fridge
-        FROM recipe AS r
-        JOIN recipe_product AS rp ON r.recipe_id = rp.recipe_id
-        JOIN product AS p ON rp.ean = p.ean
-        LEFT JOIN fridge_product AS fp ON p.ean = fp.ean AND fp.fridge_id = :fridgeId
-        WHERE r.recipe_id = :recipeId ;
+        SELECT r.recipe_id, r.recipe_name, r.recipe_description, r.image_url, p.item_name
+        FROM recipe r
+        inner JOIN recipe_product rp ON r.recipe_id = rp.recipe_id
+        inner join product p on rp.ean = p.ean 
             """ , nativeQuery = true)
-    List<Object[]> findRecipeWithMatchingProductsInFridge(long fridgeId, long recipeId);
+    List<Object[]> findRecipeProductsWithName();
     
 }

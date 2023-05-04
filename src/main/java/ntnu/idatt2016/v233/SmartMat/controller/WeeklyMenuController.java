@@ -9,7 +9,9 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import lombok.AllArgsConstructor;
+import ntnu.idatt2016.v233.SmartMat.dto.response.RecipeWithMatchCount;
 import ntnu.idatt2016.v233.SmartMat.dto.response.WeeklyMenuResponse;
+import ntnu.idatt2016.v233.SmartMat.service.RecipeService;
 import ntnu.idatt2016.v233.SmartMat.service.WeeklyMenuService;
 
 @AllArgsConstructor
@@ -17,6 +19,7 @@ import ntnu.idatt2016.v233.SmartMat.service.WeeklyMenuService;
 @RequestMapping("/api/weeklymenu")
 public class WeeklyMenuController {
     
+    /*
     private WeeklyMenuService weeklyMenuService;
     
     @GetMapping("/{fridgeId}")
@@ -27,6 +30,20 @@ public class WeeklyMenuController {
             return ResponseEntity.notFound().build();
         } else {
             return ResponseEntity.ok(weeklyMenu);
+        }
+    }
+    */
+
+    final private RecipeService recipeService;
+
+    @GetMapping("/{fridgeId}")
+    public ResponseEntity<Object> compareWeeklyMenuAndRecipeProducts(@PathVariable("fridgeId") Integer fridgeId) {
+        List<RecipeWithMatchCount> weeklyMenuDetails = recipeService.getWeeklyMenu(fridgeId);
+
+        if (weeklyMenuDetails.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(weeklyMenuDetails);
         }
     }
 

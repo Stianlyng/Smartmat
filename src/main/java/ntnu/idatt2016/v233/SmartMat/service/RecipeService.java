@@ -1,11 +1,15 @@
 package ntnu.idatt2016.v233.SmartMat.service;
 
-import ntnu.idatt2016.v233.SmartMat.dto.response.RecipeFridgeMatch;
+import ntnu.idatt2016.v233.SmartMat.dto.response.RecipeDetails;
+import ntnu.idatt2016.v233.SmartMat.dto.response.RecipeWithMatchCount;
 import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.repository.RecipeRepository;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -110,25 +114,6 @@ public class RecipeService {
         recipeRepository.save(recipe);
     }
 
-    public List<RecipeFridgeMatch> getRecipeWithFridgeProductMatch(long fridgeId, long recipeId) {
-    
-        List<Object[]> rawData = recipeRepository.findRecipeWithMatchingProductsInFridge(fridgeId, recipeId);
-
-        List<RecipeFridgeMatch> result = rawData.stream()
-            .map(row -> new RecipeFridgeMatch(
-                (Integer) row[0],
-                (String) row[1],
-                (String) row[2],
-                (Long) row[3],
-                (String) row[4],
-                (String) row[5],
-                (Boolean) row[6]
-            ))
-            .collect(Collectors.toList());
-            
-                return result;
-            }
-
     /**
      * Adds a recipe to a users favorites
      * @param recipeId id of the recipe
@@ -179,5 +164,56 @@ public class RecipeService {
             userRepository.save(user.get());
             return ResponseEntity.ok("Recipe deleted from favorites");
         }
+    }
+    public List<RecipeWithMatchCount> getWeeklyMenu(Integer fridgeId) {
+        // Get the results from both repository methods
+        List<Object[]> weeklyMenu = recipeRepository.findWeeklyMenu(fridgeId);
+    
+        List<Object[]> recipeProducts = recipeRepository.findRecipeProductsWithName();
+    
+                // Prepare a map to store RecipeDetails with their match count
+                Map<RecipeDetails, Integer> recipeMatchCountMap = new HashMap<>();
+        
+        // Compare the item_name on both lists
+        for (Object[] menuRow : weeklyMenu) {
+            String menuRowItemName = (String) menuRow[0];
+            for (Object[] recipeProductRow : recipeProducts) {
+                String recipeProductRowItemName = (String) recipeProductRow[4];
+                List<String> recipeProductWords = Arrays.asList(recipeProductRowItemName.split("\\s+"));
+    
+                boolean allWordsContained = recipeProductWords.stream()
+                        .allMatch(word -> menuRowItemName.contains(word));
+    
+                if (allWordsContained) {
+                    Integer recipeId = ((Integer) recipeProductRow[0]).intValue();
+                    String recipeName = (String) recipeProductRow[1];
+                    String recipeDescription = (String) recipeProductRow[2];
+                    String recipeImage = (String) recipeProductRow[3];
+                    RecipeDetails recipeDetails = new RecipeDetails(recipeId, recipeName, recipeDescription, recipeImage);
+    
+                    recipeMatchCountMap.put(recipeDetails, recipeMatchCountMap.getOrDefault(recipeDetails, 0) + 1);
+                }
+            }
+        }
+    
+        // Get a list of unique RecipeDetails from recipeProducts
+        List<RecipeDetails> uniqueRecipeDetails = recipeProducts.stream()
+            .map(row -> new RecipeDetails(((Integer) row[0]).intValue(), (String) row[1], (String) row[2], (String) row[3]))
+            .distinct()
+            .collect(Collectors.toList());
+    
+        // Convert the map to a list of RecipeWithMatchCount
+        List<RecipeWithMatchCount> commonRecipes = recipeMatchCountMap.entrySet().stream()
+                .map(entry -> new RecipeWithMatchCount(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+    
+        // Add additional recipes from uniqueRecipeDetails with a count of 0 if the list has less than 5 recipes
+        for (RecipeDetails recipeDetails : uniqueRecipeDetails) {
+            if (commonRecipes.size() < 5 && !recipeMatchCountMap.containsKey(recipeDetails)) {
+                commonRecipes.add(new RecipeWithMatchCount(recipeDetails, 0));
+            }
+        }
+    
+        return commonRecipes;
     }
 }
