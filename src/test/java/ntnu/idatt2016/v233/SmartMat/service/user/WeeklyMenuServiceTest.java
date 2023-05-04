@@ -33,8 +33,8 @@ class WeeklyMenuServiceTest {
     void testGetWeeklyMenu() {
         long fridgeId = 1L;
 
-        Object[] row1 = new Object[] {1, "Recipe 1", "Description 1", 10L};
-        Object[] row2 = new Object[] {2, "Recipe 2", "Description 2", 15L};
+        Object[] row1 = new Object[] {1, "Recipe 1", "Description 1","url1", 10L};
+        Object[] row2 = new Object[] {2, "Recipe 2", "Description 2", "url2", 15L};
         List<Object[]> rawData = Arrays.asList(row1, row2);
 
         when(recipeRepository.findWeeklyMenu(fridgeId)).thenReturn(rawData);
