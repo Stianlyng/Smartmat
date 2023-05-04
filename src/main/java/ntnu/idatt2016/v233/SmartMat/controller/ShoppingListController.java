@@ -44,7 +44,9 @@ public class ShoppingListController {
      * @return the shopping list, or an error if the ID is invalid
      */
     @GetMapping("/{id}")
-    public ResponseEntity<ShoppingList> getShoppingListById(@PathVariable("id") long id) {
+    public ResponseEntity<ShoppingList> getShoppingListById(@PathVariable("id") long id, Authentication auth) {
+        shoppingListService.isUserInShoppinglist(id, auth.getName());
+
         Optional<ShoppingList> shoppingList = shoppingListService.getShoppingListById(id);
         return shoppingList.map(list -> ResponseEntity.status(HttpStatus.OK).body(list))
                            .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());

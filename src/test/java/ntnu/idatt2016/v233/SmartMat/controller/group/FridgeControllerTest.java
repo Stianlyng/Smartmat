@@ -51,7 +51,7 @@ public class FridgeControllerTest {
     private FridgeProductRequest fridgeProductRequest;
 
 
-    private Authentication regularUser = new Authentication() {
+    private final Authentication regularUser = new Authentication() {
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
             return List.of(new SimpleGrantedAuthority(Authority.USER.name()));

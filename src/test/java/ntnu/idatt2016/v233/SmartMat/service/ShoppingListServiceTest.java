@@ -1,6 +1,8 @@
 package ntnu.idatt2016.v233.SmartMat.service;
 
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
+import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
+import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -78,5 +80,34 @@ class ShoppingListServiceTest {
         shoppingListService.deleteShoppingListById(1L);
 
         verify(shoppingListRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void isUserInGroupWithShoppinglist(){
+        ShoppingList shoppingList = new ShoppingList();
+        Group group = new Group();
+        shoppingList.setGroup(group);
+
+        User user = User.builder()
+                .username("test")
+                .password("test")
+                .build();
+
+        group.addUser(UserGroupAsso.builder()
+                        .user(user)
+                        .group(group)
+                .build());
+
+
+        when(shoppingListRepository.findAllByGroupUsersUsername(user.getUsername()))
+                .thenReturn(List.of(shoppingList));
+
+        boolean result = shoppingListService.isUserInShoppinglist(
+                shoppingList.getShoppingListID(), user.getUsername());
+
+        assertTrue(result);
+
+        verify(shoppingListRepository, times(1))
+                .findAllByGroupUsersUsername(user.getUsername());
     }
 }
