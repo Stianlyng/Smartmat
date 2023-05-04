@@ -127,8 +127,6 @@ public class FridgeService {
 
         if (fridgeProductAsso.isEmpty()) return false;
 
-        Fridge fridge = fridgeRepository.findById(fridgeProductAsso.get().getFridgeId().getFridgeId())
-                .get();
 
 
         fridgeProductAssoRepo.delete(fridgeProductAsso.get());
@@ -146,21 +144,6 @@ public class FridgeService {
         fridgeRepository.save(fridge);
     }
 
-    /**
-     * Adds a group to a fridge
-     * @param fridgeId the id of the fridge
-     * @param groupId the id of the group
-     */
-    public void addGroupToFridge(long fridgeId, long groupId) {
-        Optional<Fridge> fridge = fridgeRepository.findById(fridgeId);
-        Optional<Group> group = groupRepository.findByGroupId(groupId);
-        if (fridge.isPresent() && group.isPresent()) {
-            fridge.get().setGroup(group.get());
-            group.get().setFridge(fridge.get());
-            groupRepository.save(group.get());
-            fridgeRepository.save(fridge.get());
-        }
-    }
 
     /**
      * Delete an amount from a fridge product

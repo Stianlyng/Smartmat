@@ -156,10 +156,14 @@ public class GroupController {
      */
     @GetMapping("/{groupId}/progress")
     public ResponseEntity<Integer> getProgressOfLevel(@PathVariable("groupId") long groupId, Authentication auth) {
-        if (!groupService.isUserAssociatedWithGroup(auth.getName(), groupId) ||
-                auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals("ADMIN"))) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        if(auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals("ADMIN"))){
+            if (!groupService.isUserAssociatedWithGroup(auth.getName(), groupId))
+            {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
         }
+
+
 
         return groupService.getProgressOfLevel(groupId)
                 .map(ResponseEntity::ok)
