@@ -116,7 +116,7 @@ public class StatisticUtil {
         if(diffInDays >= 365){
             return co2Sum / (((double) (diffInDays +1) / 365.0) * (double) numberOfPerson);
         }else {
-            return (118.0/diffInDays) + (( co2Sum / (((double) (diffInDays +1) / 365.0) * (double) numberOfPerson))/(365.0-(double) diffInDays));
+            return (118.0/((double) diffInDays +1.0)) + (( co2Sum / (((double) (diffInDays +1) / 365.0) * (double) numberOfPerson))/(365.0-(double) diffInDays));
         }
     }
 
