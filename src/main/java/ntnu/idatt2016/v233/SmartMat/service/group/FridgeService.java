@@ -202,6 +202,7 @@ public class FridgeService {
         }
         groupRepository.save(group);
         return Optional.of(wasteRepository.save(Waste.builder()
+                        .buyPrice(fridgeProductAsso1.getBuyPrice())
                 .amount(fridgeProductAsso1.getAmount())
                 .unit(fridgeProductAsso1.getEan().getUnit())
                 .ean(fridgeProductAsso1.getEan())
