@@ -131,6 +131,9 @@ public class GroupService {
         Optional<Group> answer = groupRepository.findByGroupId(id);
         if (answer.isPresent()) {
             Group realGroup = answer.get();
+            if (realGroup.getOpen() == null)
+                realGroup.setOpen(true);
+
             realGroup.setOpen(!realGroup.getOpen());
             System.out.println(realGroup.getOpen());
             return Optional.of(groupRepository.save(realGroup).getOpen());
