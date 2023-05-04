@@ -1,5 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import ntnu.idatt2016.v233.SmartMat.entity.ShoppingList;
@@ -23,5 +24,13 @@ public interface ShoppingListRepository extends JpaRepository<ShoppingList, Long
      */
     Optional<ShoppingList> getByGroupGroupId(long id);
 
-   
+
+    /**
+     * Gets all shopping lists by the username of the user
+     * @param username the username of the user
+     * @return a list of shopping lists
+     */
+    List<ShoppingList> findAllByGroupUserUserUsername(String username);
+
+
 }

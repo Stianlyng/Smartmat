@@ -105,4 +105,16 @@ public class ShoppingListService {
 
         return shoppingListRepository.findById(shoppingListId);
     }
+
+    /**
+     * Check if user can edit/get shoppinglist
+     * @param id id of shoppinglist
+     * @param name name of user
+     * @return true if user is in shoppinglist, false if not
+     */
+    public boolean isUserInShoppinglist(long id, String name) {
+        return shoppingListRepository.findAllByGroupUserUserUsername(name).stream()
+                .anyMatch(shoppingList -> shoppingList.getShoppingListID() == id);
+
+    }
 }
