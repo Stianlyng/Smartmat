@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
  * It uses the user service to handle the requests.
  * @author Birk
  * @version 1.2
- * @since 20.04.2023
  */
 @AllArgsConstructor
 @RestController
@@ -38,16 +37,6 @@ public class UserController {
     PasswordEncoder passwordEncoder;
 
     /**
-     * Use this JSON format:
-     * {
-     *     "username":"kari123",
-     *     "password":"sjokoladekake",
-     *     "email":"kari.nordman@gmail.com",
-     *     "firstName":"kari",
-     *     "lastName":"nordmann",
-     *     "birthDate":"2001-12-12"
-     * }
-     *
      * create a new user in the database
      * uses the user service
      * @param user The user to be registered.
@@ -88,6 +77,7 @@ public class UserController {
     /**
      * Get a user from the database.
      * @param username The username of the user to be fetched.
+     * @param authentication The authentication object of the user.
      * @return The user with the given username.
      */
     @GetMapping("/get/{username}")
@@ -110,6 +100,7 @@ public class UserController {
      * Adds the specified allergy to the user with the given username.
      *
      * @param allergyRequest the request object containing the username and allergy name
+     * @param authentication The authentication object of the user.
      * @return a ResponseEntity with a boolean indicating whether the operation was successful
      */
     @PostMapping("/addAllergy")
@@ -126,6 +117,7 @@ public class UserController {
      * Deletes the specified allergy from the user with the given username.
      *
      * @param allergyRequest the request object containing the username and allergy name
+     * @param authentication The authentication object of the user.
      * @return a ResponseEntity with a boolean indicating whether the operation was successful
      */
     @DeleteMapping("/deleteAllergy")

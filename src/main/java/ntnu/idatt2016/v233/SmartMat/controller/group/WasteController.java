@@ -144,6 +144,7 @@ public class WasteController {
      * The amount is calculated based on the total cost of the expired products.
      *
      * @param groupId the ID of the group to retrieve the lost money from
+     * @param authentication The authentication of the user.
      * @return a ResponseEntity with the lost money as a Double if found, or a ResponseEntity with status 404 if the group is not found
      */
     @GetMapping("/statistic/lostMoney/{groupId}")
@@ -159,6 +160,7 @@ public class WasteController {
      * Retrieves the amount of CO2 emitted annually per person in a specific group.
      *
      * @param groupId the ID of the group to retrieve the statistic for
+     * @param authentication The authentication of the user.
      * @return a ResponseEntity containing the amount of CO2 emitted annually per person in the group,
      *         or a ResponseEntity with HTTP status 404 (not found) if the group or data is not found
      */

@@ -23,7 +23,6 @@ import java.util.Optional;
  * It uses the product service to handle the requests.
  * @version 1.0
  * @Author Birk
- * @since 26.04.2023
  */
 @RestController
 @AllArgsConstructor
@@ -130,7 +129,7 @@ public class ProductController {
 
     /**
      * Returns all products in the database.
-     * @return All products in the database.
+     * @return A list of all products in the database.
      */
     @GetMapping("/")
     public ResponseEntity<List<Product>> getAllProducts() {

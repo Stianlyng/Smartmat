@@ -22,9 +22,8 @@ import java.util.List;
  * Product is an entity class representing a product in the system.
  * All other info about the product is fetched from api call on fronted.
  * this ensures that the product is always up to date.
- * @author Birk and Anders
- * @version 1.1.001
- * @since 19.04.2023
+ * @author Birk, Anders, Pedro
+ * @version 1.4
  */
 @Data
 @NoArgsConstructor
@@ -116,6 +115,10 @@ public class Product{
         shoppingLists.add(shoppingList);
     }
 
+    /**
+     * Adds an allergy to the product
+     * @param allergy the allergy to add to the product
+     */
     public void addAllergy(Allergy allergy){
         if (allergies == null){
             allergies = new ArrayList<>();

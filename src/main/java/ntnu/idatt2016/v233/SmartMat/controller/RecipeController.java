@@ -23,9 +23,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/recipe")
 public class RecipeController {
 
-    /**
-     * The recipe service
-     */
     private final RecipeService recipeService;   
 
     /**

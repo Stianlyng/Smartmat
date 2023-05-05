@@ -14,9 +14,8 @@ import java.util.Optional;
 /**
  * Repository for groups
  * 
- * @author Stian Lyng, Anders Austlid
+ * @author Stian Lyng, Anders Austlid, Pedro Cardona
  * @version 1.3
- * @since 24.04.2023
  */
 public interface GroupRepository extends JpaRepository<Group, Long> {
     /**
@@ -42,11 +41,25 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
      */
     Optional<Group> findByGroupId(long id);
 
+    /**
+     * Gets link codes of all groups
+     * @return a list of all link codes
+     */
     @Query(value = "SELECT link_code FROM  groups", nativeQuery = true)
     List<String> findAllLinkCode();
 
+    /**
+     * Gets a group with a given link code
+     * @param linkCode the link code of the group
+     * @return the group with the given link code if it exists
+     */
     Optional<Group> findByLinkCode(String linkCode);
 
+    /**
+     * Gets the amount of users in a group with a given group id
+     * @param groupId the id of the group
+     * @return the amount of users in the group
+     */
     @Query(value = "SELECT count(*) FROM user_group where group_id = :groupId", nativeQuery = true)
     int countAllUserInGroup(@Param("groupId") long groupId);
 

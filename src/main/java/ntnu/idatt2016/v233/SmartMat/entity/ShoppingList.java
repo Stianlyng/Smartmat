@@ -14,10 +14,8 @@ import java.util.List;
 /**
  * This class represents a shopping list
  * 
- * @author Stian Lyng and Anders
- * @version 1.0.001
- * @since 19.04.2023
- *
+ * @author Stian Lyng, Anders, Birk
+ * @version 1.3
  */
 
 @NoArgsConstructor

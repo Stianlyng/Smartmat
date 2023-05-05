@@ -18,7 +18,6 @@ import java.util.Optional;
  *
  * @author Anders
  * @version 1.0
- * @sinc 20.04.2023
  */
 
 @AllArgsConstructor

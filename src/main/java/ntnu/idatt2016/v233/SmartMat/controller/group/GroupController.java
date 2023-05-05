@@ -37,6 +37,7 @@ public class GroupController {
     /**
      * Gets a group by its id
      * @param groupId the id of the group
+     * @param auth the authentication of the user
      * @return a ResponseEntity containing the group if it exists, or a 404 if it doesn't
      */
     @GetMapping("/{groupId}")
@@ -72,6 +73,7 @@ public class GroupController {
      * Creates a new group
      *
      * @param groupRequest the group to create
+     * @param auth the authentication of the user
      * @return a ResponseEntity containing the created group if it was created successfully,
      * or a 400 if the group name is invalid or already exists, or if the username is invalid
      */
@@ -130,6 +132,7 @@ public class GroupController {
      * Gets the level of a group
      *
      * @param groupId the id of the group
+     * @param auth the authentication of the user
      * @return a ResponseEntity containing the level of the group if it exists, or a 404 if it doesn't
      */
     @GetMapping("/{groupId}/level")
@@ -174,6 +177,7 @@ public class GroupController {
      * Updates the open/closed status of the group with the specified ID.
      *
      * @param groupId the ID of the group to update
+     * @param auth the authentication of the user
      * @return a ResponseEntity with a Boolean value indicating whether the operation was successful
      */
     @PutMapping("/{groupId}/changeOpen")
@@ -196,6 +200,7 @@ public class GroupController {
      * Handles the HTTP PUT request to change the primary group of a user.
      *
      * @param newPrimaryGroupId the ID of the new primary group
+     * @param auth the authentication of the user
      * @return a ResponseEntity object containing an HTTP status code and the updated UserGroupAsso object,
      *         or a ResponseEntity object with an HTTP status code indicating that the request was not successful
      */
@@ -244,6 +249,7 @@ public class GroupController {
      * Handles the HTTP POST request to add a new connection between a user and a group.
      *
      * @param groupConnectionRequest the request object containing the username and link code of the user and group to be connected
+     * @param auth the authentication of the user
      * @return a ResponseEntity object containing an HTTP status code and the newly created UserGroupAsso object,
      *         or a ResponseEntity object with an HTTP status code indicating that the request was not successful
      */
@@ -294,6 +300,7 @@ public class GroupController {
      * Changes the authority level of a user in a group.
      *
      * @param authorityRequest the request object containing the username and group ID of the user to change the authority of
+     * @param auth the authentication of the user
      * @return a ResponseEntity object containing the updated UserGroupAsso object and an HTTP status code of 200,
      *        or a ResponseEntity object with an HTTP status code of 403 if the user is not authorized to change the authority,
      *         or a ResponseEntity object with an HTTP status code of 404 if the group or user does not exist

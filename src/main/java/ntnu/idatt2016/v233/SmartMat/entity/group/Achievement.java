@@ -14,9 +14,8 @@ import java.util.List;
 /**
  * Achievement is an entity class representing an achievement in the system.
  *
- * @author Anders
- * @version 1.0
- * @since 19.04.2023
+ * @author Anders, Birk
+ * @version 1.1
  *
  */
 

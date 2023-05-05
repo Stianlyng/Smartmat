@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * This class represents a response for a weekly menu.
+ * This class represents recipe response with match count
  */
 @Data
 @Builder

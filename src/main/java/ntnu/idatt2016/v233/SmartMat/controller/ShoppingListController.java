@@ -45,6 +45,7 @@ public class ShoppingListController {
      * Gets a shopping list by its ID
      *
      * @param id the shopping list ID
+     * @param authentication The authentication object of the user.
      * @return the shopping list, or an error if the ID is invalid,
      * or the user dose not have the rights to edit the shopping list
      */
@@ -65,6 +66,7 @@ public class ShoppingListController {
      * Gets a shopping list by its group ID
      * 
      * @param id the request containing the group ID
+     * @param authentication The authentication object of the user.
      * @return the shopping list, or an error if the ID is invalid
      */
     @GetMapping("/group/{groupId}")
@@ -150,6 +152,7 @@ public class ShoppingListController {
      *
      * @param shoppingListId the shopping list ID
      * @param ean           the product EAN
+     * @param auth The authentication object of the user.
      * @return the shopping list with the removed product, or an error if the shopping list ID or EAN is invalid
      */
     @DeleteMapping("/removeProduct/{shoppingListId}/{ean}")
