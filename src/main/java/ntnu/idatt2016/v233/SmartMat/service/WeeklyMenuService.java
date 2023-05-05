@@ -26,7 +26,7 @@ public class WeeklyMenuService {
      * Retrieves the top 5 recipes with products that have a match with items in the given fridge.
      * Returns a list of RecipeWithProductsDTO objects with recipe details and product information.
      *
-     * @param groupId the ID of the fridge to use for matching products
+     * @param fridgeId the ID of the fridge to use for matching products
      * @return a list of RecipeWithProductsDTO objects with recipe and product details
      */    
     public List<WeeklyMenuResponse> getWeeklyMenu(long fridgeId) {

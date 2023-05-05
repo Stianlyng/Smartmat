@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
  * This interface defines the methods for the recipe repository
  * 
  * @author Stian Lyng
- * @version 1.0
+ * @version 2.0
  */
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
@@ -22,6 +22,11 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
      */
     List<Recipe> findAllByName(String name);
 
+    /**
+     * Gets a weekly menu for a fridge
+     * @param fridgeId the id of the fridge
+     * @return a list of objects containing the name of the product and the id of the fridge
+     */
     @Query( value = """
         select p2.item_name, f.fridge_id  
         from fridge f 
@@ -29,7 +34,11 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
         inner join product p2 on p2.ean = fp.ean
         """, nativeQuery = true)
     List<Object[]> findWeeklyMenu(long fridgeId);
-    
+
+    /**
+     * Gets a list of recipes with their products
+     * @return a list of objects containing the recipe id, name, description, image url and product name
+     */
     @Query( value = """
         SELECT r.recipe_id, r.recipe_name, r.recipe_description, r.image_url, p.item_name
         FROM recipe r

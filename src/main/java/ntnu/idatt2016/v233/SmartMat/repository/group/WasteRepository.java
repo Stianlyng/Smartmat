@@ -9,6 +9,12 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
+/**
+ * Repository for waste
+ *
+ * @author Anders, Pedro
+ * @version 1.1
+ */
 public interface WasteRepository extends JpaRepository<Waste, Long> {
     Optional<List<Waste>> findByGroupId( Group groupId);
 
@@ -25,6 +31,10 @@ public interface WasteRepository extends JpaRepository<Waste, Long> {
     Optional<List<Waste>> findAllWasteOfOneCategoryFromGroup(@Param("groupId") long groupId,
                                                              @Param("categoryName") String categoryName);
 
+    /**
+     * Gets the last added waste item
+     * @return the id of the last added waste item
+     */
     @Query(value = "SELECT waste_id FROM wastes ORDER BY waste_id ASC",nativeQuery = true)
     long getLastWaste();
 

@@ -9,7 +9,6 @@ import java.util.UUID;
  *
  * @author Pedro Cardona
  * @version 1.0
- * @since 25.04.2023
  */
 public class GroupUtil {
 

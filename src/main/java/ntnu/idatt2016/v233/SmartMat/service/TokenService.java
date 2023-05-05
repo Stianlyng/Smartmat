@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
  * This class is used to generate a JWT token.
  * @author Anders
  * @version 1.0
- * @since 22.03.2023
  */
 @Service
 public class TokenService {
@@ -24,7 +23,6 @@ public class TokenService {
 
     /**
      * Creates a new TokenService object.
-     * The encoder object is injected by Spring.
      *
      * @param encoder the JwtEncoder object to use
      */

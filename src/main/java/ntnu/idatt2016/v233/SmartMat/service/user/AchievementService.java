@@ -13,7 +13,6 @@ import java.util.Optional;
  *
  * @author Anders
  * @version 1.0
- * @since 19.04.2023
  */
 
 @Service
@@ -31,6 +30,10 @@ public class AchievementService {
         return achievementRepository.findByAchievementName(achievementName);
     }
 
+    /**
+     * Gets all achievements from the database
+     * @return a list of all achievements
+     */
     public List<Achievement> getAchievements(){
         return achievementRepository.findAll();
     }

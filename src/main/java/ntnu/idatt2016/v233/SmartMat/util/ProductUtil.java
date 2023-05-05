@@ -11,12 +11,16 @@ import java.util.regex.Pattern;
 
 /**
  * Utility class for products
- * @author Birk
- * @version 1.0
- * @since 04.04.2023
+ * @author Birk, Pedro
+ * @version 1.1
  */
 public class ProductUtil {
 
+    /**
+     * Gets volume from a product
+     * @param product the product to get volume from
+     * @return an optional containing a list of the volume and unit if it exists
+     */
     public static Optional<List<String>> getVolumeFromProduct(Product product) {
         String total = product.getName() + " " + product.getDescription();
         double amount = parseAmount(total);
@@ -32,6 +36,11 @@ public class ProductUtil {
         return Optional.of(List.of(amount + "", unit));
     }
 
+    /**
+     * Parses unit from a string
+     * @param input the string to parse unit from
+     * @return the unit
+     */
     private static String parseUnit(String input) {
         Pattern pattern = Pattern.compile("(\\d+(\\.\\d+)?)\\s*(g|kg|l|ml|dl|cl|Kg|L|STK)\\b", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(input);
@@ -44,6 +53,11 @@ public class ProductUtil {
         return "STK";
     }
 
+    /**
+     * Parses amount from a string
+     * @param input the string to parse amount from
+     * @return the amount
+     */
     private static double parseAmount(String input) {
         Pattern pattern = Pattern.compile("(\\d+(\\.\\d+)?)\\s*(g|kg|l|ml|dl|cl|Kg|L|STK)\\b", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(input);

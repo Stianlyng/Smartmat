@@ -12,7 +12,6 @@ import java.util.Optional;
  * 
  * @author Stian Lyng and birk
  * @version 1.2
- * @since 21.04.2023
  */
 public interface AllergyRepository extends JpaRepository<Allergy, String> {
     /**

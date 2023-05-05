@@ -13,7 +13,6 @@ import java.util.Optional;
  * uses both the ProductRepository and the ProductUtil
  * @author Birk
  * @version 1.1
- * @since 05.04.2023
  */
 @Service
 public class ProductService {

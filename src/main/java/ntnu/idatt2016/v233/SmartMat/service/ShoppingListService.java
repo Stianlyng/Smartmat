@@ -13,7 +13,7 @@ import ntnu.idatt2016.v233.SmartMat.repository.ShoppingListRepository;
 /**
  * Service for the shopping list
  * 
- * @author Stian Lyng
+ * @author Stian Lyng, Birk
  * @version 1.1
  */
 @Service

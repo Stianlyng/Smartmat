@@ -20,9 +20,8 @@ import java.util.Optional;
 /**
  * Service for groups
  *
- * @author Anders Austlid & Birk
- * @version 1.2
- * @since 26.04.2023
+ * @author Anders Austlid, Birk, Pedro
+ * @version 1.3
  */
 @AllArgsConstructor
 @Service
@@ -166,6 +165,11 @@ public class GroupService {
         return Optional.of(groupRepository.save(group));
     }
 
+    /**
+     * Gets a group by its link code
+     * @param linkCode the link code of the group
+     * @return an optional containing the group if it exists
+     */
     public Optional<Group> getGroupByLinkCode(String linkCode) {
         return groupRepository.findByLinkCode(linkCode);
     }
@@ -219,6 +223,12 @@ public class GroupService {
         return userGroupAssoRepository.findById(userGroupId);
     }
 
+    /**
+     * Gets the authority of a user group association
+     * @param username the username of the user
+     * @param groupId the id of the group
+     * @return the authority of the user group association
+     */
     public String getUserGroupAssoAuthority(String username, long groupId) {
         Optional<UserGroupAsso> userGroupAsso = getUserGroupAsso(username, groupId);
         return userGroupAsso.map(UserGroupAsso::getGroupAuthority).orElseThrow(() -> new IllegalArgumentException("User is not associated with group"));
@@ -236,8 +246,7 @@ public class GroupService {
 
     /**
      * removes user_group relatioon
-     * @param username the username of the user
-     * @param groupId the id of the group
+     * @param userGroup the user group association to remove
      * @return true if the user is the owner of the group, false otherwise
      */
     @Transactional

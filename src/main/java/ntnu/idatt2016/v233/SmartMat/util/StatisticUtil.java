@@ -15,7 +15,6 @@ import java.util.List;
  * A utility class for calculating statistics related to waste and CO2 emissions.
  * @author Pedro Cardona
  * @version 1.0
- * @since 03.05.2023
  */
 public class StatisticUtil {
 
