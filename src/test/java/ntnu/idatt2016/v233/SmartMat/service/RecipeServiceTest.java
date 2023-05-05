@@ -1,30 +1,42 @@
 package ntnu.idatt2016.v233.SmartMat.service;
 
+import ntnu.idatt2016.v233.SmartMat.dto.response.RecipeWithMatchCount;
 import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.repository.RecipeRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.user.UserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class RecipeServiceTest {
 
-    @Mock
-    private RecipeRepository recipeRepository;
 
     @InjectMocks
     private RecipeService recipeService;
+    @Mock
+    private RecipeRepository recipeRepository;
+
+    @Mock
+    private UserRepository userRepository;
+
 
     private Recipe recipe1;
     private Recipe recipe2;
@@ -118,5 +130,34 @@ public class RecipeServiceTest {
 
         assertThat(recipe1.getUsers()).contains(user);
         verify(recipeRepository).save(recipe1);
+    }
+
+
+    
+
+    @Test
+    public void testGetWeeklyMenu() {
+        // Mock the repository methods to return sample data
+        List<Object[]> weeklyMenu = new ArrayList<>();
+        weeklyMenu.add(new Object[]{"bread"});
+        weeklyMenu.add(new Object[]{"milk"});
+        weeklyMenu.add(new Object[]{"butter"});
+        when(recipeRepository.findWeeklyMenu(1)).thenReturn(weeklyMenu);
+
+        List<Object[]> recipeProducts = new ArrayList<>();
+        recipeProducts.add(new Object[]{1, "Recipe 1", "Description 1", "Image 1", "bread milk"});
+        recipeProducts.add(new Object[]{2, "Recipe 2", "Description 2", "Image 2", "bread butter cheese"});
+        recipeProducts.add(new Object[]{3, "Recipe 3", "Description 3", "Image 3", "eggs milk cheese"});
+        when(recipeRepository.findRecipeProductsWithName()).thenReturn(recipeProducts);
+
+        // Call the service method
+        List<RecipeWithMatchCount> weeklyMenuRecipes = recipeService.getWeeklyMenu(1);
+
+        // Verify the expected output
+        assertEquals(3, weeklyMenuRecipes.size());
+        assertNotNull(weeklyMenuRecipes.get(0));
+        // Verify that the repository methods were called with the expected parameter
+        verify(recipeRepository).findWeeklyMenu(1);
+        verify(recipeRepository).findRecipeProductsWithName();
     }
 }
