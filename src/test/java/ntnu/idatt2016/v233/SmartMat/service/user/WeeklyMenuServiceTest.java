@@ -1,6 +1,6 @@
 package ntnu.idatt2016.v233.SmartMat.service.user;
 
-import ntnu.idatt2016.v233.SmartMat.service.WeeklyMenuService;
+import ntnu.idatt2016.v233.SmartMat.service.group.WeeklyMenuService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -10,8 +10,8 @@ import org.mockito.MockitoAnnotations;
 import java.util.Arrays;
 import java.util.List;
 
-import ntnu.idatt2016.v233.SmartMat.dto.response.WeeklyMenuResponse;
-import ntnu.idatt2016.v233.SmartMat.repository.RecipeRepository;
+import ntnu.idatt2016.v233.SmartMat.dto.response.group.WeeklyMenuResponse;
+import ntnu.idatt2016.v233.SmartMat.repository.product.RecipeRepository;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;

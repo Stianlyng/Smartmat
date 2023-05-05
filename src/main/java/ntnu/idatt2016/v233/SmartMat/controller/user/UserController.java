@@ -2,11 +2,10 @@ package ntnu.idatt2016.v233.SmartMat.controller.user;
 
 
 import lombok.AllArgsConstructor;
-import ntnu.idatt2016.v233.SmartMat.dto.request.AllergyRequest;
-import ntnu.idatt2016.v233.SmartMat.dto.request.RegisterUserRequest;
+import ntnu.idatt2016.v233.SmartMat.dto.request.product.AllergyRequest;
+import ntnu.idatt2016.v233.SmartMat.dto.request.user.RegisterUserRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
-import ntnu.idatt2016.v233.SmartMat.dto.request.UpdateUserRequest;
-import ntnu.idatt2016.v233.SmartMat.entity.product.Allergy;
+import ntnu.idatt2016.v233.SmartMat.dto.request.user.UpdateUserRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.service.user.UserService;
 import org.springframework.http.HttpStatus;
@@ -16,9 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 /**

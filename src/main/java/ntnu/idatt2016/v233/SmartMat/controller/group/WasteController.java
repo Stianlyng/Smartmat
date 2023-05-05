@@ -2,8 +2,8 @@ package ntnu.idatt2016.v233.SmartMat.controller.group;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
-import ntnu.idatt2016.v233.SmartMat.dto.request.WasteRequest;
-import ntnu.idatt2016.v233.SmartMat.entity.Waste;
+import ntnu.idatt2016.v233.SmartMat.dto.request.group.WasteRequest;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Waste;
 import ntnu.idatt2016.v233.SmartMat.service.group.GroupService;
 import ntnu.idatt2016.v233.SmartMat.service.group.WasteService;
 import ntnu.idatt2016.v233.SmartMat.util.CategoryUtil;

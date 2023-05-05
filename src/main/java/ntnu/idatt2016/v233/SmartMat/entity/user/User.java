@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
-import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Recipe;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Allergy;
 import org.springframework.security.core.GrantedAuthority;

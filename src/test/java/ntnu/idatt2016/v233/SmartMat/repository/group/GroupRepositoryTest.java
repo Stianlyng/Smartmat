@@ -5,10 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
-import ntnu.idatt2016.v233.SmartMat.repository.user.AchievementRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

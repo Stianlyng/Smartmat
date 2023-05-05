@@ -1,9 +1,9 @@
 package ntnu.idatt2016.v233.SmartMat.controller.user;
 
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
-import ntnu.idatt2016.v233.SmartMat.dto.request.AllergyRequest;
-import ntnu.idatt2016.v233.SmartMat.dto.request.RegisterUserRequest;
-import ntnu.idatt2016.v233.SmartMat.dto.request.UpdateUserRequest;
+import ntnu.idatt2016.v233.SmartMat.dto.request.product.AllergyRequest;
+import ntnu.idatt2016.v233.SmartMat.dto.request.user.RegisterUserRequest;
+import ntnu.idatt2016.v233.SmartMat.dto.request.user.UpdateUserRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.repository.user.UserRepository;
 import ntnu.idatt2016.v233.SmartMat.service.user.UserService;

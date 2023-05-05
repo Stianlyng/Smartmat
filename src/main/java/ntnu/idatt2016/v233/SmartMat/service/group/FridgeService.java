@@ -1,8 +1,8 @@
 package ntnu.idatt2016.v233.SmartMat.service.group;
 
 import lombok.AllArgsConstructor;
-import ntnu.idatt2016.v233.SmartMat.dto.request.FridgeProductRequest;
-import ntnu.idatt2016.v233.SmartMat.entity.Waste;
+import ntnu.idatt2016.v233.SmartMat.dto.request.product.FridgeProductRequest;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Waste;
 import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
@@ -14,13 +14,10 @@ import ntnu.idatt2016.v233.SmartMat.repository.product.FridgeProductAssoRepo;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 
 import ntnu.idatt2016.v233.SmartMat.util.GroupUtil;
-import ntnu.idatt2016.v233.SmartMat.util.ProductUtil;
-import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Optional;
 
 /**

@@ -1,13 +1,10 @@
 package ntnu.idatt2016.v233.SmartMat.service.group;
 
-import java.nio.channels.FileChannel;
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import ntnu.idatt2016.v233.SmartMat.dto.request.WasteRequest;
-import ntnu.idatt2016.v233.SmartMat.entity.Waste;
+import ntnu.idatt2016.v233.SmartMat.dto.request.group.WasteRequest;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Waste;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;

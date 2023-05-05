@@ -1,7 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.repository.group;
 
 import java.util.List;
-import ntnu.idatt2016.v233.SmartMat.entity.Waste;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Waste;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

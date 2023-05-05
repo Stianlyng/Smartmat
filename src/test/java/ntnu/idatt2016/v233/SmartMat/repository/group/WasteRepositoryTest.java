@@ -1,21 +1,11 @@
 package ntnu.idatt2016.v233.SmartMat.repository.group;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import ntnu.idatt2016.v233.SmartMat.entity.Waste;
-import ntnu.idatt2016.v233.SmartMat.repository.group.WasteRepository;
-
-import static org.junit.jupiter.api.Assertions.*;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Waste;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest

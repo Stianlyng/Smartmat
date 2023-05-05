@@ -1,26 +1,21 @@
 package ntnu.idatt2016.v233.SmartMat.service.group;
 
-import ntnu.idatt2016.v233.SmartMat.dto.request.WasteRequest;
-import ntnu.idatt2016.v233.SmartMat.entity.Waste;
+import ntnu.idatt2016.v233.SmartMat.dto.request.group.WasteRequest;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Waste;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
-import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Category;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
-import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.WasteRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.product.ProductRepository;
-import ntnu.idatt2016.v233.SmartMat.service.group.WasteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

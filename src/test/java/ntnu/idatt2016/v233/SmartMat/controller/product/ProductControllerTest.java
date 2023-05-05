@@ -1,10 +1,10 @@
 package ntnu.idatt2016.v233.SmartMat.controller.product;
 
-import ntnu.idatt2016.v233.SmartMat.dto.request.ProductRequest;
+import ntnu.idatt2016.v233.SmartMat.dto.request.product.ProductRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Allergy;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Category;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
-import ntnu.idatt2016.v233.SmartMat.service.AllergyService;
+import ntnu.idatt2016.v233.SmartMat.service.product.AllergyService;
 import ntnu.idatt2016.v233.SmartMat.service.product.CategoryService;
 import ntnu.idatt2016.v233.SmartMat.service.product.ProductService;
 import org.junit.jupiter.api.BeforeEach;
