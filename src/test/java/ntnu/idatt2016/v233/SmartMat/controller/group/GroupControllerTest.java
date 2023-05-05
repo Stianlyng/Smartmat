@@ -5,6 +5,7 @@ import ntnu.idatt2016.v233.SmartMat.dto.request.group.ChangeAuthorityRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.request.group.GroupConnectionRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.request.group.GroupRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.response.group.GroupDetailsResponse;
+import ntnu.idatt2016.v233.SmartMat.dto.response.group.GroupResponse;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupId;
@@ -299,7 +300,7 @@ public class GroupControllerTest {
 
         assertNotNull(result.getBody());
 
-        assertEquals(group.getGroupId(), ((GroupDetailsResponse) result.getBody()).getGroupId());
+        assertEquals(group.getGroupId(),  ((GroupResponse) result.getBody()).groupId());
 
         verify(groupService, times(1)).createGroup(any(Group.class));
     }
@@ -463,7 +464,7 @@ public class GroupControllerTest {
     void getGroupLevelNotAuthorized(){
         when(groupService.isUserAssociatedWithGroup(regularUser.getName(), group.getGroupId())).thenReturn(false);
 
-        
+
         ResponseEntity<?> groupResponseEntity =
                 groupController.getGroupLevel(group.getGroupId(), regularUser);
 
