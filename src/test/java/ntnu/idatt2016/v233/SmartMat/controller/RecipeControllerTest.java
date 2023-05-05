@@ -1,6 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
 import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
 import ntnu.idatt2016.v233.SmartMat.service.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,16 +10,27 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,6 +47,80 @@ public class RecipeControllerTest {
     private ObjectMapper objectMapper;
     private Recipe recipe1;
     private Recipe recipe2;
+
+    private final Authentication regularUser = new Authentication() {
+        @Override
+        public Collection<? extends GrantedAuthority> getAuthorities() {
+            return List.of(new SimpleGrantedAuthority(Authority.USER.name()));
+        }
+
+        @Override
+        public Object getCredentials() {
+            return null;
+        }
+
+        @Override
+        public Object getDetails() {
+            return null;
+        }
+
+        @Override
+        public Object getPrincipal() {
+            return null;
+        }
+
+        @Override
+        public boolean isAuthenticated() {
+            return true;
+        }
+
+        @Override
+        public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+
+        }
+
+        @Override
+        public String getName() {
+            return "test";
+        }
+    };
+
+    private final Authentication adminUser = new Authentication() {
+        @Override
+        public Collection<? extends GrantedAuthority> getAuthorities() {
+            return List.of(new SimpleGrantedAuthority(Authority.ADMIN.name()));
+        }
+
+        @Override
+        public Object getCredentials() {
+            return null;
+        }
+
+        @Override
+        public Object getDetails() {
+            return null;
+        }
+
+        @Override
+        public Object getPrincipal() {
+            return null;
+        }
+
+        @Override
+        public boolean isAuthenticated() {
+            return true;
+        }
+
+        @Override
+        public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+
+        }
+
+        @Override
+        public String getName() {
+            return "test";
+        }
+    };
 
     @BeforeEach
     void setUp() {
@@ -88,4 +174,26 @@ public class RecipeControllerTest {
         mockMvc.perform(get("/api/recipe/name/{name}", "Nonexistent"))
                 .andExpect(status().isNotFound());
     }
+
+
+    @Test
+    void addRecipeToFavorites_Success() throws Exception {
+        Long recipeId = 1L;
+        when(recipeService.addRecipeToFavorites(recipeId, regularUser.getName())).thenReturn(ResponseEntity.ok().build());
+
+        ResponseEntity<?> response = recipeController.addRecipeToFavorites(recipeId, regularUser);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    void addRecipeToFavorites_AdminUser() throws Exception {
+        Long recipeId = 1L;
+        when(recipeService.addRecipeToFavorites(recipeId, adminUser.getName())).thenReturn(ResponseEntity.ok().build());
+
+        ResponseEntity<?> response = recipeController.addRecipeToFavorites(recipeId, adminUser);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
 }
