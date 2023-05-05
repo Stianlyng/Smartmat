@@ -1,8 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.util;
 
-import ntnu.idatt2016.v233.SmartMat.entity.Waste;
+import ntnu.idatt2016.v233.SmartMat.entity.group.Waste;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

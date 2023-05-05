@@ -2,7 +2,7 @@ package ntnu.idatt2016.v233.SmartMat.controller.group;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
-import ntnu.idatt2016.v233.SmartMat.dto.request.FridgeProductRequest;
+import ntnu.idatt2016.v233.SmartMat.dto.request.product.FridgeProductRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;

@@ -2,12 +2,12 @@ package ntnu.idatt2016.v233.SmartMat.service.group;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import ntnu.idatt2016.v233.SmartMat.entity.ShoppingList;
+import ntnu.idatt2016.v233.SmartMat.entity.group.ShoppingList;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupId;
-import ntnu.idatt2016.v233.SmartMat.repository.ShoppingListRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.group.ShoppingListRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.FridgeRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.GroupRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.group.UserGroupAssoRepository;

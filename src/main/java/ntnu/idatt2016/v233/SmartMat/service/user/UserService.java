@@ -1,21 +1,17 @@
 package ntnu.idatt2016.v233.SmartMat.service.user;
 
 import lombok.AllArgsConstructor;
-import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
-import ntnu.idatt2016.v233.SmartMat.entity.Recipe;
+import ntnu.idatt2016.v233.SmartMat.entity.product.Recipe;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Allergy;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
-import ntnu.idatt2016.v233.SmartMat.repository.AllergyRepository;
+import ntnu.idatt2016.v233.SmartMat.repository.product.AllergyRepository;
 import ntnu.idatt2016.v233.SmartMat.repository.user.UserRepository;
-import ntnu.idatt2016.v233.SmartMat.service.RecipeService;
+import ntnu.idatt2016.v233.SmartMat.service.product.RecipeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import jakarta.persistence.EntityNotFoundException;
-
-import java.nio.channels.FileChannel;
 import java.util.List;
 import java.util.Optional;
 
