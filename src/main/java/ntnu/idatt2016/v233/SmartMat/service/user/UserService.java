@@ -21,9 +21,8 @@ import java.util.Optional;
 
 /**
  * UserService is a class that implements the UserDetailsService interface.
- * @author Birk
+ * @author Birk, Stian
  * @version 1.1
- * @since 20.04.2023
  */
 @Service
 @AllArgsConstructor
@@ -43,6 +42,10 @@ public class UserService {
     public Optional<User> getUserFromUsername(String username){
         return userRepository.findByUsername(username);
     }
+
+    /**
+     * Gets all users from the database
+     */
     public List<User> getUsers(){
         return userRepository.findAll();
     }

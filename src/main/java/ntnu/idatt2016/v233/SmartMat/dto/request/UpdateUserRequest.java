@@ -5,9 +5,6 @@ import java.util.List;
 
 /**
  * This class represents a request to update a user
- * @author Birk
- * @version 1.0
- * @since 26.04.2023
  *
  * @param firstName the first name of the user
  * @param lastName the last name of the user

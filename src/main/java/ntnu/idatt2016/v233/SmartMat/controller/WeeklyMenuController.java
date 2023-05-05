@@ -14,28 +14,24 @@ import ntnu.idatt2016.v233.SmartMat.dto.response.WeeklyMenuResponse;
 import ntnu.idatt2016.v233.SmartMat.service.RecipeService;
 import ntnu.idatt2016.v233.SmartMat.service.WeeklyMenuService;
 
+/**
+ * Controller for weekly menu
+ *
+ * @author Stian Lyng
+ * @version 1.0
+ */
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/weeklymenu")
 public class WeeklyMenuController {
-    
-    /*
-    private WeeklyMenuService weeklyMenuService;
-    
-    @GetMapping("/{fridgeId}")
-    public ResponseEntity<List<WeeklyMenuResponse>> getWeeklyMenu(@PathVariable("fridgeId") Long fridgeId) {
-        List<WeeklyMenuResponse> weeklyMenu = weeklyMenuService.getWeeklyMenu(fridgeId);
-        
-        if (weeklyMenu.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(weeklyMenu);
-        }
-    }
-    */
 
     final private RecipeService recipeService;
 
+    /**
+     * Gets weekly menu for a fridge
+     * @param fridgeId the id of the fridge
+     * @return the weekly menu for the fridge
+     */
     @GetMapping("/{fridgeId}")
     public ResponseEntity<Object> compareWeeklyMenuAndRecipeProducts(@PathVariable("fridgeId") Integer fridgeId) {
         List<RecipeWithMatchCount> weeklyMenuDetails = recipeService.getWeeklyMenu(fridgeId);

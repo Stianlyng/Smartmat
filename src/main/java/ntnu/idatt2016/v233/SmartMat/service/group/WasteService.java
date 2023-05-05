@@ -20,9 +20,8 @@ import java.util.Optional;
 
 /**
  * Service for waste
- * @author Pedro, Birk
+ * @author Anders, Pedro, Birk
  * @version 1.1
- * @since 04.05.2023
  */
 @Service
 @AllArgsConstructor

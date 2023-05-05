@@ -9,10 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * This interface defines the methods for the shopping list repository
  *
- * @author Stian Lyng
+ * @author Stian Lyng, Birk
  * @version 1.2
- * @since 19.04.2023
- *
  */
 public interface ShoppingListRepository extends JpaRepository<ShoppingList, Long> {
    

@@ -11,7 +11,6 @@ import java.util.Optional;
  * Service for Categories
  * @version 1.0
  * @Author Birk
- * @since 26.04.2020
  */
 @Service
 @AllArgsConstructor

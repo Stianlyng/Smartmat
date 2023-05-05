@@ -17,8 +17,6 @@ import java.util.List;
  * 
  * @author Stian Lyng and Anders
  * @version 1.3
- * @since 24.04.2023
- *
  */
 
 @NoArgsConstructor
@@ -62,6 +60,10 @@ public class Allergy{
 
     }
 
+    /**
+     * adds a product to the allergy
+     * @param product adds a product to the list of products with this allergy
+     */
     public void addProduct(Product product) {
         if (products == null)
             products = new ArrayList<>();

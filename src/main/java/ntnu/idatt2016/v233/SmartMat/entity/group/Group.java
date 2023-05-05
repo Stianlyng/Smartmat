@@ -16,11 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Group is an entity class representing a group in the system.
+ * Group is an entity class representing a user group in the system.
  *
- * @author Stian Lyng, Anders Austlid
- * @version 1.0.1
- * @since 20.04.2023
+ * @author Stian Lyng, Anders Austlid, Birk, Pedro
+ * @version 1.3
  */
 
 @NoArgsConstructor

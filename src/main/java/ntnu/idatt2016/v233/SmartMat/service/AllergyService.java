@@ -14,14 +14,10 @@ import ntnu.idatt2016.v233.SmartMat.repository.AllergyRepository;
 /**
  * Service for allergies
  * @author Stian Lyng
- * @version 1.0
  */
 @Service
 public class AllergyService {
-    
-    /**
-     * Repository for allergies
-     */
+
     @Autowired
     private AllergyRepository allergyRepository;
     

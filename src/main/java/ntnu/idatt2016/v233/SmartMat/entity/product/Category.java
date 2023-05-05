@@ -10,6 +10,12 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Category is an entity class representing a product category
+ *
+ * @author Pedro, Birk
+ * @version 1.1
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -26,6 +32,10 @@ public class Category {
     @JsonIgnore
     private List<Product> products;
 
+    /**
+     * adds a product to the category
+     * @param product adds a product to the list of products in this category
+     */
     public void addProduct(Product product) {
         if (products == null)
             products = List.of(product);

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
  * JpaUserDetailsService is a class that implements the UserDetailsService interface.
  * @author Birk
  * @version 1.0
- * @since 05.04.2023
  */
 @Service
 @AllArgsConstructor
@@ -21,7 +20,7 @@ public class JpaUserDetailsService implements UserDetailsService {
      * gets user from username out of database
      * @param username username of user
      * @return user
-     * @throws UsernameNotFoundException
+     * @throws UsernameNotFoundException if user is not found
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

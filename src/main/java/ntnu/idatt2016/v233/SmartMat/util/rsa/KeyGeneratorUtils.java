@@ -8,16 +8,12 @@ import java.security.KeyPairGenerator;
  * KeyGeneratorUtils is a utility class for generating key pairs, specifically RSA key pairs.
  * This class is marked as a Spring component to allow its use in the Spring framework.
  *
- * @author Anders (young buck)
+ * @author Anders
  * @version 1.0
- * @since 04.04.2023
  */
 @Component
 final class KeyGeneratorUtils {
 
-    /**
-     * Private constructor to prevent instantiation of this utility class.
-     */
     private KeyGeneratorUtils() {}
 
     /**

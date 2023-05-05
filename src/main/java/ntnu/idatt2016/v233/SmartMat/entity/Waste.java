@@ -15,10 +15,8 @@ import java.sql.Timestamp;
 /**
  * This class represents a waste made by a group.
  *
- * @author Stian Lyng and Anders
- * @version 1.0.001
- * @since 19.04.2023
- *
+ * @author Anders, Birk, Pedro
+ * @version 1.3
  */
 
 @NoArgsConstructor

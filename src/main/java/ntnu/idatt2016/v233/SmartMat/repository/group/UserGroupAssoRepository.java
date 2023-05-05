@@ -10,6 +10,12 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repository interface for the UserGroupAsso association entity
+ *
+ * @author Pedro, Birk, Anders
+ * @version 1.3
+ */
 public interface UserGroupAssoRepository extends JpaRepository<UserGroupAsso, UserGroupId> {
 
 
@@ -70,7 +76,7 @@ public interface UserGroupAssoRepository extends JpaRepository<UserGroupAsso, Us
      * Finds the authority level of a user in a group
      * @param username the username of the user
      * @param groupId the id of the group
-     * @return
+     * @return the authority level of the user in the group
      */
     String findAuthorityByUser_UsernameAndGroup_GroupId(String username, long groupId);
 

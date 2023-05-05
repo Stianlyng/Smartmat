@@ -20,7 +20,6 @@ import org.hibernate.annotations.OnDeleteAction;
  *
  * @author Anders & Birk
  * @version 1.2
- * @since 25.04.2023
  */
 
 @NoArgsConstructor

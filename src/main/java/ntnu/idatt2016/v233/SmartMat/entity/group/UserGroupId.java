@@ -10,6 +10,12 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * This class represents a user group id
+ *
+ * @author Birk
+ * @version 1.0
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -20,7 +26,6 @@ public class UserGroupId implements Serializable {
     private String username;
     @Column(name = "group_id")
     private long groupId;
-
 
     @Override
     public boolean equals(Object o) {

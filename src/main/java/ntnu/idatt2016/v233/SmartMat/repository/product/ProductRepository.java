@@ -9,8 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * Repository for Products
  * @author Birk & Stian
- * @version 1.0
- * @since 19.04.2023
+ * @version 1.1
  */
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
@@ -20,4 +19,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      * @param name the name of the group
      * @return an optional containing the product if it exists
      */
-    Optional<Product> getByName(String name);}
+    Optional<Product> getByName(String name);
+}

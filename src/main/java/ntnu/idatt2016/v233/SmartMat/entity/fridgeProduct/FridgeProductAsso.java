@@ -11,6 +11,12 @@ import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 
 import java.sql.Date;
 
+/**
+ * FridgeProductAsso is an entity class representing a fridge product association.
+ *
+ * @author Birk, Pedro
+ * @version 1.1
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

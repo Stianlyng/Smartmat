@@ -7,11 +7,8 @@ import java.util.Optional;
 
 /**
  * repo for user entity
- * uses mysql from server when ran
- * uses h2 in memory database when testing
  * @author birk
  * @version 1.1
- * @since 20.04.2023
  */
 public interface UserRepository extends JpaRepository<User, Long>{
 

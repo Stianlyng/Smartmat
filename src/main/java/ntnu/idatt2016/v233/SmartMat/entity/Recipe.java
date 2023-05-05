@@ -17,10 +17,8 @@ import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 /**
  * Recipe is an entity class representing a recipe in the system.
  *
- * @author Anders & Stian + Birk
- * @version 1.1
- * @since 25.04.2023
- *
+ * @author Anders, Stian, Birk
+ * @version 1.7
  */
 
 @NoArgsConstructor

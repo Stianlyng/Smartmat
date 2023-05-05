@@ -9,15 +9,11 @@ import java.util.UUID;
 /**
  * Jwks is a utility class for generating RSA keys for JSON Web Key Set (JWKS) support.
  * It provides a method to generate an RSA key pair and create an RSAKey object.
- * @author Anders (young buck)
+ * @author Anders
  * @version 1.0
- * @since 04.04.2023
  */
 public class Jwks {
 
-    /**
-     * Private constructor to prevent instantiation of this utility class.
-     */
     private Jwks() {}
 
     /**

@@ -9,9 +9,8 @@ import ntnu.idatt2016.v233.SmartMat.entity.user.User;
 /**
  * UserGroupTable is a class representing the user_group table in the database.
  * It is used to represent the many-to-many relationship between users and groups.
- * @Author Birk
- * @Version 1.0
- * @Since 25.04
+ * @Author Birk, Pedro
+ * @Version 1.2
  */
 @Entity
 @AllArgsConstructor

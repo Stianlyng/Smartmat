@@ -6,7 +6,6 @@ import java.util.*;
  * Utility class for category
  * @author Pedro Pablo Cardona
  * @version 1.0
- * @since 21.04.2023
  */
 public class CategoryUtil {
 
@@ -29,6 +28,11 @@ public class CategoryUtil {
             "grappa", "kirsebærbrannvin", "sherry", "sider", "mjød"
     );
 
+    /**
+     * Static method that returns a list of keywords for a given category.
+     * @param category The category to get keywords for.
+     * @return A list of keywords.
+     */
     private static List<String> getCategoryKeywords(String category) {
         return switch (category) {
             case "meat, fish and chicken" -> MEAT;

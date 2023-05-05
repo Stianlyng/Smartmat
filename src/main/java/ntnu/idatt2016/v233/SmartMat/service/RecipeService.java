@@ -24,15 +24,12 @@ import org.springframework.stereotype.Service;
 /**
  * This class defines the methods for the recipe service
  * 
- * @author Stian Lyng
- * @version 1.0
+ * @author Stian Lyng, Birk
+ * @version 1.1
  */
 @Service
 public class RecipeService {
-    
-    /**
-     * The recipe repository
-     */
+
     @Autowired
     private RecipeRepository recipeRepository;
 
@@ -41,7 +38,7 @@ public class RecipeService {
 
     /**
      * Creates a new recipe service
-     * @param recipeRepository
+     * @param recipeRepository the recipe repository
      */
     public RecipeService (RecipeRepository recipeRepository) {
         this.recipeRepository = recipeRepository;
@@ -177,14 +174,11 @@ public class RecipeService {
      * @return A list of RecipeWithMatchCount objects representing the weekly menu
      */
     public List<RecipeWithMatchCount> getWeeklyMenu(Integer fridgeId) {
-        // Get the results from both repository methods
         List<Object[]> weeklyMenu = recipeRepository.findWeeklyMenu(fridgeId);
         List<Object[]> recipeProducts = recipeRepository.findRecipeProductsWithName();
     
-        // Prepare a map to store RecipeDetails with their match count
         Map<RecipeDetails, Integer> recipeMatchCountMap = new HashMap<>();
         
-        // Compare the item_name on both lists
         for (Object[] menuRow : weeklyMenu) {
             String menuRowItemName = ((String) menuRow[0]).toLowerCase();
             for (Object[] recipeProductRow : recipeProducts) {
@@ -206,18 +200,15 @@ public class RecipeService {
             }
         }
     
-        // Get a list of unique RecipeDetails from recipeProducts
         List<RecipeDetails> uniqueRecipeDetails = recipeProducts.stream()
             .map(row -> new RecipeDetails(((Integer) row[0]).intValue(), (String) row[1], (String) row[2], (String) row[3]))
             .distinct()
             .collect(Collectors.toList());
     
-        // Convert the map to a list of RecipeWithMatchCount
         List<RecipeWithMatchCount> commonRecipes = recipeMatchCountMap.entrySet().stream()
                 .map(entry -> new RecipeWithMatchCount(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
     
-        // Add additional recipes from uniqueRecipeDetails with a count of 0 if the list has less than 5 recipes
         List<RecipeWithMatchCount> zeroMatchRecipes = new ArrayList<>();
         for (RecipeDetails recipeDetails : uniqueRecipeDetails) {
             if (commonRecipes.size() < 5 && !recipeMatchCountMap.containsKey(recipeDetails)) {
@@ -225,10 +216,8 @@ public class RecipeService {
             }
         }
 
-    // Shuffle the zeroMatchRecipes list
     Collections.shuffle(zeroMatchRecipes);
 
-    // Combine the commonRecipes and zeroMatchRecipes lists
     for (RecipeWithMatchCount zeroMatchRecipe : zeroMatchRecipes) {
         if (commonRecipes.size() < 5) {
             commonRecipes.add(zeroMatchRecipe);

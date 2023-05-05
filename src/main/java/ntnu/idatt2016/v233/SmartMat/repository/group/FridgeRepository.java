@@ -5,6 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
+/**
+ * Repository interface for the Fridge entity
+ *
+ * @author Anders, Birk
+ * @version 1.1
+ */
 public interface FridgeRepository extends JpaRepository<Fridge, Long> {
     /**
      * Gets the fridge of a group

@@ -13,7 +13,6 @@ import org.springframework.security.web.SecurityFilterChain;
  * Configs for security and authentication
  * @author Birk
  * @version 1.0
- * @since 04.04.2023
  */
 @Configuration
 @AllArgsConstructor
@@ -23,8 +22,6 @@ public class SecurityConfig {
      * Configures the HttpSecurity for the application.
      * Dose not need ot have csrf enabled, because we are using jwt
      * and the application is stateless
-     * <p>
-     * TODO: Enable CORS policy when possible!
      *
      * @param http HttpSecurity to configure
      * @return SecurityFilterChain with configured HttpSecurity

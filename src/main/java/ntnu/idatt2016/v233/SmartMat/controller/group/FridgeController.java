@@ -58,7 +58,8 @@ public class FridgeController {
 
     /**
      * Gets the fridge by its fridge id
-     * @param fridgeId the id of the fridge
+     * @param fridgeId the id of the fridge to get
+     * @param authentication a user authentication object for validation of user authorization
      * @return the fridge if it exists, or a 404 if it doesn't, or a 403 if the user is not in the fridge
      */
     @GetMapping("/fridge/{fridgeId}")
@@ -79,6 +80,7 @@ public class FridgeController {
      * Adds a product to the fridge of a group
      *
      * @param request the request containing the group id and product id
+     * @param authentication a user authentication object for validation of user authorization
      * @return success if the product was added, bad request if the product was already in the fridge, or not found if the group or product doesn't exist
      */
     @PostMapping("/group/product")
@@ -107,6 +109,7 @@ public class FridgeController {
     /**
      * Updates a product in a fridge
      * @param request the request containing the group id and product id
+     * @param authentication a user authentication object for validation of user authorization
      * @return success if the product was added, bad request if the product was already in the fridge,
      * or not found if the group or product doesn't exist
      */
@@ -174,6 +177,7 @@ public class FridgeController {
     /**
      * Deletes a product from the fridge
      * @param fridgeProductId the id of the fridge product association
+     * @param authentication the authentication of the user
      * @return success if the product was deleted, bad request if the product wasn't found
      * , or forbidden if the user is not in the group
      */
@@ -207,6 +211,7 @@ public class FridgeController {
      * Deletes a product from the fridge and creates a waste object from it.
      *
      * @param fridgeProductId The id of the fridge product association to be deleted
+     * @param authentication The authentication of the user
      * @return A ResponseEntity with status code 200 if successful,
      * or status code 404 if the specified fridge product association was not found.
      * or status code 403 if the user is not in the group

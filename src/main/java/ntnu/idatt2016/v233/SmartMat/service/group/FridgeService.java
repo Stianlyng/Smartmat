@@ -28,7 +28,6 @@ import java.util.Optional;
  *
  * @author Anders Austlid & Birk
  * @version 2
- * @since 05.05.2023
  */
 @AllArgsConstructor
 @Service
@@ -92,7 +91,12 @@ public class FridgeService {
         return product;
 
     }
-    
+
+    /**
+     * Updates a product in the fridge of a group
+     * @param request the fridge product request
+     * @return the product that was added to the fridge
+     */
     public Optional<FridgeProductAsso> updateProductInFridge(FridgeProductRequest request) {
         Optional<FridgeProductAsso> fridgeProductAsso = fridgeProductAssoRepo.findById(request.fridgeProductId());
         if (fridgeProductAsso.isEmpty()) return Optional.empty();

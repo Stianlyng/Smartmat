@@ -20,10 +20,8 @@ import java.util.*;
  * User is a class representing a user in the system.
  * It implements the UserDetails interface.
  *
- * @author Anders and Birk
+ * @author Anders, Birk, Pedro
  * @version 2.0.3
- * @since 25.04.2023
- *
  */
 
 @Data

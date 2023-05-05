@@ -5,6 +5,9 @@ import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 
 import java.util.List;
 
+/**
+ * GroupDetailsResponse is a class representing a response containing details about a group.
+ */
 @Data
 public class GroupDetailsResponse {
     private long groupId;

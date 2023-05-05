@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Controller for allergies
  * @author Stian Lyng
- * @version 1.0
  */
 @AllArgsConstructor
 @RestController

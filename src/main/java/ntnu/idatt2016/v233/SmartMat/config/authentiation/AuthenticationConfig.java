@@ -26,7 +26,6 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
  * Configures the authentication for the application.
  * @author Anders and  birk
  * @version 1.1
- * @since 05.04.2023
  */
 @Configuration
 public class AuthenticationConfig {
