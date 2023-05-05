@@ -186,9 +186,9 @@ public class RecipeService {
         
         // Compare the item_name on both lists
         for (Object[] menuRow : weeklyMenu) {
-            String menuRowItemName = (String) menuRow[0];
+            String menuRowItemName = ((String) menuRow[0]).toLowerCase();
             for (Object[] recipeProductRow : recipeProducts) {
-                String recipeProductRowItemName = (String) recipeProductRow[4];
+                String recipeProductRowItemName = ((String) recipeProductRow[4]).toLowerCase();
                 List<String> recipeProductWords = Arrays.asList(recipeProductRowItemName.split("\\s+"));
     
                 boolean allWordsContained = recipeProductWords.stream()
