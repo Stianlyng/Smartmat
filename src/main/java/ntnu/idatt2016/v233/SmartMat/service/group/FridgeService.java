@@ -28,7 +28,7 @@ import java.util.Optional;
  *
  * @author Anders Austlid & Birk
  * @version 2
- * @since 04.05.2023
+ * @since 05.05.2023
  */
 @AllArgsConstructor
 @Service
@@ -206,5 +206,17 @@ public class FridgeService {
         Optional<Fridge> fridge = fridgeRepository.findById(fridgeId);
         return fridge.map(value -> value.getGroup().getUser().stream()
                 .anyMatch(user -> user.getUser().getUsername().equals(username))).orElse(false);
+    }
+
+
+    /**
+     * Get the group id of a fridge product
+     * @param fridgeProductId the id of the fridge product
+     * @return the id of the group of the fridge product
+     */
+    public long getGroupIdFromFridgeProuctId(long fridgeProductId){
+        return fridgeProductAssoRepo.findById(fridgeProductId)
+                .map(fridgeProductAsso -> fridgeProductAsso.getFridgeId().getGroup().getGroupId()).orElse(0L);
+
     }
 }

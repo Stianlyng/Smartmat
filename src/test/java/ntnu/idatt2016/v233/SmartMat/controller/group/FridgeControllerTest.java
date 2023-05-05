@@ -239,9 +239,10 @@ public class FridgeControllerTest {
         when(fridgeService.addProductToFridge(any(FridgeProductRequest.class))).thenReturn(Optional.empty( ));
 
         when(fridgeService.getFridgeByGroupId(1L)).thenReturn(Optional.of(fridge));
+        when(fridgeService.isUserInFridge("test", 0L)).thenReturn(true);
 
 
-        ResponseEntity<Product> responseEntity = fridgeController.addProductToFridge(fridgeProductRequest, adminUser);
+        ResponseEntity<Product> responseEntity = fridgeController.addProductToFridge(fridgeProductRequest, regularUser);
 
         verify(fridgeService).isUserInFridge("test", 0L);
 

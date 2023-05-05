@@ -7,6 +7,7 @@ import ntnu.idatt2016.v233.SmartMat.entity.fridgeProduct.FridgeProductAsso;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Fridge;
 import ntnu.idatt2016.v233.SmartMat.entity.product.Product;
 import ntnu.idatt2016.v233.SmartMat.service.group.FridgeService;
+import ntnu.idatt2016.v233.SmartMat.service.group.GroupService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,7 +22,7 @@ import java.util.Optional;
  *
  * @author Anders Austlid & Birk
  * @version 2.0
- * @since 3.05.2023
+ * @since 5.05.2023
  */
 @AllArgsConstructor
 @RestController
@@ -29,6 +30,8 @@ import java.util.Optional;
 public class FridgeController {
 
     private final FridgeService fridgeService;
+
+    private final GroupService groupService;
 
 
     /**
@@ -87,10 +90,10 @@ public class FridgeController {
         if (fridge.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
-        if (!fridgeService.isUserInFridge(authentication.getName(), fridge.get().getFridgeId()) &&
-                !authentication.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.name()))) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        if(authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals(Authority.ADMIN.name()))){
+            if (!fridgeService.isUserInFridge(authentication.getName(), fridge.get().getFridgeId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
         }
 
         try {
@@ -116,11 +119,15 @@ public class FridgeController {
             return ResponseEntity.notFound().build();
         }
 
-        if (!fridgeService.isUserInFridge(authentication.getName(), fridge.get().getFridgeId()) &&
-                !authentication.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.name()))) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        if(authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals(Authority.ADMIN.name()))){
+            if (!fridgeService.isUserInFridge(authentication.getName(), fridge.get().getFridgeId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
 
+            if(groupService.getUserGroupAssoAuthority(authentication.getName(), request.groupId())
+                    .equalsIgnoreCase("RESTRICTED"))
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
 
         return fridgeService.updateProductInFridge(request).map(ResponseEntity::ok).orElseGet(()-> ResponseEntity.notFound().build());
     }
@@ -137,9 +144,16 @@ public class FridgeController {
                                                        @PathVariable("amount") String amountStr, Authentication authentication) {
 
 
-        if (!fridgeService.isUserInGroupWithFridgeProduct( authentication.getName(), fridgeProductId)
-        && !authentication.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.name()))){
-            return ResponseEntity.status(403).body("You are not a member of this group");
+        if(authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals(Authority.ADMIN.name()))){
+            if (!fridgeService.isUserInGroupWithFridgeProduct(authentication.getName(), fridgeProductId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            if(groupService.getUserGroupAssoAuthority(authentication.getName(),
+                    fridgeService.getGroupIdFromFridgeProuctId(fridgeProductId))
+                    .equalsIgnoreCase("RESTRICTED")
+                   )
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         try {
@@ -167,9 +181,16 @@ public class FridgeController {
     public ResponseEntity<String> removeProductFromFridge(@PathVariable("fridgeProductId") long fridgeProductId,
                                                           Authentication authentication) {
 
-        if (!fridgeService.isUserInGroupWithFridgeProduct( authentication.getName(), fridgeProductId)
-                && !authentication.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.name()))){
-            return ResponseEntity.status(403).body("You are not a member of this group");
+        if(authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals(Authority.ADMIN.name()))){
+            if (!fridgeService.isUserInGroupWithFridgeProduct(authentication.getName(), fridgeProductId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            if(groupService.getUserGroupAssoAuthority(authentication.getName(),
+                            fridgeService.getGroupIdFromFridgeProuctId(fridgeProductId))
+                    .equalsIgnoreCase("RESTRICTED")
+            )
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         try {
@@ -193,9 +214,16 @@ public class FridgeController {
     @DeleteMapping("/waste/product/{fridgeProductId}")
     public ResponseEntity<?> wasteProductFromFridge(@PathVariable("fridgeProductId") long fridgeProductId,
                                                     Authentication authentication){
-        if (!fridgeService.isUserInGroupWithFridgeProduct( authentication.getName(), fridgeProductId)
-                && !authentication.getAuthorities().contains(new SimpleGrantedAuthority(Authority.ADMIN.name()))){
-            return ResponseEntity.status(403).body("You are not a member of this group");
+        if(authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals(Authority.ADMIN.name()))){
+            if (!fridgeService.isUserInGroupWithFridgeProduct(authentication.getName(), fridgeProductId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            if(groupService.getUserGroupAssoAuthority(authentication.getName(),
+                            fridgeService.getGroupIdFromFridgeProuctId(fridgeProductId))
+                    .equalsIgnoreCase("RESTRICTED")
+            )
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         return fridgeService.wasteProductFromFridge(fridgeProductId)
