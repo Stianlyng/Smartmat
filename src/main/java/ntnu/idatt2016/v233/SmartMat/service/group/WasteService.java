@@ -18,6 +18,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Service for waste
+ * @author Pedro, Birk
+ * @version 1.1
+ * @since 04.05.2023
+ */
 @Service
 @AllArgsConstructor
 public class WasteService {
@@ -26,6 +32,11 @@ public class WasteService {
     private final ProductRepository productRepository;
 
 
+    /**
+     * Creates a new waste
+     * @param wasteRequest the waste to create
+     * @return an optional containing the waste if it was created
+     */
     public Optional<Waste> createWaste(WasteRequest wasteRequest) {
         Optional<Group> group = groupRepository.findByGroupId(wasteRequest.groupId());
         Optional<Product> product = productRepository.findById(wasteRequest.ean());
@@ -117,4 +128,16 @@ public class WasteService {
         return Optional.of(StatisticUtil.getAnnualAverage(wastes,number));
     }
 
+
+    /**
+     * Checks if the user is assosiated with the waste their trying to retrive
+     * @param username the username of the user
+     * @param wasteId the id of the waste
+     * @return true if the user is associated with the waste, false otherwise
+     */
+    public boolean isUserAssosiatedWithWaste(String username, long wasteId) {
+        Optional<Waste> waste = wasteRepository.findById(wasteId);
+        return waste.map(value -> value.getGroupId().getUser().stream()
+                .anyMatch(user -> user.getUser().getUsername().equals(username))).orElse(false);
+    }
 }
