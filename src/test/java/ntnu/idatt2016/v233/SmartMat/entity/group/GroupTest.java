@@ -50,4 +50,44 @@ class GroupTest {
         assertEquals("Group(groupId=1, level=0, points=0, groupName=Test Group, linkCode=null, open=null, shoppingList=null, user=null, fridge=null, achievements=null)",
                 group.toString());
     }
+
+    @Test
+    void builder() {
+        Group.GroupBuilder builder = Group.builder();
+        builder.groupName("Test Group");
+        builder.groupId(1L);
+        builder.user(null);
+        builder.fridge(null);
+        builder.shoppingList(null);
+        builder.achievements(null);
+        builder.level(0);
+        builder.points(0);
+        builder.linkCode(null);
+        builder.open(null);
+
+        assertNotNull(builder.toString());
+
+        Group group = builder
+                .build();
+
+        assertEquals("Test Group", group.getGroupName());
+        assertEquals(1L, group.getGroupId());
+
+        assertNull(group.getUser());
+
+        assertNull(group.getFridge());
+
+        assertNull(group.getShoppingList());
+
+        assertNull(group.getAchievements());
+
+        assertEquals(0, group.getLevel());
+
+        assertEquals(0, group.getPoints());
+
+        assertNull(group.getLinkCode());
+
+        assertNull(group.getOpen());
+
+    }
 }
