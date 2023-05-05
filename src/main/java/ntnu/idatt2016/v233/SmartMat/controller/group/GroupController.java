@@ -283,6 +283,7 @@ public class GroupController {
                 .id(userGroupId)
                 .group(group)
                 .user(user)
+                .groupAuthority("USER")
                 .build();
 
         user.addGroup(userGroupAsso);
