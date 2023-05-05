@@ -70,10 +70,6 @@ public class FridgeService {
      * @return the product that was added to the fridge
      */
     public Optional<Product> addProductToFridge(FridgeProductRequest fridgeProductRequest) {
-        if (fridgeProductRequest.amount() < 0 || fridgeProductRequest.days() < 0) {
-            throw new IllegalArgumentException("Amount and days must be non-negative values.");
-        }
-
         Optional<Product> product = productService.getProductById(fridgeProductRequest.ean());
         Optional<Fridge> fridge = fridgeRepository.findByGroupGroupId(fridgeProductRequest.groupId());
         double price = 10.0;
