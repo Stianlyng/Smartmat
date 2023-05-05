@@ -2,6 +2,8 @@ package ntnu.idatt2016.v233.SmartMat.controller.group;
 
 import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
 import ntnu.idatt2016.v233.SmartMat.dto.request.group.ChangeAuthorityRequest;
+import ntnu.idatt2016.v233.SmartMat.dto.request.group.GroupConnectionRequest;
+import ntnu.idatt2016.v233.SmartMat.dto.request.group.GroupRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.response.group.GroupDetailsResponse;
 import ntnu.idatt2016.v233.SmartMat.entity.group.Group;
 import ntnu.idatt2016.v233.SmartMat.entity.group.UserGroupAsso;
@@ -21,12 +23,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class GroupControllerTest {
@@ -282,7 +283,195 @@ public class GroupControllerTest {
 
         assertSame(HttpStatus.FORBIDDEN, groupResponseEntity.getStatusCode());
         assertNull(groupResponseEntity.getBody());
- }
+    }
+
+    @Test
+    void shouldCreateGroup(){
+        GroupRequest groupRequest = new GroupRequest("test group");
+
+        when(groupService.createGroup(any(Group.class))).thenReturn(group);
+        when(groupService.getGroupByName(groupRequest.groupName())).thenReturn(Optional.empty());
+        when(userService.getUserFromUsername(regularUser.getName())).thenReturn(Optional.ofNullable(user));
+
+        ResponseEntity<?> result = groupController.createGroup(groupRequest, regularUser);
+
+        assertSame(HttpStatus.OK, result.getStatusCode());
+
+        assertNotNull(result.getBody());
+
+        assertEquals(group.getGroupId(), ((GroupDetailsResponse) result.getBody()).getGroupId());
+
+        verify(groupService, times(1)).createGroup(any(Group.class));
+    }
+
+    @Test
+    void shouldNotCreateGroupWhenConflict(){
+        GroupRequest groupRequest = new GroupRequest("test group");
+
+        when(groupService.getGroupByName(groupRequest.groupName())).thenReturn(Optional.of(group));
+
+        ResponseEntity<?> result = groupController.createGroup(groupRequest, regularUser);
+
+        assertSame(HttpStatus.BAD_REQUEST, result.getStatusCode());
+
+        assertNotNull(result.getBody());
+
+        assertEquals("Group name already exists.", result.getBody());
+
+        verify(groupService, times(0)).createGroup(any(Group.class));
+    }
 
 
+    @Test
+    void markNewPrimaryTest(){
+
+        when(groupService.isUserAssociatedWithGroup(regularUser.getName(), group.getGroupId())).thenReturn(true);
+
+        when(userService.getUserFromUsername(regularUser.getName())).thenReturn(Optional.ofNullable(user));
+
+
+        when(groupService.updateUserGroupAsso(any(UserGroupAsso.class))).thenReturn(group.getUser().get(0));
+
+        when(groupService.findPrimaryUserGroupAssoForUser(regularUser.getName()))
+                .thenReturn(Optional.ofNullable(group.getUser().get(0)));
+
+        when(groupService.getUserGroupAsso(regularUser.getName(), group.getGroupId()))
+                .thenReturn(Optional.ofNullable(group.getUser().get(0)));
+
+        group.getUser().get(0).setPrimaryGroup(false);
+
+        ResponseEntity<?> result = groupController.markNewPrimaryGroup(group.getGroupId(), regularUser);
+
+        assertSame(HttpStatus.OK, result.getStatusCode());
+
+        assertNotNull(result.getBody());
+
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("username", user.getUsername());
+        responseBody.put("oldPrimaryGroupId", group.getGroupId());
+        responseBody.put("newPrimaryGroupId", group.getGroupId());
+
+        assertEquals(responseBody, result.getBody());
+
+        assertEquals(group.getUser().get(0).getPrimaryGroup(), true);
+
+
+
+        verify(groupService, times(2)).updateUserGroupAsso(any(UserGroupAsso.class));
+
+
+        verify(userService, times(1)).updateUser(user);
+
+
+    }
+
+    @Test
+    void markNewPrimaryTestNotAuthorizedWhenNotAssosiated(){
+
+        when(groupService.isUserAssociatedWithGroup(regularUser.getName(), group.getGroupId())).thenReturn(false);
+
+
+        ResponseEntity<?> result = groupController.markNewPrimaryGroup(group.getGroupId(), regularUser);
+
+        assertSame(HttpStatus.FORBIDDEN, result.getStatusCode());
+
+        assertNull(result.getBody());
+
+        verify(groupService, times(0)).updateUserGroupAsso(any(UserGroupAsso.class));
+
+
+        verify(userService, times(0)).updateUser(user);
+
+
+    }
+
+    @Test
+    void addConnection(){
+        when(groupService.isUserAssociatedWithGroup(regularUser.getName(), group.getGroupId())).thenReturn(false);
+
+        when(userService.getUserFromUsername(regularUser.getName())).thenReturn(Optional.ofNullable(user));
+
+        when(groupService.getGroupByLinkCode("test2")).thenReturn(Optional.ofNullable(group));
+        when(userService.updateUser(user)).thenReturn(user);
+        group.setLinkCode("test2");
+
+
+        GroupConnectionRequest groupConnectionRequest = new GroupConnectionRequest("test2");
+
+        ResponseEntity<?> groupResponseEntity =
+                groupController.addConnection(groupConnectionRequest, regularUser);
+
+        assertSame(HttpStatus.OK, groupResponseEntity.getStatusCode());
+        assertNotNull(groupResponseEntity.getBody());
+
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("groupId", group.getGroupId());
+        responseBody.put("username", user.getUsername());
+
+        assertEquals(responseBody, groupResponseEntity.getBody());
+
+        verify(userService, times(1)).updateUser(user);
+
+    }
+
+    @Test
+    void addConnectionNotAllowedWhenAlreadyConnected(){
+        when(groupService.isUserAssociatedWithGroup(regularUser.getName(), group.getGroupId())).thenReturn(true);
+
+        when(userService.getUserFromUsername(regularUser.getName())).thenReturn(Optional.ofNullable(user));
+
+        when(groupService.getGroupByLinkCode("test2")).thenReturn(Optional.ofNullable(group));
+        group.setLinkCode("test2");
+
+
+        GroupConnectionRequest groupConnectionRequest = new GroupConnectionRequest("test2");
+
+        ResponseEntity<?> groupResponseEntity =
+                groupController.addConnection(groupConnectionRequest, regularUser);
+
+        assertSame(HttpStatus.BAD_REQUEST, groupResponseEntity.getStatusCode());
+        assertNotNull(groupResponseEntity.getBody());
+
+
+        assertEquals("User is already associated with the group.", groupResponseEntity.getBody());
+
+        verify(userService, times(0)).updateUser(user);
+
+    }
+
+    @Test
+    void getGroupLevel(){
+        when(groupService.isUserAssociatedWithGroup(regularUser.getName(), group.getGroupId())).thenReturn(true);
+
+
+
+        when(groupService.getGroupById(group.getGroupId())).thenReturn(Optional.of(group));
+
+        ResponseEntity<?> groupResponseEntity =
+                groupController.getGroupLevel(group.getGroupId(), regularUser);
+
+        assertSame(HttpStatus.OK, groupResponseEntity.getStatusCode());
+        assertNotNull(groupResponseEntity.getBody());
+
+        assertEquals(group.getLevel(), groupResponseEntity.getBody());
+
+        verify(groupService, times(1)).getGroupById(group.getGroupId());
+
+    }
+
+    @Test
+    void getGroupLevelNotAuthorized(){
+        when(groupService.isUserAssociatedWithGroup(regularUser.getName(), group.getGroupId())).thenReturn(false);
+
+        
+        ResponseEntity<?> groupResponseEntity =
+                groupController.getGroupLevel(group.getGroupId(), regularUser);
+
+        assertSame(HttpStatus.FORBIDDEN, groupResponseEntity.getStatusCode());
+        assertNull(groupResponseEntity.getBody());
+
+
+        verify(groupService, times(0)).getGroupById(group.getGroupId());
+
+    }
 }
