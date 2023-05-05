@@ -50,9 +50,11 @@ public class ShoppingListController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<ShoppingList> getShoppingListById(@PathVariable("id") long id, Authentication auth) {
-        if(!shoppingListService.isUserInShoppinglist(id, auth.getName()) &&
-                auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals(Authority.ADMIN.name())))
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        if(auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals(Authority.ADMIN.name()))){
+            if(!shoppingListService.isUserInShoppinglist(id, auth.getName())){
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+        }
 
         Optional<ShoppingList> shoppingList = shoppingListService.getShoppingListById(id);
         return shoppingList.map(list -> ResponseEntity.status(HttpStatus.OK).body(list))
@@ -67,9 +69,11 @@ public class ShoppingListController {
      */
     @GetMapping("/group/{groupId}")
     public ResponseEntity<ShoppingList> getAllShoppingListsByGroupId(@PathVariable("groupId") long id, Authentication auth) {
-        if(!groupService.isUserAssociatedWithGroup(auth.getName(), id) &&
-                auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals(Authority.ADMIN.name())))
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        if(auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals(Authority.ADMIN.name()))){
+            if(!groupService.isUserAssociatedWithGroup(auth.getName(), id)){
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+        }
 
         Optional<ShoppingList> shoppingList = shoppingListService.getShoppingListByGroupId(id);
         return shoppingList.map(list -> ResponseEntity.status(HttpStatus.OK).body(list))
@@ -87,9 +91,19 @@ public class ShoppingListController {
     public ResponseEntity<?> addItemToShoppingList(@PathVariable("shoppingListId") long shoppingListId,
                                                               @PathVariable("ean") String ean, Authentication auth){
 
-        if(!shoppingListService.isUserInShoppinglist(shoppingListId, auth.getName()) &&
-                auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals(Authority.ADMIN.name())))
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        if(auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals(Authority.ADMIN.name()))){
+            if(!shoppingListService.isUserInShoppinglist(shoppingListId, auth.getName())){
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+            long groupId = shoppingListService.getGroupIdByShoppingListId(shoppingListId);
+
+            if(groupId == -1)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+            if (groupService.getUserGroupAssoAuthority(auth.getName(), groupId).equalsIgnoreCase("RESTRICTED"))
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        }
 
         Optional<ShoppingList> shoppingList = shoppingListService.getShoppingListById(shoppingListId);
 
@@ -142,9 +156,20 @@ public class ShoppingListController {
     public ResponseEntity<ShoppingList> removeProductFromShoppingList(@PathVariable("shoppingListId") String shoppingListId,
                                                                       @PathVariable("ean") String ean, Authentication auth) {
 
-        if(!shoppingListService.isUserInShoppinglist(Long.parseLong(shoppingListId), auth.getName()) &&
-                auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals(Authority.ADMIN.name())))
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        if(auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals(Authority.ADMIN.name()))){
+            if(!shoppingListService.isUserInShoppinglist(Long.parseLong(shoppingListId), auth.getName())){
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+            long groupId = shoppingListService.getGroupIdByShoppingListId(Long.parseLong(shoppingListId));
+
+            if(groupId == -1)
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+            if (groupService.getUserGroupAssoAuthority(auth.getName(), groupId).equalsIgnoreCase("RESTRICTED"))
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        }
+
 
 
         Optional<ShoppingList> shoppingList = shoppingListService.getShoppingListById(Long.parseLong(shoppingListId));

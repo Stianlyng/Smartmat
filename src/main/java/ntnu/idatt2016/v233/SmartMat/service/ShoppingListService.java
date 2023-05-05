@@ -117,4 +117,14 @@ public class ShoppingListService {
                 .anyMatch(shoppingList -> shoppingList.getShoppingListID() == id);
 
     }
+
+    /**
+     * Get group id by shoppinglist id
+     * @param shoppinglistId id of shoppinglist
+     * @return id of group
+     */
+    public long getGroupIdByShoppingListId(long shoppinglistId){
+        return shoppingListRepository.findById(shoppinglistId).map(shoppingList -> shoppingList.getGroup().getGroupId())
+                .orElse(-1L);
+    }
 }

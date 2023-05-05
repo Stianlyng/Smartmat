@@ -265,6 +265,10 @@ public class ShoppingListControllerTest {
         when(shoppingListService.addProductToShoppingList(ean, shoppingListId))
                 .thenReturn(Optional.of(shoppingList));
 
+        when(shoppingListService.getGroupIdByShoppingListId(shoppingListId)).thenReturn(groupId);
+
+        when(groupService.getUserGroupAssoAuthority(eq(regularUser.getName()), eq(groupId))).thenReturn("USER");
+
         when(userService.getUserFromUsername(regularUser.getName())).thenReturn(Optional.of(user));
 
         ResponseEntity<?> response = shoppingListController.addItemToShoppingList(shoppingListId, String.valueOf(ean), regularUser);
@@ -316,6 +320,12 @@ public class ShoppingListControllerTest {
         when(shoppingListService.isUserInShoppinglist(shoppingListId, regularUser.getName())).thenReturn(true);
         when(shoppingListService.removeProductFromShoppingList(ean, shoppingListId))
                 .thenReturn(Optional.of(shoppingList));
+
+        when(shoppingListService.getGroupIdByShoppingListId(shoppingListId)).thenReturn(groupId);
+
+        when(groupService.getUserGroupAssoAuthority(eq(regularUser.getName()), eq(groupId))).thenReturn("USER");
+
+
 
 
         ResponseEntity<?> response = shoppingListController.removeProductFromShoppingList(String.valueOf(shoppingListId),

@@ -303,8 +303,6 @@ public class GroupController {
                                              Authentication auth) {
         Optional<User> groupAdminOpt = userService.getUserFromUsername(auth.getName());
         if (groupAdminOpt.isPresent()) {
-            User groupAdmin = groupAdminOpt.get();
-
             if (auth.getAuthorities().stream().noneMatch(role -> role.getAuthority().equals("ADMIN"))){
                 if (!groupService.isUserAssociatedWithGroup(auth.getName(), authorityRequest.groupId())) {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
