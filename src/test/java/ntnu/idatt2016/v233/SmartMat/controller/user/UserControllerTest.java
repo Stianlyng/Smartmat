@@ -1,5 +1,7 @@
 package ntnu.idatt2016.v233.SmartMat.controller.user;
 
+import ntnu.idatt2016.v233.SmartMat.dto.enums.Authority;
+import ntnu.idatt2016.v233.SmartMat.dto.request.AllergyRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.request.RegisterUserRequest;
 import ntnu.idatt2016.v233.SmartMat.dto.request.UpdateUserRequest;
 import ntnu.idatt2016.v233.SmartMat.entity.user.User;
@@ -15,6 +17,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.Date;
@@ -122,5 +125,186 @@ class UserControllerTest {
         assertEquals(Date.valueOf("1980-01-01"), response.getBody().getDateOfBirth());
 
         verify(userService, times(1)).updateUser(user);
+    }
+
+    @Test
+    void getUser_validUsername_shouldReturnUser() {
+        // Arrange
+        String username = "johndoe";
+        User user = new User();
+        user.setUsername(username);
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setEmail("johndoe@example.com");
+        user.setPassword("oldPassword123");
+        user.setAllergies(new ArrayList<>());
+        user.setDateOfBirth(Date.valueOf("1980-01-01"));
+        when(authentication.getName()).thenReturn(username);
+        when(userService.getUserFromUsername(username)).thenReturn(Optional.of(user));
+
+        // Act
+        ResponseEntity<User> response = userController.getUser(username, authentication);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(username, response.getBody().getUsername());
+        assertEquals("John", response.getBody().getFirstName());
+        assertEquals("Doe", response.getBody().getLastName());
+        assertEquals("johndoe@example.com", response.getBody().getEmail());
+        assertNull(response.getBody().getPassword());
+        assertEquals(Date.valueOf("1980-01-01"), response.getBody().getDateOfBirth());
+    }
+
+    @Test
+    void getUser_invalidUsername_shouldReturnNotFound() {
+        // Arrange
+        String username = "nonexistent";
+        when(authentication.getName()).thenReturn(username);
+        when(userService.getUserFromUsername(username)).thenReturn(Optional.empty());
+
+        // Act
+        ResponseEntity<User> response = userController.getUser(username, authentication);
+
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    void addAllergyToUser_validRequest_shouldReturnOk() {
+        // Arrange
+        String username = "johndoe";
+        String allergyName = "Peanut";
+        AllergyRequest allergyRequest = new AllergyRequest(username, allergyName);
+        when(authentication.getName()).thenReturn(username);
+        when(userService.addAllergyToUser(username, allergyName)).thenReturn(ResponseEntity.ok("Allergy added"));
+
+        // Act
+        ResponseEntity<String> response = userController.addAllergyToUser(allergyRequest, authentication);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Allergy added", response.getBody());
+    }
+
+    @Test
+    void deleteAllergyFromUser_validRequest_shouldReturnOk() {
+        // Arrange
+        String username = "johndoe";
+        String allergyName = "Peanut";
+        AllergyRequest allergyRequest = new AllergyRequest(username, allergyName);
+        when(authentication.getName()).thenReturn(username);
+        when(userService.removeAllergyFromUser(username, allergyName)).thenReturn(ResponseEntity.ok("Allergy removed"));
+
+        // Act
+        ResponseEntity<String> response = userController.deleteAllergyFromUser(allergyRequest, authentication);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Allergy removed", response.getBody());
+    }
+
+    @Test
+    void addAllergyToUser_invalidRequest_shouldReturnForbidden() {
+        // Arrange
+        String username = "johndoe";
+        String allergyName = "Peanut";
+        AllergyRequest allergyRequest = new AllergyRequest(username, allergyName);
+        when(authentication.getName()).thenReturn("differentUser");
+        when(authentication.getAuthorities()).thenReturn(new ArrayList<>());
+
+        // Act
+        ResponseEntity<String> response = userController.addAllergyToUser(allergyRequest, authentication);
+
+        // Assert
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    void deleteAllergyFromUser_invalidRequest_shouldReturnForbidden() {
+        // Arrange
+        String username = "johndoe";
+        String allergyName = "Peanut";
+        AllergyRequest allergyRequest = new AllergyRequest(username, allergyName);
+        when(authentication.getName()).thenReturn("differentUser");
+        when(authentication.getAuthorities()).thenReturn(new ArrayList<>());
+
+        // Act
+        ResponseEntity<String> response = userController.deleteAllergyFromUser(allergyRequest, authentication);
+
+        // Assert
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    void updateUser_invalidUsername_shouldReturnNotFound() {
+        // Arrange
+        String username = "nonexistent";
+        when(authentication.getName()).thenReturn(username);
+        when(userService.getUserFromUsername(username)).thenReturn(Optional.empty());
+
+        // Act
+        ResponseEntity<User> response = userController.updateUser(username, updateUser, authentication);
+
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    void updateUser_invalidAuthentication_shouldReturnForbidden() {
+        // Arrange
+        String username = "johndoe";
+        when(authentication.getName()).thenReturn("differentUser");
+
+        // Act
+        ResponseEntity<User> response = userController.updateUser(username, updateUser, authentication);
+
+        // Assert
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    void getUser_unauthorizedAccess_shouldReturnForbidden() {
+        // Arrange
+        String username = "johndoe";
+        when(authentication.getName()).thenReturn("differentUser");
+        when(authentication.getAuthorities()).thenReturn(new ArrayList<>());
+
+        // Act
+        ResponseEntity<User> response = userController.getUser(username, authentication);
+
+        // Assert
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    void getUser_adminAccess_shouldReturnUser() {
+        // Arrange
+        String username = "johndoe";
+        User user = new User();
+        user.setUsername(username);
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setEmail("johndoe@example.com");
+        user.setPassword("oldPassword123");
+        user.setAllergies(new ArrayList<>());
+        user.setDateOfBirth(Date.valueOf("1980-01-01"));
+        when(authentication.getName()).thenReturn("admin");
+        doReturn(List.of(new SimpleGrantedAuthority(Authority.ADMIN.name())))
+                .when(authentication).getAuthorities();
+        when(userService.getUserFromUsername(username)).thenReturn(Optional.of(user));
+
+        // Act
+        ResponseEntity<User> response = userController.getUser(username, authentication);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(username, response.getBody().getUsername());
+        assertEquals("John", response.getBody().getFirstName());
+        assertEquals("Doe", response.getBody().getLastName());
+        assertEquals("johndoe@example.com", response.getBody().getEmail());
+        assertNull(response.getBody().getPassword());
+        assertEquals(Date.valueOf("1980-01-01"), response.getBody().getDateOfBirth());
     }
 }
